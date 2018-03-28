@@ -31,13 +31,15 @@
 ; end third-party archives
 
 ; mode settings  模式設定
-(column-number-mode 1)  ; 在 mode line 顯示列號
-(menu-bar-mode -1)      ; 關閉 menu bar
-(tool-bar-mode -1)      ; 關閉 tool bar
-(scroll-bar-mode -1)    ; 關閉 scroll bar
-(display-time-mode 1)   ; 在 mode line 顯示時間
+(column-number-mode 1 ) ; 在 mode line 顯示列號
+(menu-bar-mode -1     ) ; 關閉 menu bar
+(tool-bar-mode -1     ) ; 關閉 tool bar
+(scroll-bar-mode -1   ) ; 關閉 scroll bar
+(display-time-mode 1  ) ; 在 mode line 顯示時間
 
-(add-hook 'prog-mode-hook 'linum-mode ) ; 在 prog mode 下顯示行號
+(if (fboundp 'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
+  (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
 ; end mode settings
 
 ; key bindings  按鍵設定
@@ -47,6 +49,24 @@
 ; evil mode settings  evil mode 設定
 (require 'evil) ; 需要 evil 這個套件
 (evil-mode 1)   ; 開啟 evil mode
+
+(setq evil-shift-width 2) ; 設定縮排為 2 個字元
+
+; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
+(defun evil-toggle-relative ()
+  (interactive)
+  (if (equal (symbol-value 'display-line-numbers) t)
+    (setq display-line-numbers 'relative)
+    (setq display-line-numbers t        )))
+; end function to toggle relative line number in evil mode
+
+(define-key evil-normal-state-map " "   'evil-scroll-page-down) ; 設定空白鍵向下一頁
+(define-key evil-normal-state-map "\d"  'evil-scroll-page-up  ) ; 設定退格鍵向下一頁
+(define-key evil-emacs-state-map  "\e"  'evil-normal-state    ) ; 設定 ESC 離開 emacs state
+(if (fboundp 'display-line-numbers-mode)
+  (define-key evil-normal-state-map "\\r" 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
+
+(add-hook 'evil-insert-state-entry-hook 'evil-emacs-state) ; 設定 insert state 切換成 emacs state
 ; end evil mode settings
 
 ; org mode settings  org mode 設定
