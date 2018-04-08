@@ -1,12 +1,10 @@
-initSourceName=.emacs
-initTargetName=.emacs
-targetDir=$(HOME)
+include settings
 
 all: $(targetDir)/$(initTargetName)
 	cp $< .
 
 install:
-	./install.sh $(initSourceName) $(targetDir) $(initTargetName)
+	./install.sh
 
 uninstall:
 	rm $(targetDir)/$(initTargetName)

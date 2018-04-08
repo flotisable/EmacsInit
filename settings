@@ -1,0 +1,3 @@
+initSourceName=.emacs
+initTargetName=.emacs
+targetDir=${HOME}
