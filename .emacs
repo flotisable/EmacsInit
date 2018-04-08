@@ -50,7 +50,7 @@
 (require 'evil) ; 需要 evil 這個套件
 (evil-mode 1)   ; 開啟 evil mode
 
-(setq evil-shift-width 2) ; 設定縮排為 2 個字元
+(setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
 ; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
 (defun evil-toggle-relative ()
@@ -60,13 +60,27 @@
     (setq display-line-numbers t        )))
 ; end function to toggle relative line number in evil mode
 
-(define-key evil-normal-state-map " "   'evil-scroll-page-down) ; 設定空白鍵向下一頁
-(define-key evil-normal-state-map "\d"  'evil-scroll-page-up  ) ; 設定退格鍵向下一頁
-(define-key evil-emacs-state-map  "\e"  'evil-normal-state    ) ; 設定 ESC 離開 emacs state
+(define-key evil-normal-state-map " "     'evil-scroll-page-down  ) ; 設定空白鍵向上一頁
+(define-key evil-normal-state-map "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向下一頁
+
 (if (fboundp 'display-line-numbers-mode)
   (define-key evil-normal-state-map "\\r" 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
 
-(add-hook 'evil-insert-state-entry-hook 'evil-emacs-state) ; 設定 insert state 切換成 emacs state
+; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
+(define-key evil-insert-state-map "\C-w"  nil )
+(define-key evil-insert-state-map "\C-a"  nil )
+(define-key evil-insert-state-map "\C-d"  nil )
+(define-key evil-insert-state-map "\C-t"  nil )
+(define-key evil-insert-state-map "\C-x"  nil )
+(define-key evil-insert-state-map "\C-p"  nil )
+(define-key evil-insert-state-map "\C-n"  nil )
+(define-key evil-insert-state-map "\C-e"  nil )
+(define-key evil-insert-state-map "\C-y"  nil )
+(define-key evil-insert-state-map "\C-r"  nil )
+(define-key evil-insert-state-map "\C-o"  nil )
+(define-key evil-insert-state-map "\C-k"  nil )
+(define-key evil-insert-state-map "\C-v"  nil )
+; end remove vim key binding in insert mode
 ; end evil mode settings
 
 ; org mode settings  org mode 設定
