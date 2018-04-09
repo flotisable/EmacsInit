@@ -74,7 +74,7 @@ if you don't want to use packages, just delete the corresponding lines in the em
 
 if you want to use the packages, just install the emacs init file and open emacs.
 
-it wiil automatically install the packages if you use emacs for the first time.
+it will automatically install the packages if you use emacs for the first time.
 
 if the download of package does not happen and an error occurs.
 

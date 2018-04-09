@@ -6,9 +6,8 @@
 - [使用 Emacs 設定檔](#使用-emacs-設定檔)
   - [在 Linux 和 Mac 上](#在-linux-和-mac-上)
 - [安裝](#安裝)
+  - [設定檔](#設定檔)
   - [使用安裝腳本](#使用安裝腳本)
-    - [修改腳本](#修改腳本)
-    - [使用參數](#使用參數)
   - [使用 Makefile](#使用-makefile)
 - [初次使用](#初次使用)
 - [快捷鍵](#快捷鍵)
@@ -17,7 +16,8 @@
 # 檔案
 - **.emacs**      : [emacs](https://www.gnu.org/software/emacs/index.html) 的設定
 - **install.sh**  : **.emacs** 的安裝腳本
-- **makefile**    : 處理 **.emacs** 的 makefile 
+- **makefile**    : 處理 **.emacs** 的 makefile
+- **settings**    : 安裝/移除設定檔
 
 # 使用 Emacs 設定檔
 開啟 emacs 並輸入 **C-h r** 會打開 emacs 文檔
@@ -32,18 +32,7 @@
 這是 emacs 設定檔的預設位置
 
 # 安裝
-## 使用安裝腳本
-這個腳本是用 **bash** script 寫的，所以任何支援 bash script 的 shell 都可以使用
-
-下面會講解如何使用這個腳本
-
-- 首先在 shell 輸入 ```chmod u+x install.sh``` 來讓安裝腳本可以被執行
-- 視情況修改腳本中的變數
-- 在 shell 輸入 ```./install.sh``` 來安裝 **.emacs** 檔
-
-有兩種方式可以設定腳本的變數
-
-### 修改腳本
+## 設定檔
 - **targetDir**
 
   這是 **.emacs** 的安裝資料夾
@@ -51,12 +40,14 @@
 
   這是 **.emacs** 安裝後的檔案名稱
 
-### 使用參數
-腳本有三個參數，如果沒有給定的話，會使用預設值
+## 使用安裝腳本
+這個腳本是用 **bash** script 寫的，所以任何支援 bash script 的 shell 都可以使用
 
-1. initSourceName : **.emacs** 原始檔的名稱
-2. targetDir      : **.emacs** 的安裝資料夾
-3. initTargetName : **.emacs** 安裝後的檔案名稱
+下面會講解如何使用這個腳本
+
+- 首先在 shell 輸入 ```chmod u+x install.sh``` 來讓安裝腳本可以被執行
+- 視情況修改設定檔中的變數
+- 在 shell 輸入 ```./install.sh``` 來安裝 **.emacs** 檔
 
 ## 使用 Makefile
 makefile 是為那些想用 **make** 來處理的人寫的
@@ -72,24 +63,22 @@ makefile 是為那些想用 **make** 來處理的人寫的
   實際上這是使用安裝腳本，因此在使用前要確認安裝腳本可以被執行
 - uninstall : 解除安裝 **.emacs**
 
-若要改變 **.emacs** 的安裝路徑與檔案名稱，請直接修改 makefile 中的變數
-
-這些變數和安裝腳本的變數是一樣的
+若要改變 **.emacs** 的安裝路徑與檔案名稱，請直接修改設定檔中的變數
 
 # 初次使用
 在第一次使用 emacs init 檔時，可以先決定要不要使用套件
 
 如果不想使用的話，只要將 init 檔中相關的行數刪掉即可
 
-如果要使用套件的話，在 emacs 中輸入 ```<M-x> list-packages```
+如果要使用套件的話，只要安裝 emacs init 檔，再開啟 emacs 即可。
 
-這樣會開啟 emacs 預設的套件管理員
+如果你是第一次使用 emacs，那麼套件將會自動被安裝
 
-在套件管理員中找到 [套件](#套件) 中列出的套件
+如果套件沒有自動安裝並出現錯誤訊息
 
-按下 ```i``` 來標記要安裝那個套件
+請在 emacs 中輸入 ```<M-x> package-refresh-contents```， 接著輸入 ```<M-x> load <emacs init 檔的路徑>```
 
-在標記完所有要安裝的套件後，按下 ```x``` 來安裝這些套件
+這樣子問題應該就會被解決了。
 
 接下來就是好好享受這個 init 檔了
 # 快捷鍵
