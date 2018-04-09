@@ -8,9 +8,8 @@ for backup my emacs init file
 - [To Use Emacs Init File](#to-use-emacs-init-file)
   - [For Linux and Mac](#for-linux-and-mac)
 - [Install](#install)
+  - [Settings](#Settings)
   - [Using Install Script](#using-install-script)
-    - [Modify The Script](#modify-the-script)
-    - [Using Arguments](#using-arguments)
   - [Using Makefile](#using-makefile)
 - [Getting Start](#getting-start)
 - [KeyBindings](#key-bindings)
@@ -20,6 +19,7 @@ for backup my emacs init file
 - **.emacs**      : settings for [emacs](https://www.gnu.org/software/emacs/index.html)
 - **install.sh**  : install script for **.emacs**
 - **makefile**    : makefile for **.emacs**
+- **settings**    : setting file for install/uninstall
 
 # To Use Emacs Init File
 open the emacs and type **C-h r**, it will show the emacs manual
@@ -34,31 +34,22 @@ I place the ".emacs" at "$HOME/"
 this is the default directory of emacs init file
 
 # Install
+## Settings
+- the directory path **targetDir**
+
+  this is the installed directory of **.emacs**
+- the target file name **initTargetName**
+
+  this is the installed file name of **.emacs**
+
 ## Using Install Script
 the script is written in **bash** script, so any shell support bash script can be used
 
 to use the script
 
 - first ```chmod u+x install.sh``` to make the script executable
-- modify the variables in script if neccessary
+- modify the variables in **settings** if neccessary
 - type ```./install.sh``` to install **.emacs** file
-
-there are two ways to set the variables in the script
-
-### Modify The Script
-- the directory path **targetDir**
-
-  this is the installed directory of **.emacs**
-- the target file name **initTargetName**
-
-  this is the installed file name of **.emacs**
-
-### Using Arguments
-there are three arguments of the script, if not being specified, the default will be used
-
-1. initSourceName : the source file name of **.emacs**
-2. targetDir      : the installed file name of **.emacs**
-3. initTargetName : the installed directory of **.emacs**
 
 ## Using Makefile
 makefile is written for those who want to use **make** to finish the task
@@ -74,27 +65,26 @@ currently, the makefile support the following options
   actually this option use the install script, so make sure the install script is executable
 - uninstall : uninstall **.emacs**
 
-to change the path and file name of **.emacs**, just modify the variables of makefile
-
-the variables is the same as the install script
+to change the path and file name of **.emacs**, just modify the variables in **settings**
 
 # Getting Start
 for using the emacs init file first time, you need to decide whether you want to use the packages or not
 
 if you don't want to use packages, just delete the corresponding lines in the emacs init file
 
-if you want to use the packages, type ```<M-x> list-packages``` in emacs
+if you want to use the packages, just install the emacs init file and open emacs.
 
-it will open the default emacs package manager
+it wiil automatically install the packages if you use emacs for the first time.
 
-find the packages listed in the [Packages](#packages) in the package manager
+if the download of package does not happen and an error occurs.
 
-type ```i``` to mark the package as install
+type ```<M-x> package-refresh-contents``` in emacs, and ```<M-x> load <the-path-of-emacs-init-file>```.
 
-after mark all the packages, type ```x``` to install the packages
+this should solve the problem.
 
-then just have fun with the init file
+then just have fun with the init file.
 # Key Bindings
+all keybindings in evil insert state except ```<ESC>```, ```<C-z>``` are unbound, since I don't use insert mode key bindings in vim, and I prefer using emacs keybinding in insert state.
 - C-c a : open the org agenda dispatcher
 
 # Packages
