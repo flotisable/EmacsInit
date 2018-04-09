@@ -30,6 +30,17 @@
 (package-initialize)                                        ; 讀入套件資料
 ; end third-party archives
 
+; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
+(setq package-list '(evil ox-ioslide))
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
+
 ; mode settings  模式設定
 (column-number-mode 1 ) ; 在 mode line 顯示列號
 (menu-bar-mode -1     ) ; 關閉 menu bar
