@@ -1,5 +1,5 @@
 #!/bin/sh
 
-source ./settings
+. ./settings
 
 cp ${initSourceName} ${targetDir}/${initTargetName}
