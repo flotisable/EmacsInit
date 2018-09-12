@@ -5,11 +5,12 @@
  ;; If there is more than one, they won't work right.
  '(c-tab-always-indent nil)
  '(custom-enabled-themes (quote (misterioso)))
+ '(desktop-path (quote ("./" "~/.emacs.d/" "~")))
  '(indent-tabs-mode nil)
  '(make-backup-files nil)
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
- '(package-selected-packages (quote (ox-ioslide evil)))
+ '(package-selected-packages (quote (htmlize org ox-ioslide evil)))
  '(tab-always-indent nil)
  '(tab-width 2))
 (custom-set-faces
@@ -47,6 +48,7 @@
 (tool-bar-mode -1     ) ; 關閉 tool bar
 (scroll-bar-mode -1   ) ; 關閉 scroll bar
 (display-time-mode 1  ) ; 在 mode line 顯示時間
+(show-paren-mode 1    ) ; highlight 對應的小括號
 
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
