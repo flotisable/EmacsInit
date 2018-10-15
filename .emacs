@@ -104,5 +104,6 @@
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-refile-use-outline-path 'full-file-path)
 (setq org-refile-allow-creating-parent-nodes 't)
-(setq org-capture-templates '(("t" "todo" entry (file+headline "" "Todo") "** TODO ")))
+(setq org-capture-templates '(("t" "todo" entry (file+headline "" "Todo") "** TODO ")
+                              ("d" "date" entry (file+headline "" "Date") "** %^t")))
 ; end org mode settings
