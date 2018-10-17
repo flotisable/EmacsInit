@@ -104,6 +104,15 @@
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-refile-use-outline-path 'full-file-path)
 (setq org-refile-allow-creating-parent-nodes 't)
-(setq org-capture-templates '(("t" "todo" entry (file+headline "" "Todo") "** TODO ")
-                              ("d" "date" entry (file+headline "" "Date") "** %^t")))
+(setq org-capture-templates
+      '(("t" "todo" entry (file+headline "" "Todo") "** TODO ")
+        ("d" "date" entry (file+headline "" "Date") "** %^t")))
+(setq org-agenda-custom-commands
+      '(("t" . "List TODO entries")
+        ("ta" "List all the TODO entries" todo)
+        ("tt" "List all the unscheduled TODO entries" todo ""
+         ((org-agenda-todo-ignore-scheduled 't)))
+        ("tu" "List all the unassigned TODO entries" todo ""
+         ((org-agenda-todo-ignore-scheduled 't)
+          (org-agenda-todo-ignore-deadlines 't)))))
 ; end org mode settings
