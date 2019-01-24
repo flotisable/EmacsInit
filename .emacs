@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(c-tab-always-indent nil)
+ '(current-language-environment "UTF-8")
  '(custom-enabled-themes (quote (misterioso)))
  '(desktop-path (quote ("./" "~/.emacs.d/" "~")))
  '(indent-tabs-mode nil)
@@ -11,6 +12,10 @@
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages (quote (htmlize org ox-ioslide evil)))
+ '(safe-local-variable-values
+   (quote
+    ((org-use-sub-superscripts . {})
+     (org-export-with-sub-superscripts . {}))))
  '(tab-always-indent nil)
  '(tab-width 2))
 (custom-set-faces
