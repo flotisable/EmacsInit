@@ -1,7 +1,7 @@
 include settings
 
 all: $(targetDir)/$(initTargetName)
-	cp $< .
+	cp $< ${initSourceName}
 
 install:
 	./install.sh
