@@ -37,7 +37,7 @@
 ; end third-party archives
 
 ; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(setq package-list '(evil ox-ioslide))
+(setq package-list '(evil org htmlize))
 
 (unless package-archive-contents
   (package-refresh-contents))
