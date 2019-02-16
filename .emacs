@@ -110,8 +110,9 @@
 (setq org-refile-use-outline-path 'full-file-path)
 (setq org-refile-allow-creating-parent-nodes 't)
 (setq org-capture-templates
-      '(("t" "todo" entry (file+headline "" "Todo") "** TODO ")
-        ("d" "date" entry (file+headline "" "Date") "** %^t")))
+      '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
+        ("d" "date" entry (file+headline "" "Date") "** %^t %?")
+        ("n" "note" entry (file+headline "" "Note") "** %?")))
 (setq org-agenda-custom-commands
       '(("t" . "List TODO entries")
         ("ta" "List all the TODO entries" todo)
