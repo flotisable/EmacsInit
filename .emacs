@@ -31,7 +31,7 @@
 
 ; third-party archives  第三方套件庫
 (require 'package)                                          ; 需要 package 這個套件
-(add-to-list 'package-archives 
+(add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)  ; 加入 melpa 套件庫
 (package-initialize)                                        ; 讀入套件資料
 ; end third-party archives
@@ -79,8 +79,8 @@
     (setq display-line-numbers t        )))
 ; end function to toggle relative line number in evil mode
 
-(define-key evil-normal-state-map " "     'evil-scroll-page-down  ) ; 設定空白鍵向上一頁
-(define-key evil-normal-state-map "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向下一頁
+(define-key evil-normal-state-map " "     'evil-scroll-page-down  ) ; 設定空白鍵向下一頁
+(define-key evil-normal-state-map "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
 
 (if (fboundp 'display-line-numbers-mode)
   (define-key evil-normal-state-map "\\r" 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
@@ -104,7 +104,7 @@
 
 ; org mode settings  org mode 設定
 (setq org-agenda-files "~/Documents/orgAgendaFiles.org")  ; 設定 agenda file 的列表設定檔
-(setq org-export-backends '(html latex odt ioslide beamer))
+(setq org-export-backends '(html latex odt beamer))
 (setq org-default-notes-file "~/Documents/note.org")
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-refile-use-outline-path 'full-file-path)
