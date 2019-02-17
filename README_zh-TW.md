@@ -5,12 +5,14 @@
 - [檔案](#檔案)
 - [使用 Emacs 設定檔](#使用-emacs-設定檔)
   - [在 Linux 和 Mac 上](#在-linux-和-mac-上)
+  - [在 Windows 上](#在-windows-上)
 - [安裝](#安裝)
   - [設定檔](#設定檔)
   - [使用安裝腳本](#使用安裝腳本)
   - [使用 Makefile](#使用-makefile)
 - [初次使用](#初次使用)
 - [快捷鍵](#快捷鍵)
+  - [Normale State](#normal-state)
 - [套件包](#套件包)
 
 # 檔案
@@ -20,14 +22,18 @@
 - **settings**    : 安裝/移除設定檔
 
 # 使用 Emacs 設定檔
-開啟 emacs 並輸入 **C-h r** 會打開 emacs 文檔
+開啟 emacs 並輸入 ```C-h r``` 會打開 emacs 文檔
 
-接著輸入 **g Init File** 並按下 **Enter** 鍵, 會開啟如何放置 emacs 設定檔的說明文件
+接著輸入 ```g Init File``` 並按下 ```Enter``` 鍵, 會開啟如何放置 emacs 設定檔的說明文件
 
 下面我會講我將 emacs 設定檔放在哪作為參考
 
 ## 在 Linux 和 Mac 上
-我將 ".emacs" 放在 "$HOME/"
+我將 ".emacs" 放在 ```$HOME/```
+
+## 在 Windows 上
+
+我將 ".emacs" 以 "init.el" 的檔名放在 "```${env:APPDATA}\.emacs.d\```" ( 或是在 CMD 中的 "```%APPDATA%\.emacs.d\```" )
 
 這是 emacs 設定檔的預設位置
 
@@ -39,6 +45,10 @@
 - **initTargetName**
 
   這是 **.emacs** 安裝後的檔案名稱
+
+- **initSourceName**
+
+  這是 **.emacs** 在倉庫中的檔案名稱，主要是在更新設定檔使用
 
 ## 使用安裝腳本
 這個腳本是用 **bash** script 寫的，所以任何支援 bash script 的 shell 都可以使用
@@ -83,7 +93,14 @@ makefile 是為那些想用 **make** 來處理的人寫的
 接下來就是好好享受這個 init 檔了
 # 快捷鍵
 - C-c a : 開啟 org agenda dispatcher
+- C-c c : 開啟 org capture 選單
+
+## Normal State
+- ' '  ( 空白鍵 ) : 向下一頁
+- '\d' ( 退格鍵 ) : 向上一頁
+- \r              : 切換相對行號 ( 只適用於 emacs 版本 >= 26 )
 
 # 套件包
-- evil        : Extensable VI Layer, 讓 emacs 可以使用 vi 的按鍵配置與 mode
-- ox-ioslide  : org mode 相關的套件，用來產生 Google I/O 形式的投影片
+- evil    : Extensable VI Layer, 讓 emacs 可以使用 vi 的按鍵配置與 mode
+- org     : org mode 套件
+- htmlize : 用於 org mode 匯出 html
