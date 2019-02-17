@@ -7,12 +7,14 @@ for backup my emacs init file
 - [Files](#files)
 - [To Use Emacs Init File](#to-use-emacs-init-file)
   - [For Linux and Mac](#for-linux-and-mac)
+  - [For Windows](#for-windows)
 - [Install](#install)
   - [Settings](#Settings)
   - [Using Install Script](#using-install-script)
   - [Using Makefile](#using-makefile)
 - [Getting Start](#getting-start)
 - [KeyBindings](#key-bindings)
+  - [Normale State](#normal-state)
 - [Packages](#packages)
 
 # Files
@@ -22,14 +24,18 @@ for backup my emacs init file
 - **settings**    : setting file for install/uninstall
 
 # To Use Emacs Init File
-open the emacs and type **C-h r**, it will show the emacs manual
+open the emacs and type ```C-h r```, it will show the emacs manual
 
-then type **g Init File** and press **Enter**, it will show the help file about where to put emacs init file
+then type ```g Init File``` and press ```Enter```, it will show the help file about where to put emacs init file
 
 I will talk about where I place my emacs init file below as an example
 
 ## For Linux and Mac
-I place the ".emacs" at "$HOME/"
+I place the ".emacs" at "```$HOME/```"
+
+## For Windows
+
+I place the ".emacs" at "```${env:APPDATA}\.emacs.d\```" ( or "```%APPDATA%\.emacs.d\```" in CMD ) with name "init.el"
 
 this is the default directory of emacs init file
 
@@ -41,6 +47,10 @@ this is the default directory of emacs init file
 - the target file name **initTargetName**
 
   this is the installed file name of **.emacs**
+
+- the source file name **initSourceName**
+
+  this is the file name in the repo, this is used for the purpose of updating emacs init file
 
 ## Using Install Script
 the script is written in **bash** script, so any shell support bash script can be used
@@ -86,7 +96,14 @@ then just have fun with the init file.
 # Key Bindings
 all keybindings in evil insert state except ```<ESC>```, ```<C-z>``` are unbound, since I don't use insert mode key bindings in vim, and I prefer using emacs keybinding in insert state.
 - C-c a : open the org agenda dispatcher
+- C-c c : open the org capture menu
+
+## Normal State
+- ' '  ( space )      : page down
+- '\d' ( backspace )  : page up
+- \r                  : toggle relative line number ( only in emacs version >= 26 )
 
 # Packages
-- evil        : Extensable VI Layer
-- ox-ioslide  : the org mode package to export to Google I/O slide
+- evil    : Extensable VI Layer
+- org     : the org mode package
+- htmlize : for exporting html in org mode
