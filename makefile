@@ -1,5 +1,9 @@
 include settings
 
+ifeq "targetDir" ""
+targetDir = $(shell default.sh ${os})
+endif
+
 all: $(targetDir)/$(initTargetName)
 	cp $< ${initSourceName}
 

@@ -1,3 +1,5 @@
+os=windows
+
 initSourceName=.emacs
-initTargetName=.emacs
-targetDir=${HOME}
+initTargetName=init.el
+targetDir=
