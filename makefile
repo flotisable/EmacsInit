@@ -1,7 +1,7 @@
 include settings
 
-ifeq "targetDir" ""
-targetDir = $(shell default.sh ${os})
+ifeq "${targetDir}" ""
+targetDir = $(shell ./default.sh ${os})
 endif
 
 all: $(targetDir)/$(initTargetName)
