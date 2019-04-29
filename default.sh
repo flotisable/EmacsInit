@@ -4,8 +4,8 @@ os=$1
 
 case ${os} in
 
-  linux   ) echo ${HOME};;
-  windows ) echo "${APPDATA}\\.emacs.d";;
-  macos   ) echo ${HOME};;
+  Linux       ) echo ${HOME};;
+  Windows_NT  ) echo "${APPDATA}\\.emacs.d";;
+  Darwin      ) echo ${HOME};;
 
 esac

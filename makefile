@@ -1,7 +1,9 @@
+OS ?= $(shell uname -s)
+
 include settings
 
 ifeq "${targetDir}" ""
-targetDir = $(shell ./default.sh ${os})
+targetDir = $(shell ./default.sh ${OS})
 endif
 
 all: $(targetDir)/$(initTargetName)
