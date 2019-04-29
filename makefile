@@ -10,7 +10,7 @@ all: $(targetDir)/$(initTargetName)
 	cp $< ${initSourceName}
 
 install:
-	./install.sh
+	@./install.sh
 
 uninstall:
 	rm $(targetDir)/$(initTargetName)
