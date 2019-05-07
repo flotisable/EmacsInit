@@ -103,10 +103,11 @@
 ; end evil mode settings
 
 ; org mode settings  org mode 設定
-(setq org-agenda-files "~/Documents/orgAgendaFiles.org")  ; 設定 agenda file 的列表設定檔
-(setq org-icalendar-combined-agenda-file "~/Documents/agenda.ics")
+(setq org-directory "~/Documents")
+(setq org-agenda-files (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
+(setq org-icalendar-combined-agenda-file (concat org-directory "/agenda.ics"))
 (setq org-export-backends '(html latex odt beamer icalendar))
-(setq org-default-notes-file "~/Documents/note.org")
+(setq org-default-notes-file (concat org-directory "/note.org"))
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-refile-use-outline-path 'full-file-path)
 (setq org-refile-allow-creating-parent-nodes 't)
