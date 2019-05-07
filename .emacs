@@ -104,14 +104,15 @@
 
 ; org mode settings  org mode 設定
 (setq org-agenda-files "~/Documents/orgAgendaFiles.org")  ; 設定 agenda file 的列表設定檔
-(setq org-export-backends '(html latex odt beamer))
+(setq org-icalendar-combined-agenda-file "~/Documents/agenda.ics")
+(setq org-export-backends '(html latex odt beamer icalendar))
 (setq org-default-notes-file "~/Documents/note.org")
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
 (setq org-refile-use-outline-path 'full-file-path)
 (setq org-refile-allow-creating-parent-nodes 't)
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
-        ("d" "date" entry (file+headline "" "Date") "** %^t %?")
+        ("d" "date" entry (file+headline "" "Date") "** %?\n   %^t")
         ("n" "note" entry (file+headline "" "Note") "** %?")))
 (setq org-agenda-custom-commands
       '(("t" . "List TODO entries")
