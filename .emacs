@@ -124,4 +124,22 @@
         ("tu" "List all the unassigned TODO entries" todo ""
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))))
+
+(defun sync-agenda-from-google-cal ()
+  (interactive)
+  (let ((google-cal-file (concat org-directory "/orgGoogleCal.org"))
+        (ics2org "ical2orgpy")
+        lines line data filename url icsFile orgFile)
+    (with-temp-buffer
+      (insert-file-contents google-cal-file)
+      (setq lines (split-string (buffer-string) "\n"))
+      (dolist (line lines)
+        (setq data (split-string line "\s+"))
+        (unless (equal (list line) data)
+          (setq filepath  (concat org-directory "/" (car data)))
+          (setq url       (cadr data))
+          (setq icsFile   (concat filepath ".ics"))
+          (setq orgFile   (concat filepath ".org"))
+          (make-process :name "get ics" :command (list "curl" url "-o" icsFile))
+          (make-process :name "ics2org" :command (list ics2org icsFile orgFile)))))))
 ; end org mode settings
