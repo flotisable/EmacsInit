@@ -73,6 +73,7 @@
 
 ; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
 (defun evil-toggle-relative ()
+  "Toggle relative line number in evil mode"
   (interactive)
   (if (equal (symbol-value 'display-line-numbers) t)
     (setq display-line-numbers 'relative)
@@ -125,21 +126,55 @@
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))))
 
+; the file stores the information to synchronize with google calendar
+; each line is a elisp list with two string elements
+; the first element is the filename to store the agenda
+; the second element is the url to fetch the ics file from google calendar
+(setq my-google-cal-file (concat org-directory "/orgGoogleCal.org"))
+
+; export filter settings  匯出過濾器設定
+(defun google-cal-filter (body backend channel)
+  "Filter agenda from google calendar"
+  (if (string-equal backend "icalendar")
+      (let ((category (org-get-category))
+            filtered)
+        (with-temp-buffer
+          (insert-file-contents my-google-cal-file)
+          (dolist (line (split-string (buffer-string) "\n" t))
+            (when (string-equal category (car (read line)))
+              (setq filtered 't))))
+        (if filtered
+            ""
+          body))
+    body))
+
+(require 'ox)
+(add-to-list 'org-export-filter-body-functions 'google-cal-filter)
+; end export filter settings
+
+; synchonized with google calendar  與 google 日曆同步
 (defun sync-agenda-from-google-cal ()
+  "Synchronize org agenda from google calendar"
   (interactive)
-  (let ((google-cal-file (concat org-directory "/orgGoogleCal.org"))
-        (ics2org "ical2orgpy")
-        lines line data filename url icsFile orgFile)
+  (let ((ics2org "ical2orgpy")
+        line data url icsFile orgFile)
     (with-temp-buffer
-      (insert-file-contents google-cal-file)
-      (setq lines (split-string (buffer-string) "\n"))
-      (dolist (line lines)
-        (setq data (split-string line "\s+"))
-        (unless (equal (list line) data)
-          (setq filepath  (concat org-directory "/" (car data)))
-          (setq url       (cadr data))
-          (setq icsFile   (concat filepath ".ics"))
-          (setq orgFile   (concat filepath ".org"))
-          (make-process :name "get ics" :command (list "curl" url "-o" icsFile))
-          (make-process :name "ics2org" :command (list ics2org icsFile orgFile)))))))
+      (insert-file-contents my-google-cal-file)
+      (dolist (line (split-string (buffer-string) "\n" t))
+        (setq data    (read line))
+        (setq url     (cadr data))
+        (setq icsFile (concat org-directory "/" (car data) ".ics"))
+        (setq orgFile (concat org-directory "/" (car data) ".org"))
+        (call-process "curl"  nil nil nil url "-o" icsFile)
+        (call-process ics2org nil nil nil icsFile orgFile)
+        (delete-file icsFile))
+      (princ "Synchronized from Google Calendar"))))
+
+(require 'org-agenda)
+(defun sync-agenda-to-google-cal ()
+  "Synchronize org agenda to google calendar"
+  (interactive)
+  (org-icalendar-combine-agenda-files)
+  (princ "Synchronized to Google Calendar"))
+; end synchonized with google calendar
 ; end org mode settings
