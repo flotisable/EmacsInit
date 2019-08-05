@@ -48,12 +48,12 @@
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ; mode settings  模式設定
-(column-number-mode 1 ) ; 在 mode line 顯示列號
-(menu-bar-mode -1     ) ; 關閉 menu bar
-(tool-bar-mode -1     ) ; 關閉 tool bar
-(scroll-bar-mode -1   ) ; 關閉 scroll bar
-(display-time-mode 1  ) ; 在 mode line 顯示時間
-(show-paren-mode 1    ) ; highlight 對應的小括號
+(column-number-mode 1   ) ; 在 mode line 顯示列號
+(menu-bar-mode      -1  ) ; 關閉 menu bar
+(tool-bar-mode      -1  ) ; 關閉 tool bar
+(scroll-bar-mode    -1  ) ; 關閉 scroll bar
+(display-time-mode  1   ) ; 在 mode line 顯示時間
+(show-paren-mode    1   ) ; highlight 對應的小括號
 
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
@@ -125,6 +125,9 @@
         ("tu" "List all the unassigned TODO entries" todo ""
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))))
+(setq org-log-done 'time)
+(setq org-todo-keywords
+      '((sequence "TODO" "WIP" "|" "DONE")))
 
 ; the file stores the information to synchronize with google calendar
 ; each line is a elisp list with two string elements
