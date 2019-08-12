@@ -127,7 +127,7 @@
           (org-agenda-todo-ignore-deadlines 't)))))
 (setq org-log-done 'time)
 (setq org-todo-keywords
-      '((sequence "TODO" "WIP" "|" "DONE")))
+      '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
 
 ; the file stores the information to synchronize with google calendar
 ; each line is a elisp list with two string elements
