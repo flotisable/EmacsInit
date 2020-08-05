@@ -107,6 +107,9 @@
 (setq org-directory "~/Documents")
 (setq org-agenda-files (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-agenda-span 'day)
+(setq org-highest-priority ?A)
+(setq org-lowest-priority ?E)
+(setq org-default-priority ?C)
 (setq org-icalendar-combined-agenda-file (concat org-directory "/agenda.ics"))
 (setq org-icalendar-timezone "Asia/Taipei")
 (setq org-export-backends '(html latex odt beamer icalendar))
