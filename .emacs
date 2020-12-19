@@ -185,3 +185,13 @@
   (princ "Synchronized to Google Calendar"))
 ; end synchonized with google calendar
 ; end org mode settings
+
+; gnus settings
+(setq gnus-select-method
+      '(nnimap "imap.gmail.com"
+               (nnmail-expiry-target "nnimap+gmail:[Gmail]/垃圾桶")
+               (nnmail-expiry-wait immediate)))
+(setq gnus-thread-sort-functions
+      '(gnus-thread-sort-by-most-recent-date))
+(setq gnus-summary-line-format "%U%R%z%-15,15&user-date;%I%(%[%4L: %-23,23f%]%) %s\n")
+; end gnus settings
