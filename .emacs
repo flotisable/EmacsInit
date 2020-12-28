@@ -197,3 +197,20 @@
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-smtp-server "smtp.gmail.com")
 ; end gnus settings
+
+; eww settings
+(defun eww-toggle-mouse-browse ()
+  "toggle browsing eww with mouse"
+  (interactive)
+  (if (equal (symbol-value 'tool-bar-mode) nil)
+      (progn
+        (tool-bar-mode              1)
+        (scroll-bar-mode            1)
+        (horizontal-scroll-bar-mode 1)
+        (tab-bar-mode               1))
+    (progn
+      (tool-bar-mode              -1)
+      (scroll-bar-mode            -1)
+      (horizontal-scroll-bar-mode -1)
+      (tab-bar-mode               -1))))
+; end eww settings
