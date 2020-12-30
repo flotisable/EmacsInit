@@ -174,7 +174,12 @@
         (setq orgFile (concat (expand-file-name org-directory ) "/" (car data) ".org"))
         (call-process "curl"  nil nil nil url "-o" icsFile)
         (call-process ics2org nil nil nil icsFile orgFile)
-        (delete-file icsFile))
+        (delete-file icsFile)
+        (let ((buffer (get-file-buffer orgFile)))
+          (when buffer
+            (save-current-buffer
+              (set-buffer buffer)
+              (revert-buffer 't 't)))))
       (princ "Synchronized from Google Calendar"))))
 
 (require 'org-agenda)
