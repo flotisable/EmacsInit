@@ -37,7 +37,7 @@
 ; end third-party archives
 
 ; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(setq package-list '(evil org htmlize))
+(setq package-list '(evil org htmlize evil-collection))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -66,8 +66,10 @@
 ; end key bindings
 
 ; evil mode settings  evil mode 設定
+(setq evil-want-keybinding 'nil)
 (require 'evil) ; 需要 evil 這個套件
 (evil-mode 1)   ; 開啟 evil mode
+(evil-collection-init '(eww gnus info (custom cus-edit)))
 
 (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
