@@ -204,6 +204,8 @@
 ; end gnus settings
 
 ; eww settings
+(setq browse-url-browser-function 'eww)
+
 (defun eww-toggle-mouse-browse ()
   "toggle browsing eww with mouse"
   (interactive)
