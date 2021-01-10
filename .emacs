@@ -82,26 +82,27 @@
     (setq display-line-numbers t        )))
 ; end function to toggle relative line number in evil mode
 
-(define-key evil-normal-state-map " "     'evil-scroll-page-down  ) ; 設定空白鍵向下一頁
-(define-key evil-normal-state-map "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
+(evil-global-set-key 'normal "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
+(evil-global-set-key 'motion " "     'evil-scroll-page-down  ) ; 設定空白鍵向下一頁
+(evil-global-set-key 'motion "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
 
 (if (fboundp 'display-line-numbers-mode)
   (define-key evil-normal-state-map "\\r" 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
 
 ; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-(define-key evil-insert-state-map "\C-w"  nil )
-(define-key evil-insert-state-map "\C-a"  nil )
-(define-key evil-insert-state-map "\C-d"  nil )
-(define-key evil-insert-state-map "\C-t"  nil )
-(define-key evil-insert-state-map "\C-x"  nil )
-(define-key evil-insert-state-map "\C-p"  nil )
-(define-key evil-insert-state-map "\C-n"  nil )
-(define-key evil-insert-state-map "\C-e"  nil )
-(define-key evil-insert-state-map "\C-y"  nil )
-(define-key evil-insert-state-map "\C-r"  nil )
-(define-key evil-insert-state-map "\C-o"  nil )
-(define-key evil-insert-state-map "\C-k"  nil )
-(define-key evil-insert-state-map "\C-v"  nil )
+(evil-global-set-key 'insert "\C-w" nil)
+(evil-global-set-key 'insert "\C-a" nil)
+(evil-global-set-key 'insert "\C-d" nil)
+(evil-global-set-key 'insert "\C-t" nil)
+(evil-global-set-key 'insert "\C-x" nil)
+(evil-global-set-key 'insert "\C-p" nil)
+(evil-global-set-key 'insert "\C-n" nil)
+(evil-global-set-key 'insert "\C-e" nil)
+(evil-global-set-key 'insert "\C-y" nil)
+(evil-global-set-key 'insert "\C-r" nil)
+(evil-global-set-key 'insert "\C-o" nil)
+(evil-global-set-key 'insert "\C-k" nil)
+(evil-global-set-key 'insert "\C-v" nil)
 ; end remove vim key binding in insert mode
 ; end evil mode settings
 
