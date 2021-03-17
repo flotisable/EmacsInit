@@ -108,6 +108,7 @@
 
 ; org mode settings  org mode 設定
 (setq org-directory "~/Documents")
+(setq org-image-actual-width 'nil)
 (setq org-agenda-files (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-agenda-span 'day)
 (setq org-highest-priority ?A)
