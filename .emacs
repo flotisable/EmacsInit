@@ -37,7 +37,7 @@
 ; end third-party archives
 
 ; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(setq package-list '(evil org htmlize evil-collection))
+(setq package-list '(evil org htmlize evil-collection org-attach-screenshot))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -136,6 +136,11 @@
 (setq org-log-done 'time)
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
+
+(require 'org-attach-screenshot)
+
+(setq org-attach-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+(add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot."))
 
 ; the file stores the information to synchronize with google calendar
 ; each line is a elisp list with two string elements
