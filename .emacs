@@ -39,7 +39,7 @@
 ; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 (setq package-list '(evil
                      evil-collection
-                     ivy-mode
+                     ivy
                      swiper
                      org
                      org-attach-screenshot
