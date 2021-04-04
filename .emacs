@@ -60,7 +60,12 @@
 (scroll-bar-mode    -1  ) ; 關閉 scroll bar
 (display-time-mode  1   ) ; 在 mode line 顯示時間
 (show-paren-mode    1   ) ; highlight 對應的小括號
-(ivy-mode           1   ) ; 互動式模糊補全
+
+(when (package-installed-p 'ivy)
+  (ivy-mode 1 )) ; 互動式模糊補全
+
+(when (package-installed-p 'evil)
+  (evil-mode 1)) ; 開啟 evil mode
 
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
@@ -74,64 +79,68 @@
 ; end key bindings
 
 ; evil mode settings  evil mode 設定
-(setq evil-want-keybinding 'nil)
-(require 'evil) ; 需要 evil 這個套件
-(evil-mode 1)   ; 開啟 evil mode
-(evil-collection-init '(eww gnus info (custom cus-edit)))
+(when (package-installed-p 'evil)
+  (setq evil-want-keybinding 'nil)
+  (require 'evil) ; 需要 evil 這個套件
+  (when (package-installed-p 'evil-collection)
+    (evil-collection-init '(eww gnus info (custom cus-edit))))
 
-(setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
+  (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
-; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
-(defun evil-toggle-relative ()
-  "Toggle relative line number in evil mode"
-  (interactive)
-  (if (equal (symbol-value 'display-line-numbers) t)
-    (setq display-line-numbers 'relative)
-    (setq display-line-numbers t        )))
-; end function to toggle relative line number in evil mode
+  ; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
+  (defun evil-toggle-relative ()
+    "Toggle relative line number in evil mode"
+    (interactive)
+    (if (equal (symbol-value 'display-line-numbers) t)
+      (setq display-line-numbers 'relative)
+      (setq display-line-numbers t        )))
+  ; end function to toggle relative line number in evil mode
 
-(evil-global-set-key 'normal (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
-(evil-global-set-key 'motion (kbd "SPC") 'evil-scroll-page-down ) ; 設定空白鍵向下一頁
-(evil-global-set-key 'motion (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
+  ; evil mode keybindings  evil mode 按鍵設定
+  (evil-global-set-key 'normal (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
+  (evil-global-set-key 'motion (kbd "SPC") 'evil-scroll-page-down ) ; 設定空白鍵向下一頁
+  (evil-global-set-key 'motion (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
 
-(if (fboundp 'display-line-numbers-mode)
-  (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
+  (if (fboundp 'display-line-numbers-mode)
+    (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
+  ; end evil mode keybindings
 
-; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-(setq evil-insert-mode-key-to-be-removed '("C-w"
-                                           "C-a"
-                                           "C-d"
-                                           "C-t"
-                                           "C-x"
-                                           "C-p"
-                                           "C-n"
-                                           "C-e"
-                                           "C-y"
-                                           "C-r"
-                                           "C-o"
-                                           "C-k"
-                                           "C-v"))
+  ; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
+  (setq evil-insert-mode-key-to-be-removed '("C-w"
+                                            "C-a"
+                                            "C-d"
+                                            "C-t"
+                                            "C-x"
+                                            "C-p"
+                                            "C-n"
+                                            "C-e"
+                                            "C-y"
+                                            "C-r"
+                                            "C-o"
+                                            "C-k"
+                                            "C-v"))
 
-(dolist (key evil-insert-mode-key-to-be-removed)
-  (evil-global-set-key 'insert (kbd key) nil))
+  (dolist (key evil-insert-mode-key-to-be-removed)
+    (evil-global-set-key 'insert (kbd key) nil)))
 ; end remove vim key binding in insert mode
 ; end evil mode settings
 
 ; org mode settings  org mode 設定
-(setq org-directory "~/Documents")
-(setq org-image-actual-width 'nil)
-(setq org-agenda-files (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
-(setq org-agenda-span 'day)
-(setq org-highest-priority ?A)
-(setq org-lowest-priority ?E)
-(setq org-default-priority ?C)
-(setq org-icalendar-combined-agenda-file (concat org-directory "/agenda.ics"))
-(setq org-icalendar-timezone "Asia/Taipei")
-(setq org-export-backends '(html latex odt beamer icalendar))
-(setq org-default-notes-file (concat org-directory "/note.org"))
-(setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
-(setq org-refile-use-outline-path 'nil)
-(setq org-refile-allow-creating-parent-nodes 't)
+(setq org-directory                           "~/Documents")
+(setq org-agenda-files                        (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
+(setq org-icalendar-combined-agenda-file      (concat org-directory "/agenda.ics"))
+(setq org-default-notes-file                  (concat org-directory "/note.org"))
+(setq org-image-actual-width                  'nil)
+(setq org-icalendar-timezone                  "Asia/Taipei")
+(setq org-export-backends                     '(html latex odt beamer icalendar))
+(setq org-agenda-span                         'day)
+(setq org-highest-priority                    ?A)
+(setq org-lowest-priority                     ?E)
+(setq org-default-priority                    ?C)
+(setq org-log-done                            'time)
+(setq org-refile-targets                      '((org-agenda-files . (:maxlevel . 2))))
+(setq org-refile-use-outline-path             'nil)
+(setq org-refile-allow-creating-parent-nodes  't)
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
         ("d" "date" entry (file+headline "" "Date") "** %?\n   %^t")
@@ -144,14 +153,14 @@
         ("tu" "List all the unassigned TODO entries" todo ""
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))))
-(setq org-log-done 'time)
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
 
-(require 'org-attach-screenshot)
+(when (package-installed-p 'org-attach-screenshot)
+    (require 'org-attach-screenshot)
 
-(setq org-attach-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
-(add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot."))
+    (setq org-attach-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+    (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
 
 ; the file stores the information to synchronize with google calendar
 ; each line is a elisp list with two string elements
@@ -190,8 +199,8 @@
       (dolist (line (split-string (buffer-string) "\n" t))
         (setq data    (read line))
         (setq url     (cadr data))
-        (setq icsFile (concat (expand-file-name org-directory ) "/" (car data) ".ics"))
-        (setq orgFile (concat (expand-file-name org-directory ) "/" (car data) ".org"))
+        (setq icsFile (concat (expand-file-name org-directory) "/" (car data) ".ics"))
+        (setq orgFile (concat (expand-file-name org-directory) "/" (car data) ".org"))
         (call-process "curl"  nil nil nil url "-o" icsFile)
         (call-process ics2org nil nil nil icsFile orgFile)
         (delete-file icsFile)
