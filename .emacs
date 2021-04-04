@@ -37,7 +37,13 @@
 ; end third-party archives
 
 ; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(setq package-list '(evil org htmlize evil-collection org-attach-screenshot))
+(setq package-list '(evil
+                     evil-collection
+                     ivy-mode
+                     swiper
+                     org
+                     org-attach-screenshot
+                     htmlize))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -54,6 +60,7 @@
 (scroll-bar-mode    -1  ) ; 關閉 scroll bar
 (display-time-mode  1   ) ; 在 mode line 顯示時間
 (show-paren-mode    1   ) ; highlight 對應的小括號
+(ivy-mode           1   ) ; 互動式模糊補全
 
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
@@ -63,6 +70,7 @@
 ; key bindings  按鍵設定
 (global-set-key "\C-ca" 'org-agenda ) ; 設定 C-c a 開啟 org agenda dispatcher
 (global-set-key "\C-cc" 'org-capture) ; 設定 C-c c 開啟 org capture
+(global-set-key "\C-s"  'swiper     ) ; 設定 C-s 開啟互動式模糊搜尋
 ; end key bindings
 
 ; evil mode settings  evil mode 設定
@@ -119,7 +127,7 @@
 (setq org-export-backends '(html latex odt beamer icalendar))
 (setq org-default-notes-file (concat org-directory "/note.org"))
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
-(setq org-refile-use-outline-path 'full-file-path)
+(setq org-refile-use-outline-path 'nil)
 (setq org-refile-allow-creating-parent-nodes 't)
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
