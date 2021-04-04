@@ -68,9 +68,9 @@
 ; end mode settings
 
 ; key bindings  按鍵設定
-(global-set-key "\C-ca" 'org-agenda ) ; 設定 C-c a 開啟 org agenda dispatcher
-(global-set-key "\C-cc" 'org-capture) ; 設定 C-c c 開啟 org capture
-(global-set-key "\C-s"  'swiper     ) ; 設定 C-s 開啟互動式模糊搜尋
+(global-set-key (kbd "C-c a") 'org-agenda ) ; 設定 C-c a 開啟 org agenda dispatcher
+(global-set-key (kbd "C-c c") 'org-capture) ; 設定 C-c c 開啟 org capture
+(global-set-key (kbd "C-s"  ) 'swiper     ) ; 設定 C-s 開啟互動式模糊搜尋
 ; end key bindings
 
 ; evil mode settings  evil mode 設定
@@ -90,27 +90,30 @@
     (setq display-line-numbers t        )))
 ; end function to toggle relative line number in evil mode
 
-(evil-global-set-key 'normal "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
-(evil-global-set-key 'motion " "     'evil-scroll-page-down  ) ; 設定空白鍵向下一頁
-(evil-global-set-key 'motion "\d"    'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
+(evil-global-set-key 'normal (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
+(evil-global-set-key 'motion (kbd "SPC") 'evil-scroll-page-down ) ; 設定空白鍵向下一頁
+(evil-global-set-key 'motion (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
 
 (if (fboundp 'display-line-numbers-mode)
-  (define-key evil-normal-state-map "\\r" 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
+  (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
 
 ; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-(evil-global-set-key 'insert "\C-w" nil)
-(evil-global-set-key 'insert "\C-a" nil)
-(evil-global-set-key 'insert "\C-d" nil)
-(evil-global-set-key 'insert "\C-t" nil)
-(evil-global-set-key 'insert "\C-x" nil)
-(evil-global-set-key 'insert "\C-p" nil)
-(evil-global-set-key 'insert "\C-n" nil)
-(evil-global-set-key 'insert "\C-e" nil)
-(evil-global-set-key 'insert "\C-y" nil)
-(evil-global-set-key 'insert "\C-r" nil)
-(evil-global-set-key 'insert "\C-o" nil)
-(evil-global-set-key 'insert "\C-k" nil)
-(evil-global-set-key 'insert "\C-v" nil)
+(setq evil-insert-mode-key-to-be-removed '("C-w"
+                                           "C-a"
+                                           "C-d"
+                                           "C-t"
+                                           "C-x"
+                                           "C-p"
+                                           "C-n"
+                                           "C-e"
+                                           "C-y"
+                                           "C-r"
+                                           "C-o"
+                                           "C-k"
+                                           "C-v"))
+
+(dolist (key evil-insert-mode-key-to-be-removed)
+  (evil-global-set-key 'insert (kbd key) nil))
 ; end remove vim key binding in insert mode
 ; end evil mode settings
 
