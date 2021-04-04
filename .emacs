@@ -29,6 +29,11 @@
 (put 'downcase-region 'disabled nil)
 
 
+; local machine related settings  跟本地機器相關的設定
+(setq local-machine-org-directory               "~/Documents")
+(setq local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+; end local machine related settings
+
 ; third-party archives  第三方套件庫
 (require 'package)                                          ; 需要 package 這個套件
 (add-to-list 'package-archives
@@ -126,7 +131,7 @@
 ; end evil mode settings
 
 ; org mode settings  org mode 設定
-(setq org-directory                           "~/Documents")
+(setq org-directory                           local-machine-org-directory)
 (setq org-agenda-files                        (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file      (concat org-directory "/agenda.ics"))
 (setq org-default-notes-file                  (concat org-directory "/note.org"))
@@ -159,7 +164,7 @@
 (when (package-installed-p 'org-attach-screenshot)
     (require 'org-attach-screenshot)
 
-    (setq org-attach-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+    (setq org-attach-screenshot-command-line local-machine-org-screen-shot-command-line)
     (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
 
 ; the file stores the information to synchronize with google calendar
