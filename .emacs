@@ -69,9 +69,6 @@
 (when (package-installed-p 'ivy)
   (ivy-mode 1 )) ; 互動式模糊補全
 
-(when (package-installed-p 'evil)
-  (evil-mode 1)) ; 開啟 evil mode
-
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
   (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
@@ -87,6 +84,7 @@
 (when (package-installed-p 'evil)
   (setq evil-want-keybinding 'nil)
   (require 'evil) ; 需要 evil 這個套件
+  (evil-mode 1)   ; 開啟 evil mode
   (when (package-installed-p 'evil-collection)
     (evil-collection-init '(eww gnus info (custom cus-edit))))
 
