@@ -162,7 +162,7 @@
 (when (package-installed-p 'org-attach-screenshot)
     (require 'org-attach-screenshot)
 
-    (setq org-attach-screenshot-command-line local-machine-org-screen-shot-command-line)
+    (setq org-attach-screenshot-command-line local-machine-org-screenshot-command-line)
     (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
 
 ; the file stores the information to synchronize with google calendar
