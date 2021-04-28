@@ -233,6 +233,7 @@
 (setq gnus-summary-line-format "%U%R%z%-15,15&user-date;%I%(%[%4L: %-23,23f%]%) %s\n")
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-smtp-server "smtp.gmail.com")
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 ; end gnus settings
 
 ; eww settings
