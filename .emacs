@@ -142,7 +142,8 @@
 (setq org-default-priority                    ?C)
 (setq org-log-done                            'time)
 (setq org-refile-targets                      '((org-agenda-files . (:maxlevel . 2))))
-(setq org-refile-use-outline-path             'nil)
+(setq org-refile-use-outline-path             'full-file-path)
+(setq org-outline-path-complete-in-steps      'nil)
 (setq org-refile-allow-creating-parent-nodes  't)
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
