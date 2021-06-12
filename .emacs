@@ -11,7 +11,6 @@
  '(make-backup-files nil)
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
- '(package-selected-packages (quote (htmlize org ox-ioslide evil)))
  '(safe-local-variable-values
    (quote
     ((org-use-sub-superscripts . {})
@@ -48,7 +47,8 @@
                      swiper
                      org
                      org-attach-screenshot
-                     htmlize))
+                     htmlize
+                     ebdb))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -226,7 +226,7 @@
 ; end synchonized with google calendar
 ; end org mode settings
 
-; gnus settings
+; mail settings
 (setq gnus-select-method
       '(nnimap "imap.gmail.com"
                (nnmail-expiry-target "nnimap+gmail:[Gmail]/垃圾桶")
@@ -234,10 +234,15 @@
 (setq gnus-thread-sort-functions
       '(gnus-thread-sort-by-most-recent-date))
 (setq gnus-summary-line-format "%U%R%z%-15,15&user-date;%I%(%[%4L: %-23,23f%]%) %s\n")
+(setq compose-mail-user-agent-warnings nil)
+(setq mail-user-agent 'message-user-agent)
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-smtp-server "smtp.gmail.com")
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
-; end gnus settings
+(when (package-installed-p 'ebdb)
+  (require 'ebdb-gnus)
+  (require 'ebdb-message))
+; end mail settings
 
 ; eww settings
 (setq browse-url-browser-function 'eww)
