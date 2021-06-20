@@ -23,7 +23,16 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:height 142))))
- '(cursor ((t (:background "azure4")))))
+ '(cursor ((t (:background "azure4"))))
+ '(org-ellipsis ((t (:foreground "light slate gray" :underline nil))))
+ '(tab-bar ((t (:inherit variable-pitch :background "gray10"))))
+ '(tab-bar-tab ((t (:inherit tab-bar :background "default"))))
+ '(tab-bar-tab-inactive ((t (:inherit tab-bar))))
+ '(tab-line ((t (:inherit (variable-pitch tab-bar) :height 0.9))))
+ '(tab-line-tab ((t (:inherit tab-line))))
+ '(tab-line-tab-current ((t (:inherit tab-line-tab :background "default"))))
+ '(tab-line-tab-inactive ((t (:inherit tab-line-tab))))
+ '(tool-bar ((t (:inherit tab-bar)))))
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
