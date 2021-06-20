@@ -1,4 +1,8 @@
-OS ?= $(shell uname -s)
+OS  ?= $(shell uname -s)
+GIT := git
+
+gitMasterBranch := master
+gitLocalBranch  := local
 
 include settings
 
@@ -32,3 +36,10 @@ ifeq "${OS}" "Windows_NT"
 else
 	@./uninstall.sh
 endif
+
+sync:
+	${GIT} checkout ${gitMasterBranch}
+	${GIT} pull
+	${GIT} checkout ${gitLocalBranch}
+	${GIT} merge master
+	${MAKE}
