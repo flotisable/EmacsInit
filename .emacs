@@ -142,6 +142,7 @@
 (setq org-agenda-files                        (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file      (concat org-directory "/agenda.ics"))
 (setq org-default-notes-file                  (concat org-directory "/note.org"))
+(setq org-ellipsis                            " ▼")
 (setq org-image-actual-width                  'nil)
 (setq org-icalendar-timezone                  "Asia/Taipei")
 (setq org-export-backends                     '(html latex odt beamer icalendar))
