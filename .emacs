@@ -255,7 +255,10 @@
 ; end mail settings
 
 ; eww settings
-(setq browse-url-browser-function 'eww)
+(setq browse-url-browser-function
+      '(("gamer\\.com\\.tw" . browse-url-default-browser)
+        ("quora\\.com"      . browse-url-default-browser)
+        ("."                . eww)))
 
 (defun eww-toggle-mouse-browse ()
   "toggle browsing eww with mouse"
