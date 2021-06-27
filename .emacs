@@ -1,3 +1,4 @@
+;;; customization by build in customize UI
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -12,9 +13,10 @@
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
  '(safe-local-variable-values
-   (quote
-    ((org-use-sub-superscripts . {})
-     (org-export-with-sub-superscripts . {}))))
+   '((eval outline-hide-sublevels 3)
+     (eval outline-minor-mode 't)
+     (org-use-sub-superscripts . {})
+     (org-export-with-sub-superscripts . {})))
  '(tab-always-indent nil)
  '(tab-width 2))
 (custom-set-faces
@@ -37,19 +39,19 @@
 (put 'downcase-region 'disabled nil)
 
 
-; local machine related settings  跟本地機器相關的設定
+;;; local machine related settings  跟本地機器相關的設定
 (setq local-machine-org-directory               "~/Documents")
 (setq local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
 ; end local machine related settings
 
-; third-party archives  第三方套件庫
+;;; third-party archives  第三方套件庫
 (require 'package)                                          ; 需要 package 這個套件
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)  ; 加入 melpa 套件庫
 (package-initialize)                                        ; 讀入套件資料
 ; end third-party archives
 
-; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
+;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 (setq package-list '(evil
                      evil-collection
                      ivy
@@ -67,7 +69,7 @@
     (package-install package)))
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
-; mode settings  模式設定
+;;; mode settings  模式設定
 (column-number-mode 1   ) ; 在 mode line 顯示列號
 (menu-bar-mode      -1  ) ; 關閉 menu bar
 (tool-bar-mode      -1  ) ; 關閉 tool bar
@@ -83,13 +85,13 @@
   (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
 ; end mode settings
 
-; key bindings  按鍵設定
+;;; key bindings  按鍵設定
 (global-set-key (kbd "C-c a") 'org-agenda ) ; 設定 C-c a 開啟 org agenda dispatcher
 (global-set-key (kbd "C-c c") 'org-capture) ; 設定 C-c c 開啟 org capture
 (global-set-key (kbd "C-s"  ) 'swiper     ) ; 設定 C-s 開啟互動式模糊搜尋
 ; end key bindings
 
-; evil mode settings  evil mode 設定
+;;; evil mode settings  evil mode 設定
 (when (package-installed-p 'evil)
   (setq evil-want-keybinding 'nil)
   (require 'evil) ; 需要 evil 這個套件
@@ -99,7 +101,7 @@
 
   (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
-  ; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
+  ;;;; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
   (defun evil-toggle-relative ()
     "Toggle relative line number in evil mode"
     (interactive)
@@ -108,7 +110,7 @@
       (setq display-line-numbers t        )))
   ; end function to toggle relative line number in evil mode
 
-  ; evil mode keybindings  evil mode 按鍵設定
+  ;;;; evil mode keybindings  evil mode 按鍵設定
   (evil-global-set-key 'normal (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
   (evil-global-set-key 'motion (kbd "SPC") 'evil-scroll-page-down ) ; 設定空白鍵向下一頁
   (evil-global-set-key 'motion (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
@@ -117,7 +119,7 @@
     (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
   ; end evil mode keybindings
 
-  ; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
+  ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
   (setq evil-insert-mode-key-to-be-removed '("C-w"
                                             "C-a"
                                             "C-d"
@@ -137,7 +139,7 @@
 ; end remove vim key binding in insert mode
 ; end evil mode settings
 
-; org mode settings  org mode 設定
+;;; org mode settings  org mode 設定
 (setq org-directory                           local-machine-org-directory)
 (setq org-agenda-files                        (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file      (concat org-directory "/agenda.ics"))
@@ -184,7 +186,7 @@
 ; the second element is the url to fetch the ics file from google calendar
 (setq my-google-cal-file (concat org-directory "/orgGoogleCal.org"))
 
-; export filter settings  匯出過濾器設定
+;;;; export filter settings  匯出過濾器設定
 (defun google-cal-filter (body backend channel)
   "Filter agenda from google calendar"
   (if (string-equal backend "icalendar")
@@ -204,7 +206,7 @@
 (add-to-list 'org-export-filter-body-functions 'google-cal-filter)
 ; end export filter settings
 
-; synchonized with google calendar  與 google 日曆同步
+;;;; synchonized with google calendar  與 google 日曆同步
 (defun sync-agenda-from-google-cal ()
   "Synchronize org agenda from google calendar"
   (interactive)
@@ -236,7 +238,7 @@
 ; end synchonized with google calendar
 ; end org mode settings
 
-; mail settings
+;;; mail settings
 (setq gnus-select-method
       '(nnimap "imap.gmail.com"
                (nnmail-expiry-target "nnimap+gmail:[Gmail]/垃圾桶")
@@ -254,7 +256,7 @@
   (require 'ebdb-message))
 ; end mail settings
 
-; eww settings
+;;; eww settings
 (setq browse-url-browser-function
       '(("gamer\\.com\\.tw" . browse-url-default-browser)
         ("quora\\.com"      . browse-url-default-browser)
@@ -275,3 +277,10 @@
       (horizontal-scroll-bar-mode -1)
       (tab-bar-mode               -1))))
 ; end eww settings
+
+;;; local varialbe settings
+;; Local Variables:
+;; eval: (outline-minor-mode 't)
+;; outline-regexp: "\s*;;;+"
+;; eval: (outline-hide-sublevels 3)
+;; End:
