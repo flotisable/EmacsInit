@@ -1,10 +1,13 @@
-. ./readSettings.ps1 "./settings"
+. ./readSettings.ps1 "./settings.toml"
 
-if( $targetDir -eq "" )
+ForEach( $target in $settings['target'].keys )
 {
-  $targetDir = $(./default.ps1 $env:OS)
+  If( $target -eq 'dir' )
+  {
+    Continue
+  }
+  $targetFile = Invoke-Expression "Write-Output `"$($settings['target']['dir'])/$($settings['target'][$target])`""
+
+  Write-Host "remove $target"
+  Remove-Item $targetFile
 }
-
-Write-Host "uninstall emacs init file"
-
-Remove-Item ${targetDir}/${initTargetName}

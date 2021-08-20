@@ -1,4 +1,6 @@
-. ./readSettings.ps1 "./settings.toml"
+$settingFile = "./settings.toml"
+
+. ./readSettings.ps1 $settingFile
 
 ForEach( $target in $settings['target'].keys )
 {
@@ -6,9 +8,10 @@ ForEach( $target in $settings['target'].keys )
   {
     Continue
   }
+
   $targetFile = Invoke-Expression "Write-Output `"$($settings['target']['dir'])/$($settings['target'][$target])`""
   $sourceFile = Invoke-Expression "Write-Output $($settings['source'][$target])"
 
-  Write-Host "install $target"
-  Copy-Item $sourceFile $targetFile
+  Write-Host "copy $targetFile to $sourceFile"
+  Copy-Item $targetFile $sourceFile
 }

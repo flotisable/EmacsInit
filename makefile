@@ -4,23 +4,15 @@ GIT := git
 gitMasterBranch := master
 gitLocalBranch  := local
 
-include settings
+.PHONY: default copy install uninstall sync
 
+default: copy
+
+copy:
 ifeq "${OS}" "Windows_NT"
-	defaultScript := powershell -NoProfile ./default.ps1
+	@powershell -NoProfile ./copy.ps1
 else
-	defaultScript := ./default.sh
-endif
-
-ifeq "${targetDir}" ""
-targetDir := $(shell ${defaultScript} ${OS})
-endif
-
-all: $(targetDir)/$(initTargetName)
-ifeq "${OS}" "Windows_NT"
-	powershell -NoProfile -Command "Copy-Item $< ${initSourceName}"
-else
-	cp $< ${initSourceName}
+	@./copy.sh
 endif
 
 install:
