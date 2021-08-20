@@ -1,0 +1,4 @@
+[dir]
+linux   = "${HOME}"
+windows = "${APPDATA}\\.emacs.d"
+macos   = "${HOME}"

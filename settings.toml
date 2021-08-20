@@ -1,0 +1,6 @@
+[source]
+init = ".emacs"
+
+[target]
+init  = ".emacs"
+dir   = ""
