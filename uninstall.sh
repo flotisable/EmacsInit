@@ -1,18 +1,29 @@
-#!/bin/bash
+#!/bin/sh
+settingFile="./settings.toml"
 
-. ./settings
+. ./readSettings.sh ${settingFile}
 
-if [ -z ${OS} ]; then
-  OS=$(uname -s);
-fi
+removeFile()
+{
+  local file=$1
 
-echo "detected OS: ${OS}"
+  echo "remove $file"
+  rm $file
+}
 
-if [ -z ${targetDir} ]; then
+targetTableName=$(mapFind "settings" "target")
+dir=$(mapFind "$targetTableName" "dir")
 
-  targetDir=$(./default.sh $OS)
+for target in $(mapKeys "$targetTableName"); do
 
-fi
+  if [ "$target" == 'dir' ]; then
 
-echo "uninstall emacs init file"
-rm ${targetDir}/${initTargetName}
+    continue
+
+  fi
+
+  targetFile="$dir/$(mapFind "$targetTableName" "$target")"
+
+  removeFile $targetFile
+
+done

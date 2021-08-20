@@ -1,16 +1,33 @@
 #!/bin/sh
+settingFile="./settings.toml"
 
-if [ -z ${OS} ]; then
-  OS=$(uname -s);
-fi
+. ./readSettings.sh ${settingFile}
 
-echo "detected OS: ${OS}"
+installFile()
+{
+  local sourceFile=$1
+  local targetFile=$2
+  local fileMessage=$3
 
-. ./settings
+  echo "install $fileMessage"
+  cp $sourceFile $targetFile 
+}
 
-if [ -z ${targetDir} ]; then
-  targetDir=$(./default.sh ${OS});
-fi
+targetTableName=$(mapFind "settings" "target")
+sourceTableName=$(mapFind "settings" "source")
+dir=$(mapFind "$targetTableName" "dir")
 
-echo "install emacs init file"
-cp ${initSourceName} ${targetDir}/${initTargetName}
+for target in $(mapKeys "$targetTableName"); do
+
+  if [ "$target" == 'dir' ]; then
+
+    continue
+
+  fi
+
+  targetFile="$dir/$(mapFind "$targetTableName" "$target")"
+  sourceFile=$(mapFind "$sourceTableName" "$target")
+
+  installFile $sourceFile $targetFile $target
+
+done
