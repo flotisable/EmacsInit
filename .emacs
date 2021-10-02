@@ -111,9 +111,11 @@
   ; end function to toggle relative line number in evil mode
 
   ;;;; evil mode keybindings  evil mode 按鍵設定
-  (evil-global-set-key 'normal (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
-  (evil-global-set-key 'motion (kbd "SPC") 'evil-scroll-page-down ) ; 設定空白鍵向下一頁
-  (evil-global-set-key 'motion (kbd "DEL") 'evil-scroll-page-up   ) ; 設定退格鍵向上一頁
+  (evil-set-leader      'normal (kbd "\\"))
+  (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
+  (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down  ) ; 設定空白鍵向下一頁
+  (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
+  (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode           ) ; 設定 \c 高亮現在行數
 
   (if (fboundp 'display-line-numbers-mode)
     (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
