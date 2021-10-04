@@ -179,7 +179,7 @@
           (agenda     ""      ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
-(setq org-tag-persistent-alist          '("Project" "Today"))
+(setq org-tag-persistent-alist          '(("Project") ("Today")))
 (setq org-tags-exclude-from-inheritance '("Project" "Today"))
 
 (when (package-installed-p 'org-attach-screenshot)
