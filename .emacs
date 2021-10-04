@@ -174,9 +174,9 @@
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))
         ("a" "Agenda and todo for current day"
-         ((agenda     ""      ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}>"))))
+         ((agenda     ""      ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))
           (tags-todo  "Today")
-          (agenda     ""      ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}>"))))))))
+          (agenda     ""      ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
 (setq org-tag-persistent-alist          '("Project" "Today"))
