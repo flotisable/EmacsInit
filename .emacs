@@ -231,11 +231,12 @@
         (call-process "curl"  nil nil nil url "-o" icsFile)
         (call-process ics2org nil nil nil icsFile orgFile)
         (delete-file icsFile)
-        (let ((buffer (get-file-buffer orgFile)))
-          (when buffer
+        (let ((buffer (find-buffer-visiting orgFile)))
+          (if buffer
             (save-current-buffer
               (set-buffer buffer)
-              (revert-buffer 't 't)))))
+              (revert-buffer 't 't))
+            (princ "No buffer found\n"))))
       (princ "Synchronized from Google Calendar"))))
 
 (require 'org-agenda)
