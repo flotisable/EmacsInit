@@ -59,7 +59,8 @@
                      org
                      org-attach-screenshot
                      htmlize
-                     ebdb))
+                     ebdb
+                     perfect-margin))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -119,6 +120,9 @@
 
   (if (fboundp 'display-line-numbers-mode)
     (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
+  
+  (when (package-installed-p 'perfect-margin)
+    (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
   ; end evil mode keybindings
 
   ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
@@ -295,6 +299,11 @@
       (horizontal-scroll-bar-mode -1)
       (tab-bar-mode               -1))))
 ; end eww settings
+
+;;; perfect margin mode settings  perfect margin mode 設定
+(when (package-installed-p 'perfect-margin)
+    (setq perfect-margin-visible-width 80))
+; end perfect margin mode settings
 
 ;;; local varialbe settings
 ;; Local Variables:
