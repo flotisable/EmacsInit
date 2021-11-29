@@ -120,7 +120,6 @@
 
   (if (fboundp 'display-line-numbers-mode)
     (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
-  
   (when (package-installed-p 'perfect-margin)
     (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
   ; end evil mode keybindings
@@ -201,20 +200,20 @@
 
 (add-to-list 'org-after-todo-state-change-hook 'remove-today-tag-when-done)
 
-; the file stores the information to synchronize with google calendar
+; the file stores the information to synchronize with remote calendar
 ; each line is a elisp list with two string elements
 ; the first element is the filename to store the agenda
-; the second element is the url to fetch the ics file from google calendar
-(setq my-google-cal-file (concat org-directory "/orgGoogleCal.org"))
+; the second element is the url to fetch the ics file from remote calendar
+(setq my-remote-cal-file (concat org-directory "/orgRemoteCal.org"))
 
 ;;;; export filter settings  匯出過濾器設定
-(defun google-cal-filter (body backend channel)
-  "Filter agenda from google calendar"
+(defun remote-cal-filter (body backend channel)
+  "Filter agenda from remote calendar"
   (if (string-equal backend "icalendar")
       (let ((category (org-get-category))
             filtered)
         (with-temp-buffer
-          (insert-file-contents my-google-cal-file)
+          (insert-file-contents my-remote-cal-file)
           (dolist (line (split-string (buffer-string) "\n" t))
             (when (string-equal category (car (read line)))
               (setq filtered 't))))
@@ -224,17 +223,17 @@
     body))
 
 (require 'ox)
-(add-to-list 'org-export-filter-body-functions 'google-cal-filter)
+(add-to-list 'org-export-filter-body-functions 'remote-cal-filter)
 ; end export filter settings
 
-;;;; synchonized with google calendar  與 google 日曆同步
-(defun sync-agenda-from-google-cal ()
-  "Synchronize org agenda from google calendar"
+;;;; synchonized with remote calendar  與遠端日曆同步
+(defun sync-agenda-from-remote-cal ()
+  "Synchronize org agenda from remote calendar"
   (interactive)
   (let ((ics2org "ical2orgpy")
         line data url icsFile orgFile)
     (with-temp-buffer
-      (insert-file-contents my-google-cal-file)
+      (insert-file-contents my-remote-cal-file)
       (dolist (line (split-string (buffer-string) "\n" t))
         (setq data    (read line))
         (setq url     (cadr data))
@@ -249,15 +248,15 @@
               (set-buffer buffer)
               (revert-buffer 't 't))
             (princ "No buffer found\n"))))
-      (princ "Synchronized from Google Calendar"))))
+      (princ "Synchronized from Remote Calendar"))))
 
 (require 'org-agenda)
-(defun sync-agenda-to-google-cal ()
-  "Synchronize org agenda to google calendar"
+(defun sync-agenda-to-remote-cal ()
+  "Synchronize org agenda to remote calendar"
   (interactive)
   (org-icalendar-combine-agenda-files)
-  (princ "Synchronized to Google Calendar"))
-; end synchonized with google calendar
+  (princ "Synchronized to Remote Calendar"))
+; end synchonized with remote calendar
 ; end org mode settings
 
 ;;; mail settings
