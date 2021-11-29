@@ -198,7 +198,7 @@
   (when (org-entry-is-done-p)
     (org-set-tags (remove "Today" (org-get-tags)))))
 
-(add-to-list 'org-after-todo-state-change-hook 'remove-today-tag-when-done)
+(add-hook 'org-after-todo-state-change-hook 'remove-today-tag-when-done)
 
 ; the file stores the information to synchronize with remote calendar
 ; each line is a elisp list with two string elements
