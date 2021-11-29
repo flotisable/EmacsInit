@@ -155,6 +155,7 @@
 (setq org-lowest-priority                     ?E)
 (setq org-default-priority                    ?C)
 (setq org-log-done                            'time)
+(setq org-archive-location                    "%s_archive::datetree/")
 (setq org-refile-use-outline-path             'full-file-path)
 (setq org-outline-path-complete-in-steps      'nil)
 (setq org-refile-allow-creating-parent-nodes  't)
