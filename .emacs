@@ -189,6 +189,13 @@
   (setq org-attach-screenshot-command-line local-machine-org-screenshot-command-line)
   (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
 
+(defun remove-today-tag-when-done ()
+  "Remove the :Today: tag when a task is marked as done"
+  (when (org-entry-is-done-p)
+    (org-set-tags (remove "Today" (org-get-tags)))))
+
+(add-to-list 'org-after-todo-state-change-hook 'remove-today-tag-when-done)
+
 ; the file stores the information to synchronize with google calendar
 ; each line is a elisp list with two string elements
 ; the first element is the filename to store the agenda
