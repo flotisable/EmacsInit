@@ -4,29 +4,31 @@ GIT := git
 gitMasterBranch := master
 gitLocalBranch  := local
 
+scriptDir := Scripts
+
 .PHONY: default copy install uninstall sync
 
 default: copy
 
 copy:
 ifeq "${OS}" "Windows_NT"
-	@powershell -NoProfile ./copy.ps1
+	@powershell -NoProfile ./${scriptDir}/copy.ps1
 else
-	@./copy.sh
+	@./${scriptDir}/copy.sh
 endif
 
 install:
 ifeq "${OS}" "Windows_NT"
-	@powershell -NoProfile ./install.ps1
+	@powershell -NoProfile ./${scriptDir}/install.ps1
 else
-	@./install.sh
+	@./${scriptDir}/install.sh
 endif
 
 uninstall:
 ifeq "${OS}" "Windows_NT"
-	@powershell -NoProfile ./uninstall.ps1
+	@powershell -NoProfile ./${scriptDir}/uninstall.ps1
 else
-	@./uninstall.sh
+	@./${scriptDir}/uninstall.sh
 endif
 
 sync:

@@ -1,4 +1,7 @@
-. ./readSettings.ps1 "./settings.toml"
+$settingFile  = "./settings.toml"
+$scriptDir    = "$(Split-Path $PSCommandPath )"
+
+. ${scriptDir}/readSettings.ps1 ${settingFile}
 
 ForEach( $target in $settings['target'].keys )
 {

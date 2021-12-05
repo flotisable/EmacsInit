@@ -1,6 +1,9 @@
 #!/bin/sh
+settingFile="./settings.toml"
 
-. ./readSettings.sh "./settings.toml"
+scriptDir="$(dirname $0)"
+
+. ${scriptDir}/readSettings.sh ${settingFile}
 
 targetTableName=$(mapFind "settings" "target")
 sourceTableName=$(mapFind "settings" "source")
