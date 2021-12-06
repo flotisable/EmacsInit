@@ -1,5 +1,5 @@
 [source]
-init = ".emacs"
+init = "Rcs/.emacs"
 
 [target]
 init  = ".emacs"
