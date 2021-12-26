@@ -40,8 +40,10 @@
 
 
 ;;; local machine related settings  跟本地機器相關的設定
-(setq my-local-machine-org-directory               "~/Documents")
-(setq my-local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+(defconst my-local-machine-org-directory               "~/Documents"
+  "org-directory variable in local machine")
+(defconst my-local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f"
+  "org-screenshot-command-line variable of org-attach-screenshot package")
 
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
@@ -54,15 +56,16 @@
 ; end third-party archives
 
 ;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(setq my-package-list '(evil
-                        evil-collection
-                        ivy
-                        swiper
-                        org
-                        org-attach-screenshot
-                        htmlize
-                        ebdb
-                        perfect-margin))
+(defconst my-package-list '(evil
+                            evil-collection
+                            ivy
+                            swiper
+                            org
+                            org-attach-screenshot
+                            htmlize
+                            ebdb
+                            perfect-margin)
+  "packages to be automatically downloaded when not exists")
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -127,19 +130,20 @@
   ; end evil mode keybindings
 
   ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-  (setq my-evil-insert-mode-key-to-be-removed '("C-w"
-                                                "C-a"
-                                                "C-d"
-                                                "C-t"
-                                                "C-x"
-                                                "C-p"
-                                                "C-n"
-                                                "C-e"
-                                                "C-y"
-                                                "C-r"
-                                                "C-o"
-                                                "C-k"
-                                                "C-v"))
+  (defconst my-evil-insert-mode-key-to-be-removed '("C-w"
+                                                    "C-a"
+                                                    "C-d"
+                                                    "C-t"
+                                                    "C-x"
+                                                    "C-p"
+                                                    "C-n"
+                                                    "C-e"
+                                                    "C-y"
+                                                    "C-r"
+                                                    "C-o"
+                                                    "C-k"
+                                                    "C-v")
+    "key bindings to be removed from evil insert mode to use emacs key bindings")
 
   (dolist (key my-evil-insert-mode-key-to-be-removed)
     (evil-global-set-key 'insert (kbd key) nil)))
@@ -202,11 +206,11 @@
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 
-; the file stores the information to synchronize with remote calendar
-; each line is a elisp list with two string elements
-; the first element is the filename to store the agenda
-; the second element is the url to fetch the ics file from remote calendar
-(setq my-remote-cal-file (concat org-directory "/orgRemoteCal.org"))
+(defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
+  "The file stores the information to synchronize with remote calendar.
+Each line is an elisp list with two string elements.
+The first element is the filename to store the agenda.
+The second element is the url to fetch the ics file from remote calendar.")
 
 ;;;; export filter settings  匯出過濾器設定
 (defun my-remote-cal-filter (body backend channel)
