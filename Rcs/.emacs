@@ -40,8 +40,10 @@
 
 
 ;;; local machine related settings  跟本地機器相關的設定
-(setq local-machine-org-directory               "~/Documents")
-(setq local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+(setq my-local-machine-org-directory               "~/Documents")
+(setq my-local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f")
+
+(setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
 
 ;;; third-party archives  第三方套件庫
@@ -52,20 +54,20 @@
 ; end third-party archives
 
 ;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(setq package-list '(evil
-                     evil-collection
-                     ivy
-                     swiper
-                     org
-                     org-attach-screenshot
-                     htmlize
-                     ebdb
-                     perfect-margin))
+(setq my-package-list '(evil
+                        evil-collection
+                        ivy
+                        swiper
+                        org
+                        org-attach-screenshot
+                        htmlize
+                        ebdb
+                        perfect-margin))
 
 (unless package-archive-contents
   (package-refresh-contents))
 
-(dolist (package package-list)
+(dolist (package my-package-list)
   (unless (package-installed-p package)
     (package-install package)))
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
@@ -103,7 +105,7 @@
   (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
   ;;;; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
-  (defun evil-toggle-relative ()
+  (defun my-evil-toggle-relative ()
     "Toggle relative line number in evil mode"
     (interactive)
     (if (equal (symbol-value 'display-line-numbers) t)
@@ -119,33 +121,33 @@
   (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode           ) ; 設定 \c 高亮現在行數
 
   (if (fboundp 'display-line-numbers-mode)
-    (evil-global-set-key 'normal (kbd "<leader>r") 'evil-toggle-relative)) ; 設定 \r 切換行號顯示
+    (evil-global-set-key 'normal (kbd "<leader>r") 'my-evil-toggle-relative)) ; 設定 \r 切換行號顯示
   (when (package-installed-p 'perfect-margin)
     (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
   ; end evil mode keybindings
 
   ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-  (setq evil-insert-mode-key-to-be-removed '("C-w"
-                                            "C-a"
-                                            "C-d"
-                                            "C-t"
-                                            "C-x"
-                                            "C-p"
-                                            "C-n"
-                                            "C-e"
-                                            "C-y"
-                                            "C-r"
-                                            "C-o"
-                                            "C-k"
-                                            "C-v"))
+  (setq my-evil-insert-mode-key-to-be-removed '("C-w"
+                                                "C-a"
+                                                "C-d"
+                                                "C-t"
+                                                "C-x"
+                                                "C-p"
+                                                "C-n"
+                                                "C-e"
+                                                "C-y"
+                                                "C-r"
+                                                "C-o"
+                                                "C-k"
+                                                "C-v"))
 
-  (dolist (key evil-insert-mode-key-to-be-removed)
+  (dolist (key my-evil-insert-mode-key-to-be-removed)
     (evil-global-set-key 'insert (kbd key) nil)))
 ; end remove vim key binding in insert mode
 ; end evil mode settings
 
 ;;; org mode settings  org mode 設定
-(setq org-directory                           local-machine-org-directory)
+(setq org-directory                           my-local-machine-org-directory)
 (setq org-agenda-files                        (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file      (concat org-directory "/agenda.ics"))
 (setq org-default-notes-file                  (concat org-directory "/note.org"))
@@ -190,15 +192,15 @@
 (when (package-installed-p 'org-attach-screenshot)
   (require 'org-attach-screenshot)
 
-  (setq org-attach-screenshot-command-line local-machine-org-screenshot-command-line)
+  (setq org-attach-screenshot-command-line my-local-machine-org-screenshot-command-line)
   (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
 
-(defun remove-today-tag-when-done ()
+(defun my-remove-today-tag-when-done ()
   "Remove the :Today: tag when a task is marked as done"
   (when (org-entry-is-done-p)
     (org-set-tags (remove "Today" (org-get-tags)))))
 
-(add-hook 'org-after-todo-state-change-hook 'remove-today-tag-when-done)
+(add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 
 ; the file stores the information to synchronize with remote calendar
 ; each line is a elisp list with two string elements
@@ -207,7 +209,7 @@
 (setq my-remote-cal-file (concat org-directory "/orgRemoteCal.org"))
 
 ;;;; export filter settings  匯出過濾器設定
-(defun remote-cal-filter (body backend channel)
+(defun my-remote-cal-filter (body backend channel)
   "Filter agenda from remote calendar"
   (if (string-equal backend "icalendar")
       (let ((category (org-get-category))
@@ -227,7 +229,7 @@
 ; end export filter settings
 
 ;;;; synchonized with remote calendar  與遠端日曆同步
-(defun sync-agenda-from-remote-cal ()
+(defun my-sync-agenda-from-remote-cal ()
   "Synchronize org agenda from remote calendar"
   (interactive)
   (let ((ics2org "ical2orgpy")
@@ -251,7 +253,7 @@
       (princ "Synchronized from Remote Calendar"))))
 
 (require 'org-agenda)
-(defun sync-agenda-to-remote-cal ()
+(defun my-sync-agenda-to-remote-cal ()
   "Synchronize org agenda to remote calendar"
   (interactive)
   (org-icalendar-combine-agenda-files)
@@ -283,7 +285,7 @@
         ("quora\\.com"      . browse-url-default-browser)
         ("."                . eww)))
 
-(defun eww-toggle-mouse-browse ()
+(defun my-eww-toggle-mouse-browse ()
   "toggle browsing eww with mouse"
   (interactive)
   (if (equal (symbol-value 'tool-bar-mode) nil)
@@ -301,7 +303,7 @@
 
 ;;; perfect margin mode settings  perfect margin mode 設定
 (when (package-installed-p 'perfect-margin)
-    (setq perfect-margin-visible-width 80))
+  (setq perfect-margin-visible-width 80))
 ; end perfect margin mode settings
 
 ;;; local varialbe settings
