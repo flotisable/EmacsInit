@@ -232,7 +232,7 @@ The second element is the url to fetch the ics file from remote calendar.")
     body))
 
 (require 'ox)
-(add-to-list 'org-export-filter-body-functions 'remote-cal-filter)
+(add-to-list 'org-export-filter-body-functions 'my-remote-cal-filter)
 ; end export filter settings
 
 ;;;; synchonized with remote calendar  與遠端日曆同步
