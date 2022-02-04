@@ -40,10 +40,12 @@
 
 
 ;;; local machine related settings  跟本地機器相關的設定
-(defconst my-local-machine-org-directory               "~/Documents"
+(defconst my-local-machine-org-directory                "~/Documents"
   "org-directory variable in local machine")
-(defconst my-local-machine-org-screenshot-command-line "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f"
+(defconst my-local-machine-org-screenshot-command-line  "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f"
   "org-screenshot-command-line variable of org-attach-screenshot package")
+(defconst my-local-machine-org-agenda-git-repo          "~/Documents/Data/OrgAgenda"
+  "git repository of org agenda files")
 
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
@@ -247,6 +249,15 @@ The second element is the url to fetch the ics file from remote calendar.")
 ; end export filter settings
 
 ;;;; synchonized with remote calendar  與遠端日曆同步
+(defun my-sync-agenda-files-to-git-repo ()
+  "Synchronize org agenda files to git repo"
+  (interactive)
+  (with-temp-buffer
+    (cd my-local-machine-org-agenda-git-repo)
+    (let ((buffer (make-comint "Sync Org Agenda Files" "make" nil "sync")))
+      (split-window nil nil 'above)
+      (switch-to-buffer buffer))))
+
 (defun my-sync-agenda-from-remote-cal ()
   "Synchronize org agenda from remote calendar"
   (interactive)
