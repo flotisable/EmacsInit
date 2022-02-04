@@ -116,12 +116,20 @@
       (setq display-line-numbers t        )))
   ; end function to toggle relative line number in evil mode
 
+  ;;;; function to edit emacs init file  編輯 emacs 設定檔
+  (defun my-evil-edit-init-file ()
+    "Edit emacs init file"
+    (interactive)
+    (find-file "~/.emacs"))
+  ; end function to edit emacs init file
+
   ;;;; evil mode keybindings  evil mode 按鍵設定
   (evil-set-leader      'normal (kbd "\\"))
   (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
   (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down  ) ; 設定空白鍵向下一頁
   (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up    ) ; 設定退格鍵向上一頁
   (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode           ) ; 設定 \c 高亮現在行數
+  (evil-global-set-key  'normal (kbd "<leader>es") 'my-evil-edit-init-file ) ; 設定 \es 編輯設定檔
 
   (if (fboundp 'display-line-numbers-mode)
     (evil-global-set-key 'normal (kbd "<leader>r") 'my-evil-toggle-relative)) ; 設定 \r 切換行號顯示
