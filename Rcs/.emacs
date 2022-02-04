@@ -151,6 +151,9 @@
 ; end evil mode settings
 
 ;;; org mode settings  org mode 設定
+(require 'org)
+(add-to-list 'org-modules 'habit)
+
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file              (concat org-directory "/agenda.ics"))
