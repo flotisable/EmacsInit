@@ -105,7 +105,11 @@
   (require 'evil) ; 需要 evil 這個套件
   (evil-mode 1)   ; 開啟 evil mode
   (when (package-installed-p 'evil-collection)
-    (evil-collection-init '(eww gnus info (custom cus-edit))))
+    (evil-collection-init '(eww
+                            gnus
+                            info
+                            (custom cus-edit)
+                            (term term ansi-term multi-term))))
 
   (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
@@ -249,14 +253,17 @@ The second element is the url to fetch the ics file from remote calendar.")
 ; end export filter settings
 
 ;;;; synchonized with remote calendar  與遠端日曆同步
+(require 'term)
 (defun my-sync-agenda-files-to-git-repo ()
   "Synchronize org agenda files to git repo"
   (interactive)
-  (with-temp-buffer
-    (cd my-local-machine-org-agenda-git-repo)
-    (let ((buffer (make-comint "Sync Org Agenda Files" "make" nil "sync")))
+  (let ((buffer (get-buffer-create "*Sync Org Agenda Files*")))
+    (with-current-buffer buffer
+      (cd my-local-machine-org-agenda-git-repo)
       (split-window nil nil 'above)
-      (switch-to-buffer buffer))))
+      (switch-to-buffer buffer)
+      (term-mode)
+      (term-exec buffer "Sync Org Agenda Files" "make" nil '("sync")))))
 
 (defun my-sync-agenda-from-remote-cal ()
   "Synchronize org agenda from remote calendar"
