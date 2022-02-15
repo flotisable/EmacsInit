@@ -10,6 +10,11 @@
  '(desktop-path (quote ("./" "~/.emacs.d/" "~")))
  '(indent-tabs-mode nil)
  '(make-backup-files nil)
+ '(org-agenda-sorting-strategy
+   '((agenda habit-up time-up deadline-up priority-down category-keep)
+     (todo priority-down category-keep)
+     (tags priority-down category-keep)
+     (search category-keep)))
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
  '(org-modules
