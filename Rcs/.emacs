@@ -57,6 +57,31 @@
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
 
+;;; self defined functions
+;;;; function to toggle relative line number  切換相對行號
+(defun my-toggle-relative ()
+  "Toggle relative line number"
+  (interactive)
+  (if (equal (symbol-value 'display-line-numbers) t)
+    (setq display-line-numbers 'relative)
+    (setq display-line-numbers t        )))
+; end function to toggle relative line number
+
+;;;; function to edit emacs init file  編輯 emacs 設定檔
+(defun my-edit-init-file ()
+  "Edit emacs init file"
+  (interactive)
+  (find-file "~/.emacs"))
+; end function to edit emacs init file
+
+;;;; function to edit org agenda file  編輯 org agenda 設定檔
+(defun my-edit-org-agenda-file ()
+  "Edit org agenda file"
+  (interactive)
+  (find-file org-agenda-files))
+; end function to edit org agenda file
+; end self defined functions
+
 ;;; third-party archives  第三方套件庫
 (require 'package)                                          ; 需要 package 這個套件
 (add-to-list 'package-archives
@@ -120,40 +145,17 @@
 
   (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
 
-  ;;;; function to toggle relative line number in evil mode  在 evil mode 切換相對行號的函式
-  (defun my-evil-toggle-relative ()
-    "Toggle relative line number in evil mode"
-    (interactive)
-    (if (equal (symbol-value 'display-line-numbers) t)
-      (setq display-line-numbers 'relative)
-      (setq display-line-numbers t        )))
-  ; end function to toggle relative line number in evil mode
-
-  ;;;; function to edit emacs init file  編輯 emacs 設定檔
-  (defun my-evil-edit-init-file ()
-    "Edit emacs init file"
-    (interactive)
-    (find-file "~/.emacs"))
-  ; end function to edit emacs init file
-
-  ;;;; function to edit org agenda file  編輯 org agenda 設定檔
-  (defun my-evil-edit-org-agenda-file ()
-    "Edit org agenda file"
-    (interactive)
-    (find-file org-agenda-files))
-  ; end function to edit org agenda file
-
   ;;;; evil mode keybindings  evil mode 按鍵設定
   (evil-set-leader      'normal (kbd "\\"))
-  (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up           ) ; 設定退格鍵向上一頁
-  (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down         ) ; 設定空白鍵向下一頁
-  (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up           ) ; 設定退格鍵向上一頁
-  (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode                  ) ; 設定 \c 高亮現在行數
-  (evil-global-set-key  'normal (kbd "<leader>er") 'my-evil-edit-init-file        ) ; 設定 \er 編輯設定檔
-  (evil-global-set-key  'normal (kbd "<leader>ea") 'my-evil-edit-org-agenda-file  ) ; 設定 \ea 編輯 org agenda 設定檔
+  (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up     ) ; 設定退格鍵向上一頁
+  (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down   ) ; 設定空白鍵向下一頁
+  (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up     ) ; 設定退格鍵向上一頁
+  (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode            ) ; 設定 \c 高亮現在行數
+  (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file       ) ; 設定 \er 編輯設定檔
+  (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file ) ; 設定 \ea 編輯 org agenda 設定檔
 
   (if (fboundp 'display-line-numbers-mode)
-    (evil-global-set-key 'normal (kbd "<leader>r") 'my-evil-toggle-relative)) ; 設定 \r 切換行號顯示
+    (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)) ; 設定 \r 切換行號顯示
   (when (package-installed-p 'perfect-margin)
     (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
   ; end evil mode keybindings
