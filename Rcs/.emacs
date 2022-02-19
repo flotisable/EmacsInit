@@ -309,6 +309,35 @@ The second element is the url to fetch the ics file from remote calendar.")
   (org-icalendar-combine-agenda-files)
   (princ "Synchronized to Remote Calendar"))
 ; end synchonized with remote calendar
+
+;;;; org mode specific key bindings
+(defun my-org-agenda-file-to-front ()
+  "org-agenda-file-to-front works on single org-agenda-files"
+  (interactive)
+  (save-current-buffer
+    (let ((current-file buffer-file-name)
+          (agenda-file  org-agenda-files))
+      (set-buffer (find-file-noselect agenda-file))
+      (goto-char (point-min))
+      (insert current-file "\n")
+      (princ (concat "Adding file " current-file " to agenda file")))))
+
+(defun my-org-remove-file ()
+  "org-remove-file works on single org-agenda-files"
+  (interactive)
+  (save-current-buffer
+    (let ((current-file buffer-file-name)
+          (agenda-file  org-agenda-files))
+      (set-buffer (find-file-noselect agenda-file))
+      (goto-char (point-min))
+      (goto-char (re-search-forward (concat "^" current-file "$") nil t))
+      (delete-region (- (point) (length current-file)) (1+ (point)))
+      (princ (concat "Removing file " current-file " from agenda file")))))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (define-key org-mode-map (kbd "C-c [") 'my-org-agenda-file-to-front)
+            (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file)))
 ; end org mode settings
 
 ;;; mail settings
