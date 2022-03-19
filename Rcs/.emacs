@@ -59,7 +59,7 @@
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
 
-;;; self defined functions
+;;; self defined functions  自定義函式
 ;;;; function to toggle relative line number  切換相對行號
 (defun my-toggle-relative ()
   "Toggle relative line number"
@@ -350,7 +350,7 @@ The second element is the url to fetch the ics file from remote calendar.")
             (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file)))
 ; end org mode settings
 
-;;; mail settings
+;;; mail settings  郵件設定
 (setq gnus-select-method
       '(nnimap "imap.gmail.com"
                (nnmail-expiry-target "nnimap+gmail:[Gmail]/垃圾桶")
@@ -368,7 +368,7 @@ The second element is the url to fetch the ics file from remote calendar.")
   (require 'ebdb-message))
 ; end mail settings
 
-;;; eww settings
+;;; eww settings  eww 瀏覽器設定
 (setq browse-url-browser-function
       '(("gamer\\.com\\.tw" . browse-url-default-browser)
         ("quora\\.com"      . browse-url-default-browser)
