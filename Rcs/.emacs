@@ -47,6 +47,8 @@
 
 
 ;;; local machine related settings  跟本地機器相關的設定
+(defconst my-local-machine-init-file                    (concat user-emacs-directory "/localInit.el")
+  "local machine specific emacs init file")
 (defconst my-local-machine-org-directory                "~/Documents"
   "org-directory variable in local machine")
 (defconst my-local-machine-org-screenshot-command-line  "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f"
@@ -71,7 +73,14 @@
 (defun my-edit-init-file ()
   "Edit emacs init file"
   (interactive)
-  (find-file "~/.emacs"))
+  (find-file user-init-file))
+; end function to edit emacs init file
+
+;;;; function to edit local machine emacs init file  編輯本地機器 emacs 設定檔
+(defun my-edit-local-machine-init-file ()
+  "Edit local machine emacs init file"
+  (interactive)
+  (find-file my-local-machine-init-file))
 ; end function to edit emacs init file
 
 ;;;; function to edit org agenda file  編輯 org agenda 設定檔
@@ -147,12 +156,13 @@
 
   ;;;; evil mode keybindings  evil mode 按鍵設定
   (evil-set-leader      'normal (kbd "\\"))
-  (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up     ) ; 設定退格鍵向上一頁
-  (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down   ) ; 設定空白鍵向下一頁
-  (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up     ) ; 設定退格鍵向上一頁
-  (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode            ) ; 設定 \c 高亮現在行數
-  (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file       ) ; 設定 \er 編輯設定檔
-  (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file ) ; 設定 \ea 編輯 org agenda 設定檔
+  (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
+  (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down           ) ; 設定空白鍵向下一頁
+  (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
+  (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode                    ) ; 設定 \c 高亮現在行數
+  (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file               ) ; 設定 \er 編輯設定檔
+  (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file ) ; 設定 \er 編輯設定檔
+  (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         ) ; 設定 \ea 編輯 org agenda 設定檔
 
   (if (fboundp 'display-line-numbers-mode)
     (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)) ; 設定 \r 切換行號顯示
@@ -385,6 +395,9 @@ The second element is the url to fetch the ics file from remote calendar.")
   (setq perfect-margin-visible-width 80))
 ; end perfect margin mode settings
 
+;;; load local machine settings  讀取本地機器設定
+(when (file-readable-p my-local-machine-init-file)
+    (load-file my-local-machine-init-file))
 ;;; local varialbe settings
 ;; Local Variables:
 ;; eval: (outline-minor-mode 't)
