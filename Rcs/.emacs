@@ -348,6 +348,9 @@ The second element is the url to fetch the ics file from remote calendar.")
           (lambda ()
             (define-key org-mode-map (kbd "C-c [") 'my-org-agenda-file-to-front)
             (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file)))
+
+(add-hook 'org-agenda-mode-hook
+          'hl-line-mode)
 ; end org mode settings
 
 ;;; mail settings  郵件設定
