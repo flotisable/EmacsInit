@@ -330,6 +330,7 @@ The second element is the url to fetch the ics file from remote calendar.")
       (set-buffer (find-file-noselect agenda-file))
       (goto-char (point-min))
       (insert current-file "\n")
+      (save-buffer)
       (princ (concat "Adding file " current-file " to agenda file")))))
 
 (defun my-org-remove-file ()
@@ -342,6 +343,7 @@ The second element is the url to fetch the ics file from remote calendar.")
       (goto-char (point-min))
       (goto-char (re-search-forward (concat "^" current-file "$") nil t))
       (delete-region (- (point) (length current-file)) (1+ (point)))
+      (save-buffer)
       (princ (concat "Removing file " current-file " from agenda file")))))
 
 (add-hook 'org-mode-hook
