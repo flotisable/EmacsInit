@@ -14,18 +14,14 @@ removeFile()
 }
 
 targetTableName=$(mapFind "settings" "target")
-dir=$(mapFind "$targetTableName" "dir")
+dirTableName=$(mapFind "settings" "dir")
 
 for target in $(mapKeys "$targetTableName"); do
 
-  if [ "$target" == 'dir' ]; then
+  targetFile=$(mapFind "$targetTableName" "$target")
 
-    continue
+  dir=$(mapFind "$dirTableName" "target")
 
-  fi
-
-  targetFile="$dir/$(mapFind "$targetTableName" "$target")"
-
-  removeFile $targetFile
+  removeFile $dir/$targetFile
 
 done

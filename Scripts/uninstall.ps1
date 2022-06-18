@@ -1,16 +1,21 @@
-$settingFile  = "./settings.toml"
-$scriptDir    = "$(Split-Path $PSCommandPath )"
+$settingFile = "./settings.toml"
 
-. ${scriptDir}/readSettings.ps1 ${settingFile}
+$scriptDir = "$(Split-Path $PSCommandPath )"
+
+. ${scriptDir}/readSettings.ps1 $settingFile
+
+Function removeFile()
+{
+  $file = $args[0]
+
+  Write-Host "uninstall $file"
+  Remove-Item -Force -ErrorAction SilentlyContinue $file
+}
 
 ForEach( $target in $settings['target'].keys )
 {
-  If( $target -eq 'dir' )
-  {
-    Continue
-  }
-  $targetFile = Invoke-Expression "Write-Output `"$($settings['target']['dir'])/$($settings['target'][$target])`""
+  $targetFile = Invoke-Expression "Write-Output $($settings['target'][$target])"
+  $dir        = Invoke-Expression "Write-Output $($settings['dir']['target'])"
 
-  Write-Host "remove $target"
-  Remove-Item $targetFile
+  removeFile $dir/$targetFile 
 }

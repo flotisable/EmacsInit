@@ -1,6 +1,12 @@
+[branch]
+main  = "master"
+local = "local"
+
+[dir]
+target = ""
+
 [source]
 init = "Rcs/.emacs"
 
 [target]
-init  = ".emacs"
-dir   = ""
+init = ".emacs"

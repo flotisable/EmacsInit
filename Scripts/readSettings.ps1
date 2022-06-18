@@ -26,6 +26,11 @@ Function parseToml()
 
   ForEach( $line in Get-Content $file )
   {
+    If( $line -match '^\s*#' )
+    {
+      Continue
+    }
+
     If( $isParseArray )
     {
       If( $line -match '\]\s*$' )
@@ -93,7 +98,7 @@ Write-Host "detected OS: $os"
 $settings     = parseToml $settingFile
 $defaultPaths = parseToml $defaultPathFile
 
-If( $settings['target']['dir'] -eq "" )
+If( $settings['dir']['target'] -eq "" )
 {
-  $settings['target']['dir'] = $defaultPaths['dir'][$os]
+  $settings['dir']['target'] = $defaultPaths['dir'][$os]
 }

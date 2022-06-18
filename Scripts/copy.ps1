@@ -1,6 +1,6 @@
 $settingFile = "./settings.toml"
 
-$scriptDir = "$(Split-Path $PSCommandPath )"
+$scriptDir = "$(Split-Path $PSCommandPath)"
 
 . ${scriptDir}/readSettings.ps1 $settingFile
 

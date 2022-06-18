@@ -106,6 +106,12 @@ parseToml()
 
   while read line; do
   
+    if [ -n "$(echo $line | grep '^\s*#')" ]; then
+
+      continue
+
+    fi
+
     # parse array
     if [ $isParseArray -eq 1 ]; then
 
@@ -165,13 +171,14 @@ echo "detected OS: ${os}"
 parseToml "$file"             "settings"
 parseToml "$defaultPathFile"  "defaults"
 
-targetMapName=$(mapFind "settings" "target")
-defaultMapName=$(mapFind "defaults" "dir")
+dirMapName=$(mapFind "settings" "dir")
 
 # set default values if the target is not set
-if [ -z "$(mapFind "$targetMapName" "dir")" ]; then
+if [ -z "$(mapFind "$dirMapName" "target")" ]; then
 
-  mapSet "$targetMapName" "dir" "$(mapFind "$defaultMapName" "$os")"
+  targetDirMapName=$(mapFind "defaults" "dir")
+
+  mapSet "$dirMapName" "target" $(mapFind "$targetDirMapName" "$os")
 
 fi
 # end set default values if the target is not set

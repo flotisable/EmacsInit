@@ -17,15 +17,9 @@ installFile()
 
 targetTableName=$(mapFind "settings" "target")
 sourceTableName=$(mapFind "settings" "source")
-dir=$(mapFind "$targetTableName" "dir")
+dir=$(mapFind "settings" "dir")
 
 for target in $(mapKeys "$targetTableName"); do
-
-  if [ "$target" == 'dir' ]; then
-
-    continue
-
-  fi
 
   targetFile="$dir/$(mapFind "$targetTableName" "$target")"
   sourceFile=$(mapFind "$sourceTableName" "$target")
