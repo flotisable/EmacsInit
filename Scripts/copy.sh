@@ -7,22 +7,19 @@ scriptDir="$(dirname $0)"
 
 targetTableName=$(mapFind "settings" "target")
 sourceTableName=$(mapFind "settings" "source")
+dirTableName=$(mapFind "settings" "dir")
 
 for target in $(mapKeys "$targetTableName"); do
 
-  if [ "$target" == 'dir' ]; then
-
-    continue
-
-  fi
-
-  targetFile="$(mapFind "$targetTableName" "dir")/$(mapFind "$targetTableName" "$target")"
+  targetFile=$(mapFind "$targetTableName" "$target")
   sourceFile=$(mapFind "$sourceTableName" "$target")
 
-  if [ -r "$targetFile" ]; then
+  dir=$(mapFind "$dirTableName" "target")
 
-    echo "copy $targetFile to $sourceFile"
-    cp $targetFile $sourceFile
+  if [ -r "$dir/$targetFile" ]; then
+
+    echo "copy $dir/$targetFile to $sourceFile"
+    cp $dir/$targetFile $sourceFile
 
   fi
 

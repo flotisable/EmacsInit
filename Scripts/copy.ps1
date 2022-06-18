@@ -6,14 +6,14 @@ $scriptDir = "$(Split-Path $PSCommandPath)"
 
 ForEach( $target in $settings['target'].keys )
 {
-  If( $target -eq 'dir' )
+  $targetFile = Invoke-Expression "Write-Output $($settings['target'][$target])"
+  $sourceFile = Invoke-Expression "Write-Output $($settings['source'][$target])"
+  $dir        = Invoke-Expression "Write-Output $($settings['dir']['target'])"
+
+  If( !( Get-Item -Force -ErrorAction SilentlyContinue $dir/$targetFile ) )
   {
     Continue
   }
-
-  $targetFile = Invoke-Expression "Write-Output `"$($settings['target']['dir'])/$($settings['target'][$target])`""
-  $sourceFile = Invoke-Expression "Write-Output $($settings['source'][$target])"
-
-  Write-Host "copy $targetFile to $sourceFile"
-  Copy-Item $targetFile $sourceFile
+  Write-Host "copy $dir/$targetFile to $sourceFile"
+  Copy-Item $dir/$targetFile $sourceFile
 }
