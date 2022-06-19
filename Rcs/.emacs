@@ -89,6 +89,22 @@
   (interactive)
   (find-file org-agenda-files))
 ; end function to edit org agenda file
+
+;;;; function to alert on Windows < 8  在 Windows 8 以下的 alert
+(defun my-alert-w32-notify (info)
+  "Alert on Windows < 8"
+  (let ((id (w32-notification-notify :level  'info
+                                     :title  (plist-get info :title)
+                                     :body   (plist-get info :message))))
+    (setq my-notify-id id)))
+; end function alert on Windows < 8
+
+;;;; function to close alert on Windows < 8  在 Windows 8 以下的 alert close
+(defun my-alert-w32-close (info)
+  "Close alert on Windows < 8"
+  (when my-notify-id
+    (w32-notification-close my-notify-id)))
+; end function close alert on Windows < 8
 ; end self defined functions
 
 ;;; third-party archives  第三方套件庫
@@ -105,6 +121,7 @@
                             swiper
                             org
                             org-attach-screenshot
+                            org-alert
                             htmlize
                             ebdb
                             perfect-margin)
@@ -127,7 +144,7 @@
 (show-paren-mode    1   ) ; highlight 對應的小括號
 
 (when (package-installed-p 'ivy)
-  (ivy-mode 1 )) ; 互動式模糊補全
+  (ivy-mode 1)) ; 互動式模糊補全
 
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
@@ -242,6 +259,18 @@
 
   (setq org-attach-screenshot-command-line my-local-machine-org-screenshot-command-line)
   (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
+
+(when (package-installed-p 'org-alert)
+  (require 'org-alert)
+  (add-hook 'org-agenda-mode-hook 'org-alert-enable)
+  (if (string= system-type "windows-nt")
+      (if (< (car (w32-version)) 8)
+          ; for Windows version < 8
+          (setq alert-default-style 'w32)
+        ; for Windows version >= 8
+        (setq alert-default-style 'toaster))
+    ; for other OS
+    (setq alert-default-style 'notifizations)))
 
 (defun my-remove-today-tag-when-done ()
   "Remove the :Today: tag when a task is marked as done"
@@ -399,6 +428,14 @@ The second element is the url to fetch the ics file from remote calendar.")
 (when (package-installed-p 'perfect-margin)
   (setq perfect-margin-visible-width 80))
 ; end perfect margin mode settings
+
+;;; alert settings  alert 設定
+(when (package-installed-p 'alert)
+  (require 'alert)
+  (alert-define-style 'w32 :title "W32 notification style"
+                      :notifier 'my-alert-w32-notify
+                      :remover  'my-alert-w32-close))
+; end alert settings  alert 設定
 
 ;;; load local machine settings  讀取本地機器設定
 (when (file-readable-p my-local-machine-init-file)
