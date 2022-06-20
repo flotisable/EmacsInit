@@ -262,7 +262,7 @@
 
 (when (package-installed-p 'org-alert)
   (require 'org-alert)
-  (add-hook 'org-agenda-mode-hook 'org-alert-enable)
+  (org-alert-enable)
   (if (string= system-type "windows-nt")
       (if (< (car (w32-version)) 8)
           ; for Windows version < 8
