@@ -149,6 +149,9 @@
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
   (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
+
+(add-hook 'package-menu-mode-hook
+          'hl-line-mode)
 ; end mode settings
 
 ;;; key bindings  按鍵設定
@@ -397,6 +400,8 @@ The second element is the url to fetch the ics file from remote calendar.")
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-smtp-server "smtp.gmail.com")
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+(add-hook 'gnus-group-mode-hook 'hl-line-mode)
+(add-hook 'gnus-summary-mode-hook 'hl-line-mode)
 (when (package-installed-p 'ebdb)
   (require 'ebdb-gnus)
   (require 'ebdb-message))
