@@ -10,6 +10,11 @@
  '(desktop-path (quote ("./" "~/.emacs.d/" "~")))
  '(indent-tabs-mode nil)
  '(make-backup-files nil)
+ '(org-agenda-prefix-format
+   '((agenda . " %i %-12:c%?-12t% s%l")
+     (todo . " %i %-12:c%l")
+     (tags . " %i %-12:c%l")
+     (search . " %i %-12:c")))
  '(org-agenda-sorting-strategy
    '((agenda habit-up time-up deadline-up priority-down category-keep)
      (todo priority-down category-keep)
