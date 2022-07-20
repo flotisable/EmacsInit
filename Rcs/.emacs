@@ -239,6 +239,7 @@
 (setq org-refile-allow-creating-parent-nodes          't)
 (setq org-refile-targets
       '((org-agenda-files . (:maxlevel  . 2))
+        (org-agenda-files . (:tag       . "Refile"))
         (org-agenda-files . (:tag       . "Project"))))
 (setq org-capture-templates
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
@@ -261,8 +262,8 @@
                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
-(setq org-tag-persistent-alist          '(("Project") ("Today")))
-(setq org-tags-exclude-from-inheritance '("Project" "Today"))
+(setq org-tag-persistent-alist          '(("Refile") ("Project") ("Today")))
+(setq org-tags-exclude-from-inheritance '("Refile" "Project" "Today"))
 
 (when (package-installed-p 'org-attach-screenshot)
   (require 'org-attach-screenshot)
