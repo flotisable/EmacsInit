@@ -228,6 +228,7 @@
 (setq org-export-backends                             '(html latex odt beamer icalendar))
 (setq org-agenda-span                                 'day)
 (setq org-agenda-skip-scheduled-if-deadline-is-shown  'repeated-after-deadline)
+(setq org-agenda-dim-blocked-tasks                    'invisible)
 (setq org-highest-priority                            ?A)
 (setq org-lowest-priority                             ?E)
 (setq org-default-priority                            ?C)
@@ -384,6 +385,14 @@ The second element is the url to fetch the ics file from remote calendar.")
       (save-buffer)
       (princ (concat "Removing file " current-file " from agenda file")))))
 
+(defun my-org-agenda-toggle-blocked-tasks-visiblility ()
+  "Toggle visitility of blocked tasks in org agenda"
+  (interactive)
+  (if (equal org-agenda-dim-blocked-tasks 'invisible)
+      (setq org-agenda-dim-blocked-tasks 't)
+    (setq org-agenda-dim-blocked-tasks 'invisible))
+  (org-agenda-redo))
+
 (add-hook 'org-mode-hook
           (lambda ()
             (define-key org-mode-map (kbd "C-c [") 'my-org-agenda-file-to-front)
@@ -391,6 +400,9 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 (add-hook 'org-agenda-mode-hook
           'hl-line-mode)
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (define-key org-agenda-mode-map (kbd "C-c d") 'my-org-agenda-toggle-blocked-tasks-visiblility)))
 ; end org mode settings
 
 ;;; mail settings  郵件設定
