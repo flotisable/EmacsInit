@@ -253,13 +253,33 @@
         ("tu" "List all the unassigned TODO entries" todo ""
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))
-        ("a" "Agenda and todo for current day"
+        ("a" . "List Agendas")
+        ("aa" "Agenda and todo for current day"
          ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
                                (org-agenda-skip-function      '(org-agenda-skip-entry-if 'notregexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))
                                (org-deadline-warning-days     0)))
           (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
           (agenda     ""      ((org-agenda-overriding-header  "Assigned Todo List:")
-                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))))))
+                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))))
+        ("ad" "Review daily agenda" agenda ""
+         ((org-agenda-span                'day)
+          (org-agenda-start-day           "-1d")
+          (org-agenda-start-with-log-mode 't)
+          (org-agenda-archives-mode       't)
+          (org-agenda-use-time-grid       nil)))
+        ("aw" "Review weekly agenda" agenda ""
+         ((org-agenda-span                'week)
+          (org-agenda-start-on-weekday    nil)
+          (org-agenda-start-day           "-1w")
+          (org-agenda-start-with-log-mode 't)
+          (org-agenda-archives-mode       't)
+          (org-agenda-use-time-grid       nil)))
+        ("ay" "Review yearly agenda" agenda ""
+         ((org-agenda-span                'year)
+          (org-agenda-start-day           "-1y")
+          (org-agenda-start-with-log-mode 't)
+          (org-agenda-archives-mode       't)
+          (org-agenda-use-time-grid       nil)))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
 (setq org-tag-persistent-alist          '(("Refile") ("Project") ("Today")))
