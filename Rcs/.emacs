@@ -226,6 +226,10 @@
   "Remove the :Today: tag when a task is marked as done"
   (when (org-entry-is-done-p)
     (org-set-tags (remove "Today" (org-get-tags)))))
+(defun my-remove-focus-tag-when-done ()
+  "Remove the :Focus: tag when a task is marked as done"
+  (when (org-entry-is-done-p)
+    (org-set-tags (remove "Focus" (org-get-tags)))))
 
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
@@ -272,6 +276,7 @@
                                (org-agenda-skip-function      '(org-agenda-skip-entry-if 'notregexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))
                                (org-deadline-warning-days     0)))
           (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
+          (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))
           ,@(mapcar (lambda (priority)
                       `(agenda "" ((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority " (string priority) ":"))
                                    (org-agenda-skip-function      '(lambda ()
@@ -301,8 +306,14 @@
           (org-agenda-use-time-grid       nil)))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
-(setq org-tag-persistent-alist          '(("Refile") ("Project") ("Today")))
-(setq org-tags-exclude-from-inheritance '("Refile" "Project" "Today"))
+(setq org-tag-persistent-alist          '(("Refile")
+                                          ("Project")
+                                          ("Today")
+                                          ("Focus")))
+(setq org-tags-exclude-from-inheritance '("Refile"
+                                          "Project"
+                                          "Today"
+                                          "Focus"))
 
 (when (package-installed-p 'org-attach-screenshot)
   (require 'org-attach-screenshot)
@@ -323,6 +334,7 @@
     (setq alert-default-style 'notifizations)))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
+(add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done)
 
 (defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
   "The file stores the information to synchronize with remote calendar.
