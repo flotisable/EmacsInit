@@ -245,11 +245,19 @@
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
         ("d" "date" entry (file+headline "" "Date") "** %?\n   %^t")
         ("n" "note" entry (file+headline "" "Note") "** %?")))
+(defun my-skip-entry-if-not-priority (priority)
+  "Skip entry in org agenda when no in specified priority"
+  (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
+    (org-entry-end-position)))
 (setq org-agenda-custom-commands
-      '(("t" . "List TODO entries")
+      `(("t" . "List TODO entries")
         ("ta" "List all the TODO entries" todo)
-        ("tt" "List all the unscheduled TODO entries" todo ""
-         ((org-agenda-todo-ignore-scheduled 't)))
+        ("tt" "List all the unscheduled TODO entries"
+         ,(mapcar (lambda (priority)
+                    `(alltodo "" ((org-agenda-overriding-header     ,(concat "Todo List With Priority " (string priority) ":"))
+                                  (org-agenda-todo-ignore-scheduled 't)
+                                  (org-agenda-skip-function         '(my-skip-entry-if-not-priority ,priority)))))
+                  (number-sequence org-highest-priority org-lowest-priority)))
         ("tu" "List all the unassigned TODO entries" todo ""
          ((org-agenda-todo-ignore-scheduled 't)
           (org-agenda-todo-ignore-deadlines 't)))
@@ -259,8 +267,14 @@
                                (org-agenda-skip-function      '(org-agenda-skip-entry-if 'notregexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))
                                (org-deadline-warning-days     0)))
           (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
-          (agenda     ""      ((org-agenda-overriding-header  "Assigned Todo List:")
-                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))))))
+          ,@(mapcar (lambda (priority)
+                      `(agenda "" ((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority " (string priority) ":"))
+                                   (org-agenda-skip-function      '(lambda ()
+                                                                     (let ((end-position (org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>")))
+                                                                       (if end-position
+                                                                           end-position
+                                                                         (my-skip-entry-if-not-priority ,priority))))))))
+                    (number-sequence org-highest-priority org-lowest-priority))))
         ("ad" "Review daily agenda" agenda ""
          ((org-agenda-span                'day)
           (org-agenda-start-day           "-1d")
