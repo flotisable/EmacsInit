@@ -218,6 +218,15 @@
 ; end evil mode settings
 
 ;;; org mode settings  org mode 設定
+(defun my-skip-entry-if-not-priority (priority)
+  "Skip entry in org agenda when no in specified priority"
+  (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
+    (org-entry-end-position)))
+(defun my-remove-today-tag-when-done ()
+  "Remove the :Today: tag when a task is marked as done"
+  (when (org-entry-is-done-p)
+    (org-set-tags (remove "Today" (org-get-tags)))))
+
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file              (concat org-directory "/agenda.ics"))
@@ -245,10 +254,6 @@
       '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
         ("d" "date" entry (file+headline "" "Date") "** %?\n   %^t")
         ("n" "note" entry (file+headline "" "Note") "** %?")))
-(defun my-skip-entry-if-not-priority (priority)
-  "Skip entry in org agenda when no in specified priority"
-  (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
-    (org-entry-end-position)))
 (setq org-agenda-custom-commands
       `(("t" . "List TODO entries")
         ("ta" "List all the TODO entries" todo)
@@ -316,11 +321,6 @@
         (setq alert-default-style 'toaster))
     ; for other OS
     (setq alert-default-style 'notifizations)))
-
-(defun my-remove-today-tag-when-done ()
-  "Remove the :Today: tag when a task is marked as done"
-  (when (org-entry-is-done-p)
-    (org-set-tags (remove "Today" (org-get-tags)))))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 
