@@ -268,7 +268,7 @@
         ("ta" "List all the TODO entries" todo)
         ("tt" "List all the unscheduled TODO entries"
          ,(mapcar (lambda (priority)
-                    `(alltodo "" ((org-agenda-overriding-header     ,(concat "Todo List With Priority " (string priority) ":"))
+                    `(alltodo "" ((org-agenda-overriding-header     ,(concat "Todo List With Priority [#" (string priority) "]:"))
                                   (org-agenda-todo-ignore-scheduled 't)
                                   (org-agenda-skip-function         '(my-skip-entry-if-not-priority ,priority)))))
                   (number-sequence org-highest-priority org-lowest-priority)))
@@ -283,7 +283,7 @@
           (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
           (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))
           ,@(mapcar (lambda (priority)
-                      `(agenda "" ((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority " (string priority) ":"))
+                      `(agenda "" ((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority [#" (string priority) "]:"))
                                    (org-agenda-skip-function      '(lambda ()
                                                                      (let ((end-position (org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>")))
                                                                        (if end-position
