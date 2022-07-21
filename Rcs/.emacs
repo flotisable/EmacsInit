@@ -231,6 +231,11 @@
   (when (org-entry-is-done-p)
     (org-set-tags (remove "Focus" (org-get-tags)))))
 
+(defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode 't)
+                                          (org-agenda-archives-mode       't)
+                                          (org-agenda-use-time-grid       nil))
+  "Common settings for review of org agenda")
+
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file              (concat org-directory "/agenda.ics"))
@@ -288,22 +293,16 @@
         ("ad" "Review daily agenda" agenda ""
          ((org-agenda-span                'day)
           (org-agenda-start-day           "-1d")
-          (org-agenda-start-with-log-mode 't)
-          (org-agenda-archives-mode       't)
-          (org-agenda-use-time-grid       nil)))
+          ,@my-org-agenda-review-settings))
         ("aw" "Review weekly agenda" agenda ""
          ((org-agenda-span                'week)
           (org-agenda-start-on-weekday    nil)
           (org-agenda-start-day           "-1w")
-          (org-agenda-start-with-log-mode 't)
-          (org-agenda-archives-mode       't)
-          (org-agenda-use-time-grid       nil)))
+          ,@my-org-agenda-review-settings))
         ("ay" "Review yearly agenda" agenda ""
          ((org-agenda-span                'year)
           (org-agenda-start-day           "-1y")
-          (org-agenda-start-with-log-mode 't)
-          (org-agenda-archives-mode       't)
-          (org-agenda-use-time-grid       nil)))))
+          ,@my-org-agenda-review-settings))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
 (setq org-tag-persistent-alist          '(("Refile")
