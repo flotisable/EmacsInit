@@ -230,6 +230,10 @@
   "Remove the :Focus: tag when a task is marked as done"
   (when (org-entry-is-done-p)
     (org-set-tags (remove "Focus" (org-get-tags)))))
+(defun my-add-focus-tag-when-has-today-tag ()
+  "Add the :Focus: tag is :Today: tag is set"
+  (when (member "Today" (org-get-tags)))
+    (org-set-tags (delete-dups (append (org-get-tags) '("Focus")))))
 
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode 't)
                                           (org-agenda-archives-mode       't)
@@ -334,6 +338,7 @@
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done)
+(add-hook 'org-after-tags-change-hook       'my-add-focus-tag-when-has-today-tag)
 
 (defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
   "The file stores the information to synchronize with remote calendar.
