@@ -234,6 +234,13 @@
   "Add the :Focus: tag is :Today: tag is set"
   (when (and (not (member "Focus" (org-get-tags))) (member "Today" (org-get-tags))))
     (org-set-tags (delete-dups (append (org-get-tags) '("Focus")))))
+(defun my-add-clock-effort-diff-property ()
+  (interactive)
+  "Calculate the clock effort diff and set to property ClockEffortDiff"
+  (let ((effort (org-duration-to-minutes (org-entry-get nil "Effort")))
+        (clock  (org-duration-to-minutes (org-clock-sum-current-item))))
+    (let ((diff (- clock effort)))
+      (org-entry-put nil "ClockEffortDiff" (concat (if (>= diff 0) "+" "-") (org-duration-from-minutes (abs diff)))))))
 
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode 't)
                                           (org-agenda-archives-mode       't)
@@ -254,6 +261,8 @@
 (setq org-highest-priority                            ?A)
 (setq org-lowest-priority                             ?E)
 (setq org-default-priority                            ?C)
+(setq org-columns-default-format                      "%25ITEM %TODO %3PRIORITY %Effort %CLOCKSUM %ClockEffortDiff %TAGS")
+(setq org-columns-default-format-for-agenda           (concat "%10CATEGORY " org-columns-default-format))
 (setq org-log-done                                    'time)
 (setq org-archive-location                            "%s_archive::datetree/")
 (setq org-refile-use-outline-path                     'full-file-path)
@@ -339,6 +348,10 @@
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done)
 (add-hook 'org-after-tags-change-hook       'my-add-focus-tag-when-has-today-tag)
+(add-hook 'org-clock-out-hook               'my-add-clock-effort-diff-property)
+(add-hook 'org-property-changed-functions   (lambda (property value)
+                                              (when (string= property "Effort")
+                                                (my-add-clock-effort-diff-property))))
 
 (defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
   "The file stores the information to synchronize with remote calendar.
