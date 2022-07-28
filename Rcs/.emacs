@@ -232,7 +232,7 @@
     (org-set-tags (remove "Focus" (org-get-tags)))))
 (defun my-add-focus-tag-when-has-today-tag ()
   "Add the :Focus: tag is :Today: tag is set"
-  (when (member "Today" (org-get-tags)))
+  (when (and (not (member "Focus" (org-get-tags))) (member "Today" (org-get-tags))))
     (org-set-tags (delete-dups (append (org-get-tags) '("Focus")))))
 
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode 't)
