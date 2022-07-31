@@ -120,17 +120,20 @@
 ; end third-party archives
 
 ;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(defconst my-package-list '(evil
-                            evil-collection
-                            ivy
-                            swiper
-                            org
-                            org-attach-screenshot
-                            org-alert
-                            htmlize
-                            ebdb
-                            perfect-margin)
+(defvar my-package-list '(evil
+                          evil-collection
+                          ivy
+                          swiper
+                          org
+                          org-attach-screenshot
+                          org-alert
+                          htmlize
+                          ebdb
+                          perfect-margin)
   "packages to be automatically downloaded when not exists")
+
+(when (>= (car (w32-version)) 8)
+  (add-to-list 'my-package-list 'alert-toast))
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -337,13 +340,16 @@
   (require 'org-alert)
   (org-alert-enable)
   (if (string= system-type "windows-nt")
-      (if (< (car (w32-version)) 8)
-          ; for Windows version < 8
-          (setq alert-default-style 'w32)
-        ; for Windows version >= 8
-        (setq alert-default-style 'toaster))
+      (if (and (>= (car (w32-version)) 8) (package-installed-p 'alert-toast))
+          ; for Windows version >= 8
+          (progn
+            (require 'alert-toast)
+            (setq alert-default-style 'toast))
+        ; for Windows version < 8
+        (setq alert-default-style 'w32))
     ; for other OS
-    (setq alert-default-style 'notifizations)))
+    (setq alert-default-style 'notifizations))
+  (setq org-alert-interval 600))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done)
