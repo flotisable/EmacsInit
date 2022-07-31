@@ -143,6 +143,10 @@
     (package-install package)))
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
+;;; general settings 通用設定
+(set-message-beep 'silent)
+; end general settings
+
 ;;; mode settings  模式設定
 (column-number-mode 1   ) ; 在 mode line 顯示列號
 (menu-bar-mode      -1  ) ; 關閉 menu bar
