@@ -262,6 +262,7 @@
 (setq org-icalendar-combined-agenda-file              (concat org-directory "/agenda.ics"))
 (setq org-default-notes-file                          (concat org-directory "/note.org"))
 (setq org-ellipsis                                    " ▼")
+(setq org-adapt-indentation                           't)
 (setq org-image-actual-width                          'nil)
 (setq org-icalendar-timezone                          "Asia/Taipei")
 (setq org-export-backends                             '(html latex odt beamer icalendar))
