@@ -204,23 +204,26 @@
   ; end evil mode keybindings
 
   ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-  (defconst my-evil-insert-mode-key-to-be-removed '("C-w"
-                                                    "C-a"
-                                                    "C-d"
-                                                    "C-t"
-                                                    "C-x"
-                                                    "C-p"
-                                                    "C-n"
-                                                    "C-e"
-                                                    "C-y"
-                                                    "C-r"
-                                                    "C-o"
-                                                    "C-k"
-                                                    "C-v")
-    "key bindings to be removed from evil insert mode to use emacs key bindings")
-
-  (dolist (key my-evil-insert-mode-key-to-be-removed)
-    (evil-global-set-key 'insert (kbd key) nil)))
+  (let ((key-to-be-removed '((insert ("C-w"
+                                      "C-a"
+                                      "C-d"
+                                      "C-t"
+                                      "C-x"
+                                      "C-p"
+                                      "C-n"
+                                      "C-e"
+                                      "C-y"
+                                      "C-r"
+                                      "C-o"
+                                      "C-k"
+                                      "C-v"))
+                             (motion ("RET"
+                                      "TAB")))))
+    (dolist (key-map key-to-be-removed)
+      (let ((mode (car  key-map))
+            (keys (cadr key-map)))
+        (dolist (key keys)
+          (evil-global-set-key mode (kbd key) nil))))))
 ; end remove vim key binding in insert mode
 ; end evil mode settings
 
