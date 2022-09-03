@@ -505,10 +505,24 @@ The second element is the url to fetch the ics file from remote calendar.")
 ; end mail settings
 
 ;;; eww settings  eww 瀏覽器設定
-(setq browse-url-browser-function
-      '(("gamer\\.com\\.tw" . browse-url-default-browser)
-        ("quora\\.com"      . browse-url-default-browser)
-        ("."                . eww)))
+(defconst my-gui-browser-urls
+  '(
+    "gamer\\.com\\.tw"
+    "quora\\.com"
+    )
+  "Urls should be opened with GUI browser")
+
+(let ((gui-browser-urls (mapcar (lambda (url)
+                                  `(,url . browse-url-default-browser))
+                                my-gui-browser-urls)))
+  (if (>= emacs-major-version 28)
+      ; set browse-url-browser-function to alist is deprecated
+      (progn
+        (setq browse-url-browser-function 'eww)
+        (setq browse-url-handlers         gui-browser-urls))
+    (setq browse-url-browser-function
+          `(,gui-browser-urls
+            ("." . eww)))))
 
 (defun my-eww-toggle-mouse-browse ()
   "toggle browsing eww with mouse"
