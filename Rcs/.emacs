@@ -129,7 +129,8 @@
                           org-alert
                           htmlize
                           ebdb
-                          perfect-margin)
+                          perfect-margin
+                          highlight-parentheses)
   "packages to be automatically downloaded when not exists")
 
 (when (>= (car (w32-version)) 8)
@@ -161,6 +162,9 @@
 (if (fboundp 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
   (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
+
+(when (package-installed-p 'highlight-parentheses)
+  (add-hook 'prog-mode-hook 'highlight-parentheses-mode))
 
 (add-hook 'package-menu-mode-hook
           'hl-line-mode)
