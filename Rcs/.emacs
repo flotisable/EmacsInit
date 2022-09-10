@@ -60,6 +60,8 @@
   "org-screenshot-command-line variable of org-attach-screenshot package")
 (defconst my-local-machine-org-agenda-git-repo          "~/Documents/Data/OrgAgenda"
   "git repository of org agenda files")
+(defconst my-local-machine-github-io-git-repo           "~/Documents/Github/flotisable.github.io"
+  "git repository of github io pahe")
 
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
@@ -357,6 +359,11 @@
                                           "Project"
                                           "Today"
                                           "Focus"))
+(setq org-publish-project-alist
+      `(("github-io"
+         :base-directory        ,my-local-machine-github-io-git-repo
+         :publishing-directory  ,my-local-machine-github-io-git-repo
+         :recursive             t)))
 
 (when (package-installed-p 'org-attach-screenshot)
   (require 'org-attach-screenshot)
