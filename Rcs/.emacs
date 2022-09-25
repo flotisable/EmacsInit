@@ -148,6 +148,9 @@
 
 ;;; general settings 通用設定
 (set-message-beep 'silent)
+
+(when (string= system-type "windows-nt")
+  (set-face-attribute 'default nil :family "Consolas"))
 ; end general settings
 
 ;;; mode settings  模式設定
