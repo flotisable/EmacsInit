@@ -360,8 +360,7 @@
                                           ("Focus")))
 (setq org-tags-exclude-from-inheritance '("Refile"
                                           "Project"
-                                          "Today"
-                                          "Focus"))
+                                          "Today"))
 (setq org-publish-project-alist
       `(("github-io"
          :base-directory        ,my-local-machine-github-io-git-repo
