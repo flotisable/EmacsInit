@@ -135,7 +135,7 @@
                           highlight-parentheses)
   "packages to be automatically downloaded when not exists")
 
-(when (>= (car (w32-version)) 8)
+(when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
   (add-to-list 'my-package-list 'alert-toast))
 
 (unless package-archive-contents
