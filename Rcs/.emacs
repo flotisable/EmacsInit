@@ -111,7 +111,19 @@
   "Close alert on Windows < 8"
   (when my-notify-id
     (w32-notification-close my-notify-id)))
-; end function close alert on Windows < 8
+; end function to close alert on Windows < 8
+
+;;;; function to format mode line with right alignment  支援置右的 format-mode-line
+(defun my-format-mode-line (left right)
+  "Format mode line with right alignment support"
+  (let ((left-format  (format-mode-line left))
+        (right-format (format-mode-line right)))
+    (concat left-format
+            (string-pad right-format
+                        ; the 1 is needed so that right aligned character will not be eaten (not sure why)
+                        (- (window-total-width) (string-width left-format) 1)
+                        ?\s t))))
+; end function to format mode line with right alignment
 ; end self defined functions
 
 ;;; third-party archives  第三方套件庫
@@ -151,6 +163,19 @@
 
 (when (string= system-type "windows-nt")
   (set-face-attribute 'default nil :family "Consolas"))
+
+(setq-default mode-line-format
+              '(:eval (my-format-mode-line
+                       '("%e" mode-line-front-space
+                         mode-line-mule-info mode-line-client mode-line-modified mode-line-remote
+                         evil-mode-line-tag
+                         mode-line-frame-identification mode-line-buffer-identification
+                         "   " (vc-mode vc-mode))
+                       '(""
+                         mode-line-modes
+                         mode-line-position
+                         mode-line-misc-info
+                         mode-line-end-spaces))))
 ; end general settings
 
 ;;; mode settings  模式設定
