@@ -609,6 +609,7 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 ;;; ivy mode settings  ivy mode 設定
 (when (package-installed-p 'ivy)
+  (setq ivy-use-virtual-buffers 't)
   (setq minor-mode-alist (assoc-delete-all 'ivy-mode minor-mode-alist))
   (add-to-list 'minor-mode-alist '(ivy-mode " ❧")))
 ; end ivy mode settings
