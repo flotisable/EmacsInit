@@ -120,8 +120,8 @@
         (right-format (format-mode-line right)))
     (concat left-format
             (string-pad right-format
-                        ; the 1 is needed so that right aligned character will not be eaten (not sure why)
-                        (- (window-total-width) (string-width left-format) 1)
+                        ; the 3 is needed so that right aligned character will not be eaten (not sure why)
+                        (- (window-total-width) (string-width left-format) 3)
                         ?\s t))))
 ; end function to format mode line with right alignment
 ; end self defined functions
@@ -166,16 +166,27 @@
 
 (setq-default mode-line-format
               '(:eval (my-format-mode-line
-                       '("%e" mode-line-front-space
-                         mode-line-mule-info mode-line-client mode-line-modified mode-line-remote
-                         evil-mode-line-tag
-                         mode-line-frame-identification mode-line-buffer-identification
-                         "   " (vc-mode vc-mode))
-                       '(""
-                         mode-line-modes
-                         mode-line-position
-                         mode-line-misc-info
-                         mode-line-end-spaces))))
+                       '((:propertize ("" "%e" mode-line-front-space (vc-mode vc-mode) " ")
+                                      face (:foreground "#8FBCBB" :background "#BF616A"))
+                         (:eval (propertize
+                                 (string-replace
+                                  "%" "%%"
+                                  (format-mode-line
+                                   '(" " mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)))
+                                 'face '(:foreground "#88C0D0" :background "#3B4252" :weight bold)))
+                         (:propertize evil-mode-line-tag
+                                      face (:foreground "#88C0D0" :background "#3B4252" :weight bold))
+                         (:eval (propertize
+                                 (format-mode-line
+                                  '("" mode-line-frame-identification mode-line-buffer-identification))
+                                 'face '(:foreground "#D8DEE9" :weight bold))))
+                       '((:eval (propertize
+                                 (format-mode-line '(" " mode-line-modes))
+                                 'face '(:foreground "#88C0D0" :background "#3B4252" :weight bold)))
+                         (:eval (propertize
+                                 (format-mode-line '(" " mode-line-position))
+                                 'face '(:foreground "#EBCB8B" :background "#81A1C1")))
+                         (:propertize (" " mode-line-misc-info mode-line-end-spaces) face (:background "#5E81AC"))))))
 ; end general settings
 
 ;;; mode settings  模式設定
