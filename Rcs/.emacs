@@ -218,7 +218,18 @@
                             (custom cus-edit)
                             (term term ansi-term multi-term))))
 
-  (setq-default evil-shift-width 2) ; 設定縮排為 2 個字元
+  (setq evil-shift-width  2) ; 設定縮排為 2 個字元
+  (setq evil-echo-state   nil)
+
+  ;;;; state symbol customization  狀態符號設定
+  (setq evil-normal-state-tag   " Ⓝ ")
+  (setq evil-insert-state-tag   " Ⓘ ")
+  (setq evil-visual-state-tag   " Ⓥ ")
+  (setq evil-replace-state-tag  " Ⓡ ")
+  (setq evil-operator-state-tag " Ⓞ ")
+  (setq evil-motion-state-tag   " Ⓜ ")
+  (setq evil-emacs-state-tag    " Ⓔ ")
+  ; end state symbol customization
 
   ;;;; evil mode keybindings  evil mode 按鍵設定
   (evil-set-leader      'normal (kbd "\\"))
