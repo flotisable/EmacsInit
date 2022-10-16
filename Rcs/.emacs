@@ -179,12 +179,13 @@
 ; end general settings
 
 ;;; mode settings  模式設定
-(column-number-mode 1   ) ; 在 mode line 顯示列號
-(menu-bar-mode      -1  ) ; 關閉 menu bar
-(tool-bar-mode      -1  ) ; 關閉 tool bar
-(scroll-bar-mode    -1  ) ; 關閉 scroll bar
-(display-time-mode  1   ) ; 在 mode line 顯示時間
-(show-paren-mode    1   ) ; highlight 對應的小括號
+(column-number-mode       1   ) ; 在 mode line 顯示列號
+(menu-bar-mode            -1  ) ; 關閉 menu bar
+(tool-bar-mode            -1  ) ; 關閉 tool bar
+(scroll-bar-mode          -1  ) ; 關閉 scroll bar
+(display-time-mode        1   ) ; 在 mode line 顯示時間
+(show-paren-mode          1   ) ; highlight 對應的小括號
+(global-auto-revert-mode  1   ) ; 自動讀取更改的檔案
 
 (when (package-installed-p 'ivy)
   (ivy-mode 1)) ; 互動式模糊補全
