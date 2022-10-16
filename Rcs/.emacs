@@ -605,7 +605,13 @@ The second element is the url to fetch the ics file from remote calendar.")
   (alert-define-style 'w32 :title "W32 notification style"
                       :notifier 'my-alert-w32-notify
                       :remover  'my-alert-w32-close))
-; end alert settings  alert 設定
+; end alert settings
+
+;;; ivy mode settings  ivy mode 設定
+(when (package-installed-p 'ivy)
+  (setq minor-mode-alist (assoc-delete-all 'ivy-mode minor-mode-alist))
+  (add-to-list 'minor-mode-alist '(ivy-mode " ❧")))
+; end ivy mode settings
 
 ;;; load local machine settings  讀取本地機器設定
 (when (file-readable-p my-local-machine-init-file)
