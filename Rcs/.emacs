@@ -633,7 +633,10 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 ;;; perfect margin mode settings  perfect margin mode 設定
 (when (package-installed-p 'perfect-margin)
-  (setq perfect-margin-visible-width 80))
+  (let ((set-width (lambda (&optional size)
+                      (setq perfect-margin-visible-width (max 80 (/ (window-total-width) 2))))))
+    (funcall set-width)
+    (add-hook 'window-size-change-functions set-width)))
 ; end perfect margin mode settings
 
 ;;; alert settings  alert 設定
