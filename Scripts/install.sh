@@ -17,11 +17,11 @@ installFile()
 
 targetTableName=$(mapFind "settings" "target")
 sourceTableName=$(mapFind "settings" "source")
-dir=$(mapFind "settings" "dir")
+dirTableName=$(mapFind "settings" "dir")
 
 for target in $(mapKeys "$targetTableName"); do
 
-  targetFile="$dir/$(mapFind "$targetTableName" "$target")"
+  targetFile="$(mapFind "$dirTableName" "target")/$(mapFind "$targetTableName" "$target")"
   sourceFile=$(mapFind "$sourceTableName" "$target")
 
   installFile $sourceFile $targetFile $target
