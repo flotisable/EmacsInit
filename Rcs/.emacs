@@ -159,9 +159,9 @@
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ;;; general settings 通用設定
-(set-message-beep 'silent)
 
 (when (string= system-type "windows-nt")
+  (set-message-beep 'silent)
   (set-face-attribute 'default nil :family "Consolas"))
 
 (setq-default mode-line-format
