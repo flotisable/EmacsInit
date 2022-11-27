@@ -289,6 +289,38 @@
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
     (org-entry-end-position)))
+(defun my-skip-entry-if-not-today-specific-time-and-habit ()
+  "Skip entry in org agenda when not today specific time or with 'habit' style"
+  (unless (string= (org-entry-get nil "STYLE") "habit")
+    (let* ((point-start     (org-element-property :begin  (org-element-at-point)))
+           (point-end       (org-element-property :end    (org-element-at-point)))
+           (element-string  (buffer-substring point-start point-end))
+           (today           org-starting-day)
+           (day-start       (time-to-days today))
+           (day-end         (time-to-days (time-add today 86400))))
+      (with-temp-buffer
+        (insert element-string)
+        (unless (org-element-map (org-element-parse-buffer) 'timestamp
+                  (lambda (timestamp)
+                    (let ((time (time-to-days (org-timestamp-to-time timestamp))))
+                      (and (<= day-start time) (< time day-end)
+                           (or (org-element-property :hour-start    timestamp)
+                               (org-element-property :minute-start  timestamp)))))
+                  nil t)
+          point-end)))))
+(defun my-skip-entry-if-not-specific-time ()
+  "Skip entry in org agenda when not today non specific time"
+  (let* ((point-start     (org-element-property :begin  (org-element-at-point)))
+         (point-end       (org-element-property :end    (org-element-at-point)))
+         (element-string  (buffer-substring point-start point-end)))
+    (with-temp-buffer
+      (insert element-string)
+      (unless (org-element-map (org-element-parse-buffer) 'timestamp
+                (lambda (timestamp)
+                  (not (or (org-element-property :hour-start    timestamp)
+                           (org-element-property :minute-start  timestamp))))
+                nil t)
+        point-end))))
 (defun my-remove-today-tag-when-done ()
   "Remove the :Today: tag when a task is marked as done"
   (when (org-entry-is-done-p)
@@ -377,7 +409,7 @@
                 (lambda (priority)
                   `(agenda "" ((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority [#" (string priority) "]:"))
                                (org-agenda-skip-function      '(lambda ()
-                                                                 (let ((end-position (org-agenda-skip-entry-if 'regexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>")))
+                                                                 (let ((end-position (my-skip-entry-if-not-specific-time)))
                                                                    (if end-position
                                                                        end-position
                                                                      (my-skip-entry-if-not-priority ,priority))))))))))
@@ -396,7 +428,7 @@
           ("a" . "List Agendas")
           ("aa" "Agenda and todo for current day"
            ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
-                                 (org-agenda-skip-function      '(org-agenda-skip-entry-if 'notregexp "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}.*>"))
+                                 (org-agenda-skip-function      'my-skip-entry-if-not-today-specific-time-and-habit)
                                  (org-deadline-warning-days     0)))
             (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
             (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))
