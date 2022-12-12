@@ -479,7 +479,7 @@
         ; for Windows version < 8
         (setq alert-default-style 'w32))
     ; for other OS
-    (setq alert-default-style 'notifizations))
+    (setq alert-default-style 'libnotify))
   (setq org-alert-interval 600))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
