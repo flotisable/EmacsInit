@@ -495,6 +495,8 @@
 Each line is an elisp list with two string elements.
 The first element is the filename to store the agenda.
 The second element is the url to fetch the ics file from remote calendar.")
+(defconst my-org-note-gpg-file (concat (expand-file-name org-default-notes-file) ".gpg")
+  "The file is the gpg encrypt note file of org mode")
 
 ;;;; export filter settings  匯出過濾器設定
 (defun my-remote-cal-filter (body backend channel)
@@ -528,6 +530,19 @@ The second element is the url to fetch the ics file from remote calendar.")
       (switch-to-buffer buffer)
       (term-mode)
       (term-exec buffer "Sync Org Agenda Files" "make" nil '("sync")))))
+
+(defun my-sync-agenda-files-from-google-drive ()
+  "Synchronize org agenda files from google drive"
+  (interactive)
+  (let ((process (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" "google:Rclone/Emacs/Org/note.org.gpg" my-org-note-gpg-file)))
+    (set-process-sentinel process (lambda (process event)
+                                    (epa-decrypt-file my-org-note-gpg-file org-default-notes-file)))))
+
+(defun my-sync-agenda-files-to-google-drive ()
+  "Synchronize org agenda files to google drive"
+  (interactive)
+  (epa-encrypt-file (expand-file-name org-default-notes-file) (epg-list-keys (epg-make-context epa-protocol) "Wei-Chih"))
+  (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" my-org-note-gpg-file "google:Rclone/Emacs/Org/note.org.gpg"))
 
 (defun my-sync-agenda-from-remote-cal ()
   "Synchronize org agenda from remote calendar"
