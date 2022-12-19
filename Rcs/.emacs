@@ -534,7 +534,7 @@ The second element is the url to fetch the ics file from remote calendar.")
 (defun my-sync-agenda-files-from-google-drive ()
   "Synchronize org agenda files from google drive"
   (interactive)
-  (let ((process (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" "google:Rclone/Emacs/Org/note.org.gpg" my-org-note-gpg-file)))
+  (let ((process (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" "google:Emacs/Org/note.org.gpg" my-org-note-gpg-file)))
     (set-process-sentinel process (lambda (process event)
                                     (epa-decrypt-file my-org-note-gpg-file org-default-notes-file)))))
 
@@ -542,7 +542,7 @@ The second element is the url to fetch the ics file from remote calendar.")
   "Synchronize org agenda files to google drive"
   (interactive)
   (epa-encrypt-file (expand-file-name org-default-notes-file) (epg-list-keys (epg-make-context epa-protocol) "Wei-Chih"))
-  (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" my-org-note-gpg-file "google:Rclone/Emacs/Org/note.org.gpg"))
+  (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" my-org-note-gpg-file "google:Emacs/Org/note.org.gpg"))
 
 (defun my-sync-agenda-from-remote-cal ()
   "Synchronize org agenda from remote calendar"
