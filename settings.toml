@@ -3,10 +3,4 @@ main  = "master"
 local = "local"
 
 [dir]
-target = ""
-
-[source]
-init = "Rcs/.emacs"
-
-[target]
-init = ".emacs"
+root = "${HOME}"

@@ -3,11 +3,21 @@ $scriptDir    = "$(Split-Path $PSCommandPath )"
 
 . ${scriptDir}/readSettings.ps1 ${settingFile}
 
-ForEach( $target in $settings['target'].keys )
-{
-  $targetFile = Invoke-Expression "Write-Output `"$($settings['dir']['target'])/$($settings['target'][$target])`""
-  $sourceFile = Invoke-Expression "Write-Output $($settings['source'][$target])"
+$root           = Invoke-Expression "Write-Output $($settings['dir']['root'])"
+$rcRoot         = ( Get-Item ${scriptDir}/../Rcs/$os ).FullName
+$rcRootPattern  = "$( $rcRoot -replace '\\', '\\' )\\"
 
-  Write-Host "install $target"
+ForEach( $file in ( Get-ChildItem -Recurse -File $rcRoot ).FullName )
+{
+  $file       = $file -replace $rcRootPattern, ""
+  $sourceFile = "$rcRoot/$file"
+  $targetFile = "$root/$file"
+  $dir        = $(Split-Path -Parent $targetFile)
+
+  If( New-Item -Type Directory -ErrorAction SilentlyContinue $dir)
+  {
+    Write-Host "create directory" $dir
+  }
+  Write-Host "install $file"
   Copy-Item $sourceFile $targetFile
 }

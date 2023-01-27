@@ -1,4 +1,0 @@
-[dir]
-linux   = "${HOME}"
-windows = "${env:APPDATA}\\.emacs.d"
-macos   = "${HOME}"

@@ -11,19 +11,23 @@ installFile()
   local targetFile=$2
   local fileMessage=$3
 
+  local dir
+  dir="$(dirname $targetFile)"
+
+  mkdir -vp $dir  
   echo "install $fileMessage"
   cp $sourceFile $targetFile 
 }
 
-targetTableName=$(mapFind "settings" "target")
-sourceTableName=$(mapFind "settings" "source")
 dirTableName=$(mapFind "settings" "dir")
 
-for target in $(mapKeys "$targetTableName"); do
+root=$(mapFind "$dirTableName" "root")
 
-  targetFile="$(mapFind "$dirTableName" "target")/$(mapFind "$targetTableName" "$target")"
-  sourceFile=$(mapFind "$sourceTableName" "$target")
+for file in $(find -L "Rcs/$os" -type f -printf '%P\n'); do
 
-  installFile $sourceFile $targetFile $target
+  targetFile="$root/$file"
+  sourceFile="Rcs/$os/$file"
+
+  installFile $sourceFile $targetFile $file
 
 done
