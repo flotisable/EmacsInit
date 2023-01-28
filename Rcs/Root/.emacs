@@ -127,10 +127,11 @@
 ; end self defined functions
 
 ;;; third-party archives  第三方套件庫
-(require 'package)                                          ; 需要 package 這個套件
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)  ; 加入 melpa 套件庫
-(package-initialize)                                        ; 讀入套件資料
+(add-hook 'window-setup-hook
+          (lambda ()
+            (add-to-list 'package-archives
+                         '("melpa" . "https://melpa.org/packages/") t)  ; 加入 melpa 套件庫
+            (package-initialize)))                                      ; 讀入套件資料
 ; end third-party archives
 
 ;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
@@ -147,15 +148,17 @@
                           highlight-parentheses)
   "packages to be automatically downloaded when not exists")
 
-(when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
-  (add-to-list 'my-package-list 'alert-toast))
+(add-hook 'window-setup-hook
+          (lambda ()
+            (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
+              (add-to-list 'my-package-list 'alert-toast))
 
-(unless package-archive-contents
-  (package-refresh-contents))
+            (unless package-archive-contents
+              (package-refresh-contents))
 
-(dolist (package my-package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+            (dolist (package my-package-list)
+              (unless (package-installed-p package)
+                (package-install package)))) 1)
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ;;; general settings 通用設定
@@ -198,18 +201,14 @@
 (show-paren-mode          1   ) ; highlight 對應的小括號
 (global-auto-revert-mode  1   ) ; 自動讀取更改的檔案
 
-(when (package-installed-p 'ivy)
-  (ivy-mode 1)) ; 互動式模糊補全
-
 (if (fboundp 'display-line-numbers-mode)
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
+    (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
   (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
 
 (when (package-installed-p 'highlight-parentheses)
   (add-hook 'prog-mode-hook 'highlight-parentheses-mode))
 
-(add-hook 'package-menu-mode-hook
-          'hl-line-mode)
+(add-hook 'package-menu-mode-hook 'hl-line-mode)
 ; end mode settings
 
 ;;; key bindings  按鍵設定
@@ -221,67 +220,68 @@
 ;;; evil mode settings  evil mode 設定
 (when (package-installed-p 'evil)
   (setq evil-want-keybinding 'nil)
-  (require 'evil) ; 需要 evil 這個套件
-  (evil-mode 1)   ; 開啟 evil mode
-  (when (package-installed-p 'evil-collection)
-    (evil-collection-init '(eww
-                            gnus
-                            info
-                            (custom cus-edit)
-                            (term term ansi-term multi-term))))
+  (add-hook 'window-setup-hook (lambda () (evil-mode 1))) ; 開啟 evil mode
+  (add-hook 'evil-mode-hook
+            (lambda ()
+              (when (package-installed-p 'evil-collection)
+                (evil-collection-init '(eww
+                                        gnus
+                                        info
+                                        (custom cus-edit)
+                                        (term term ansi-term multi-term))))
 
-  (setq evil-shift-width  2) ; 設定縮排為 2 個字元
-  (setq evil-echo-state   nil)
+              (setq evil-shift-width  2) ; 設定縮排為 2 個字元
+              (setq evil-echo-state   nil)
 
-  ;;;; state symbol customization  狀態符號設定
-  (setq evil-normal-state-tag   " Ⓝ ")
-  (setq evil-insert-state-tag   " Ⓘ ")
-  (setq evil-visual-state-tag   " Ⓥ ")
-  (setq evil-replace-state-tag  " Ⓡ ")
-  (setq evil-operator-state-tag " Ⓞ ")
-  (setq evil-motion-state-tag   " Ⓜ ")
-  (setq evil-emacs-state-tag    " Ⓔ ")
-  ; end state symbol customization
+              ;;;; state symbol customization  狀態符號設定
+              (setq evil-normal-state-tag   " Ⓝ ")
+              (setq evil-insert-state-tag   " Ⓘ ")
+              (setq evil-visual-state-tag   " Ⓥ ")
+              (setq evil-replace-state-tag  " Ⓡ ")
+              (setq evil-operator-state-tag " Ⓞ ")
+              (setq evil-motion-state-tag   " Ⓜ ")
+              (setq evil-emacs-state-tag    " Ⓔ ")
+              ; end state symbol customization
 
-  ;;;; evil mode keybindings  evil mode 按鍵設定
-  (evil-set-leader      'normal (kbd "\\"))
-  (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
-  (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down           ) ; 設定空白鍵向下一頁
-  (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
-  (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode                    ) ; 設定 \c 高亮現在行數
-  (evil-global-set-key  'normal (kbd "<leader>w")  'toggle-truncate-lines           ) ; 設定 \w 切換 wrap line
-  (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file               ) ; 設定 \er 編輯設定檔
-  (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file ) ; 設定 \er 編輯設定檔
-  (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         ) ; 設定 \ea 編輯 org agenda 設定檔
+              ;;;; evil mode keybindings  evil mode 按鍵設定
+              (evil-set-leader      'normal (kbd "\\"))
+              (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
+              (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down           ) ; 設定空白鍵向下一頁
+              (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
+              (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode                    ) ; 設定 \c 高亮現在行數
+              (evil-global-set-key  'normal (kbd "<leader>w")  'toggle-truncate-lines           ) ; 設定 \w 切換 wrap line
+              (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file               ) ; 設定 \er 編輯設定檔
+              (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file ) ; 設定 \er 編輯設定檔
+              (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         ) ; 設定 \ea 編輯 org agenda 設定檔
 
-  (if (fboundp 'display-line-numbers-mode)
-    (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)) ; 設定 \r 切換行號顯示
-  (when (package-installed-p 'perfect-margin)
-    (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
-  ; end evil mode keybindings
+              (if (fboundp 'display-line-numbers-mode)
+                  (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)) ; 設定 \r 切換行號顯示
+              (when (package-installed-p 'perfect-margin)
+                (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
+              ; end evil mode keybindings
 
-  ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
-  (let ((key-to-be-removed '((insert ("C-w"
-                                      "C-a"
-                                      "C-d"
-                                      "C-t"
-                                      "C-x"
-                                      "C-p"
-                                      "C-n"
-                                      "C-e"
-                                      "C-y"
-                                      "C-r"
-                                      "C-o"
-                                      "C-k"
-                                      "C-v"))
-                             (motion ("RET"
-                                      "TAB")))))
-    (dolist (key-map key-to-be-removed)
-      (let ((mode (car  key-map))
-            (keys (cadr key-map)))
-        (dolist (key keys)
-          (evil-global-set-key mode (kbd key) nil))))))
-; end remove vim key binding in insert mode
+              ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
+              (let ((key-to-be-removed '((insert ("C-w"
+                                                  "C-a"
+                                                  "C-d"
+                                                  "C-t"
+                                                  "C-x"
+                                                  "C-p"
+                                                  "C-n"
+                                                  "C-e"
+                                                  "C-y"
+                                                  "C-r"
+                                                  "C-o"
+                                                  "C-k"
+                                                  "C-v"))
+                                         (motion ("RET"
+                                                  "TAB")))))
+                (dolist (key-map key-to-be-removed)
+                  (let ((mode (car  key-map))
+                        (keys (cadr key-map)))
+                    (dolist (key keys)
+                      (evil-global-set-key mode (kbd key) nil))))))))
+              ; end remove vim key binding in insert mode
 ; end evil mode settings
 
 ;;; org mode settings  org mode 設定
@@ -462,25 +462,27 @@
          :recursive             t)))
 
 (when (package-installed-p 'org-attach-screenshot)
-  (require 'org-attach-screenshot)
+  (add-hook 'org-mode-hook (lambda ()
+                             (require 'org-attach-screenshot)
 
-  (setq org-attach-screenshot-command-line my-local-machine-org-screenshot-command-line)
-  (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))
+                             (setq org-attach-screenshot-command-line my-local-machine-org-screenshot-command-line)
+                             (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))))
 
 (when (package-installed-p 'org-alert)
-  (require 'org-alert)
-  (org-alert-enable)
-  (if (string= system-type "windows-nt")
-      (if (and (>= (car (w32-version)) 8) (package-installed-p 'alert-toast))
-          ; for Windows version >= 8
-          (progn
-            (require 'alert-toast)
-            (setq alert-default-style 'toast))
-        ; for Windows version < 8
-        (setq alert-default-style 'w32))
-    ; for other OS
-    (setq alert-default-style 'libnotify))
-  (setq org-alert-interval 600))
+  (add-hook 'org-agenda-mode-hook (lambda ()
+                                    (require 'org-alert)
+                                    (org-alert-enable)
+                                    (if (string= system-type "windows-nt")
+                                        (if (and (>= (car (w32-version)) 8) (package-installed-p 'alert-toast))
+                                            ; for Windows version >= 8
+                                            (progn
+                                              (require 'alert-toast)
+                                              (setq alert-default-style 'toast))
+                                          ; for Windows version < 8
+                                          (setq alert-default-style 'w32))
+                                      ; for other OS
+                                      (setq alert-default-style 'libnotify))
+                                    (setq org-alert-interval 600))))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
@@ -514,12 +516,12 @@ The second element is the url to fetch the ics file from remote calendar.")
           body))
     body))
 
-(require 'ox)
-(add-to-list 'org-export-filter-body-functions 'my-remote-cal-filter)
+(add-hook 'org-mode (lambda ()
+                      (require 'ox)
+                      (add-hook 'org-export-filter-body-functions 'my-remote-cal-filter)))
 ; end export filter settings
 
 ;;;; synchonized with remote calendar  與遠端日曆同步
-(require 'term)
 (defun my-sync-agenda-files-to-git-repo ()
   "Synchronize org agenda files to git repo"
   (interactive)
@@ -528,6 +530,7 @@ The second element is the url to fetch the ics file from remote calendar.")
       (cd my-local-machine-org-agenda-git-repo)
       (split-window nil nil 'above)
       (switch-to-buffer buffer)
+      (require 'term)
       (term-mode)
       (term-exec buffer "Sync Org Agenda Files" "make" nil '("sync")))))
 
@@ -567,7 +570,6 @@ The second element is the url to fetch the ics file from remote calendar.")
             (princ "No buffer found\n"))))
       (princ "Synchronized from Remote Calendar"))))
 
-(require 'org-agenda)
 (defun my-sync-agenda-to-remote-cal ()
   "Synchronize org agenda to remote calendar"
   (interactive)
@@ -638,8 +640,8 @@ The second element is the url to fetch the ics file from remote calendar.")
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)
 (add-hook 'gnus-summary-mode-hook 'hl-line-mode)
 (when (package-installed-p 'ebdb)
-  (require 'ebdb-gnus)
-  (require 'ebdb-message))
+  (add-hook 'gnus-started-hook          (lambda () (require 'ebdb-gnus)))
+  (add-hook 'message-header-setup-hook  (lambda () (require 'ebdb-message))))
 ; end mail settings
 
 ;;; eww settings  eww 瀏覽器設定
@@ -688,17 +690,22 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 ;;; alert settings  alert 設定
 (when (package-installed-p 'alert)
-  (require 'alert)
-  (alert-define-style 'w32 :title "W32 notification style"
-                      :notifier 'my-alert-w32-notify
-                      :remover  'my-alert-w32-close))
+  (add-hook 'window-setup-hook
+            (lambda ()
+              (require 'alert)
+              (alert-define-style 'w32 :title "W32 notification style"
+                                  :notifier 'my-alert-w32-notify
+                                  :remover  'my-alert-w32-close))))
 ; end alert settings
 
 ;;; ivy mode settings  ivy mode 設定
 (when (package-installed-p 'ivy)
-  (setq ivy-use-virtual-buffers 't)
-  (setq minor-mode-alist (assoc-delete-all 'ivy-mode minor-mode-alist))
-  (add-to-list 'minor-mode-alist '(ivy-mode " ❧")))
+  (add-hook 'window-setup-hook (lambda () (ivy-mode 1))) ; 互動式模糊補全
+  (add-hook 'ivy-mode-hook
+            (lambda ()
+              (setq ivy-use-virtual-buffers 't)
+              (setq minor-mode-alist (assoc-delete-all 'ivy-mode minor-mode-alist))
+              (add-to-list 'minor-mode-alist '(ivy-mode " ❧")))))
 ; end ivy mode settings
 
 ;;; load local machine settings  讀取本地機器設定
