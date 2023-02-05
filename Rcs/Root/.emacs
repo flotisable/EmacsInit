@@ -462,27 +462,27 @@
          :recursive             t)))
 
 (when (package-installed-p 'org-attach-screenshot)
-  (add-hook 'org-mode-hook (lambda ()
-                             (require 'org-attach-screenshot)
+  (with-eval-after-load 'org
+    (require 'org-attach-screenshot)
 
-                             (setq org-attach-screenshot-command-line my-local-machine-org-screenshot-command-line)
-                             (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot.")))))
+    (setq org-attach-screenshot-command-line my-local-machine-org-screenshot-command-line)
+    (add-to-list 'org-attach-commands '((?C) org-attach-screenshot "Attach screenshot."))))
 
 (when (package-installed-p 'org-alert)
-  (add-hook 'org-agenda-mode-hook (lambda ()
-                                    (require 'org-alert)
-                                    (org-alert-enable)
-                                    (if (string= system-type "windows-nt")
-                                        (if (and (>= (car (w32-version)) 8) (package-installed-p 'alert-toast))
-                                            ; for Windows version >= 8
-                                            (progn
-                                              (require 'alert-toast)
-                                              (setq alert-default-style 'toast))
-                                          ; for Windows version < 8
-                                          (setq alert-default-style 'w32))
-                                      ; for other OS
-                                      (setq alert-default-style 'libnotify))
-                                    (setq org-alert-interval 600))))
+  (with-eval-after-load 'org-agenda
+    (require 'org-alert)
+    (org-alert-enable)
+    (if (string= system-type "windows-nt")
+        (if (and (>= (car (w32-version)) 8) (package-installed-p 'alert-toast))
+            ; for Windows version >= 8
+            (progn
+              (require 'alert-toast)
+              (setq alert-default-style 'toast))
+          ; for Windows version < 8
+          (setq alert-default-style 'w32))
+      ; for other OS
+      (setq alert-default-style 'libnotify))
+    (setq org-alert-interval 600)))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
