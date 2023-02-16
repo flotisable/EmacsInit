@@ -162,10 +162,35 @@
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ;;; general settings 通用設定
+(defvar my-fixed-pitch-font-family ""
+  "Fixed pitch font family")
+(defvar my-variable-pitch-font-family ""
+  "Variable pitch font family")
+(defvar my-chinese-font-family ""
+  "Chinese font family")
 
-(when (string= system-type "windows-nt")
-  (set-message-beep 'silent)
-  (set-face-attribute 'default nil :family "Consolas"))
+(if (string= system-type "windows-nt")
+    (progn
+      (set-message-beep 'silent)
+      (setq my-fixed-pitch-font-family "Consolas"))
+  (setq my-fixed-pitch-font-family    "DejaVu Sans Mono")
+  (setq my-variable-pitch-font-family "DejaVu Serif")
+  (setq my-chinese-font-family        "AR PL New Kai"))
+
+(when (member my-fixed-pitch-font-family (font-family-list))
+  (set-face-attribute 'fixed-pitch nil :family my-fixed-pitch-font-family))
+(when (member my-variable-pitch-font-family (font-family-list))
+  (set-face-attribute 'variable-pitch nil :family my-variable-pitch-font-family))
+(unless (string= my-fixed-pitch-font-family "")
+  (set-face-attribute 'default nil :family my-fixed-pitch-font-family))
+(unless (string= my-chinese-font-family "")
+  (set-fontset-font t 'han my-chinese-font-family))
+
+; This is needed for running with daemon mode
+(add-hook 'before-make-frame-hook
+          (lambda ()
+            (unless (string= my-chinese-font-family "")
+              (set-fontset-font t 'han my-chinese-font-family))))
 
 (setq-default mode-line-format
               '(:eval (my-format-mode-line
