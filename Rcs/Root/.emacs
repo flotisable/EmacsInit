@@ -169,7 +169,9 @@
 (if (string= system-type "windows-nt")
     (progn
       (set-message-beep 'silent)
-      (setq my-fixed-pitch-font-family "Consolas"))
+      (setq my-fixed-pitch-font-family    "Consolas")
+      (setq my-variable-pitch-font-family "Times New Romain")
+      (setq my-chinese-font-family        "標楷體"))
   (setq my-fixed-pitch-font-family    "DejaVu Sans Mono")
   (setq my-variable-pitch-font-family "DejaVu Serif")
   (setq my-chinese-font-family        "AR PL New Kai"))
