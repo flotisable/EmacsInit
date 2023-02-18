@@ -135,7 +135,8 @@
 ; end third-party archives
 
 ;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(defvar my-package-list '(evil
+(unless (file-exists-p package-user-dir)
+  (let (my-package-list '(evil
                           evil-collection
                           ivy
                           swiper
@@ -145,20 +146,16 @@
                           htmlize
                           ebdb
                           perfect-margin
-                          highlight-parentheses)
-  "packages to be automatically downloaded when not exists")
+                          highlight-parentheses))
+    (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
+      (add-to-list 'my-package-list 'alert-toast))
 
-(add-hook 'window-setup-hook
-          (lambda ()
-            (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
-              (add-to-list 'my-package-list 'alert-toast))
+    (unless package-archive-contents
+      (package-refresh-contents))
 
-            (unless package-archive-contents
-              (package-refresh-contents))
-
-            (dolist (package my-package-list)
-              (unless (package-installed-p package)
-                (package-install package)))) 1)
+    (dolist (package my-package-list)
+      (unless (package-installed-p package)
+        (package-install package)))) 1)
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ;;; general settings 通用設定
