@@ -494,8 +494,6 @@
 
 (when (package-installed-p 'org-alert)
   (with-eval-after-load 'org-agenda
-    (require 'org-alert)
-    (org-alert-enable)
     (if (string= system-type "windows-nt")
         (if (and (>= (car (w32-version)) 8) (package-installed-p 'alert-toast))
             ; for Windows version >= 8
@@ -506,7 +504,18 @@
           (setq alert-default-style 'w32))
       ; for other OS
       (setq alert-default-style 'libnotify))
-    (setq org-alert-interval 600)))
+    (setq org-alert-interval 600)
+    (unless (boundp 'my-org-alert-timer)
+      (run-with-timer 0 org-alert-interval
+                      (lambda ()
+                        (start-process "org-alert" "*Org Alert*" "emacs" "--daemon" "--eval" "
+                          (progn
+                            (setq my-org-alert-timer 1)
+                            (require 'org-alert)
+                            (org-agenda-list)
+                            (org-alert-check)
+                            (sleep-for alert-fade-time)
+                            (kill-emacs))"))))))
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
