@@ -357,6 +357,13 @@
   "Add the :Focus: tag is :Today: tag is set"
   (when (and (not (member "Focus" (org-get-tags))) (member "Today" (org-get-tags)))
     (org-set-tags (delete-dups (append (org-get-tags) '("Focus"))))))
+(defun my-change-parent-todo-state ()
+  "Change parent todo state"
+  (if (> (org-outline-level) 1)
+    (save-excursion
+      (outline-up-heading 1)
+      (if (org-get-todo-state)
+          (org-todo org-state)))))
 (defun my-add-clock-effort-diff-property ()
   (interactive)
   "Calculate the clock effort diff and set to property ClockEffortDiff"
@@ -519,6 +526,7 @@
 
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
+(add-hook 'org-after-todo-state-change-hook 'my-change-parent-todo-state)
 (add-hook 'org-after-tags-change-hook       'my-add-focus-tag-when-has-today-tag)
 (add-hook 'org-clock-out-hook               'my-add-clock-effort-diff-property)
 (add-hook 'org-property-changed-functions   (lambda (property value)
