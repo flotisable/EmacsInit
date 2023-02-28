@@ -364,6 +364,17 @@
       (outline-up-heading 1)
       (if (org-get-todo-state)
           (org-todo org-state)))))
+(defun my-change-children-priority ()
+  "Change children priority"
+  (let* ((element   (org-element-at-point))
+         (priority  (org-element-property :priority element))
+         (end-point (org-element-property :end      element)))
+    (if (and (equal (org-element-type element) 'headline) priority)
+      (save-excursion
+        (goto-char (org-element-property :contents-begin element))
+        (while (< (point) end-point)
+          (org-priority priority nil)
+          (goto-char (org-element-property :end (org-element-at-point))))))))
 (defun my-add-clock-effort-diff-property ()
   (interactive)
   "Calculate the clock effort diff and set to property ClockEffortDiff"
@@ -527,6 +538,8 @@
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
 (add-hook 'org-after-todo-state-change-hook 'my-change-parent-todo-state)
+(add-hook 'org-shiftup-final-hook           'my-change-children-priority)
+(add-hook 'org-shiftdown-final-hook         'my-change-children-priority)
 (add-hook 'org-after-tags-change-hook       'my-add-focus-tag-when-has-today-tag)
 (add-hook 'org-clock-out-hook               'my-add-clock-effort-diff-property)
 (add-hook 'org-property-changed-functions   (lambda (property value)
