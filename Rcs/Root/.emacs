@@ -371,7 +371,7 @@
                                     (t      'down)))
          (begin-point         (org-element-property :begin          element))
          (content-begin-point (org-element-property :contents-begin element)))
-    (when (equal (org-element-type element) 'headline)
+    (when (and content-begin-point (equal (org-element-type element) 'headline))
       (save-excursion
         (goto-char content-begin-point)
         (while (< (point) (org-element-property :end element))
