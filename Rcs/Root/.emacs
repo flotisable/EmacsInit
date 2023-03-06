@@ -375,7 +375,8 @@
       (save-excursion
         (goto-char content-begin-point)
         (while (< (point) (org-element-property :end element))
-          (org-priority priority nil)
+          (when (equal (org-element-type (org-element-at-point)) 'headline)
+            (org-priority priority nil))
           (setq content-begin-point (org-entry-end-position))
           (goto-char begin-point)
           (setq element (org-element-at-point))
