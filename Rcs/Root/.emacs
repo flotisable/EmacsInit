@@ -67,13 +67,25 @@
 ; end local machine related settings
 
 ;;; self defined functions  自定義函式
-;;;; function to toggle relative line number  切換相對行號
+;;;; function to toggle line number  切換行號
 (defun my-toggle-relative ()
   "Toggle relative line number"
   (interactive)
-  (if (equal (symbol-value 'display-line-numbers) t)
-    (setq display-line-numbers 'relative)
-    (setq display-line-numbers t        )))
+  (my-toggle-display-line t))
+
+(defun my-toggle-absolute ()
+  "Toggle absolute line number"
+  (interactive)
+  (my-toggle-display-line nil))
+
+(defun my-toggle-display-line (is-relative)
+  "Toggle line number"
+  (setq display-line-numbers (cond
+                              (is-relative
+                               (cond
+                                ((equal display-line-numbers 'visual) t)
+                                ('visual)))
+                              ((not display-line-numbers)))))
 ; end function to toggle relative line number
 
 ;;;; function to edit emacs init file  編輯 emacs 設定檔
@@ -226,8 +238,8 @@
 (global-auto-revert-mode  1   ) ; 自動讀取更改的檔案
 
 (if (fboundp 'display-line-numbers-mode)
-    (add-hook 'prog-mode-hook 'display-line-numbers-mode  )
-  (add-hook 'prog-mode-hook 'linum-mode                 )) ; 在 prog mode 下顯示行號
+    (add-hook 'prog-mode-hook 'display-line-numbers-mode )
+  (add-hook 'prog-mode-hook 'linum-mode )) ; 在 prog mode 下顯示行號
 
 (when (package-installed-p 'highlight-parentheses)
   (add-hook 'prog-mode-hook 'highlight-parentheses-mode))
@@ -278,8 +290,9 @@
               (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file ) ; 設定 \er 編輯設定檔
               (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         ) ; 設定 \ea 編輯 org agenda 設定檔
 
-              (if (fboundp 'display-line-numbers-mode)
-                  (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)) ; 設定 \r 切換行號顯示
+              (when (fboundp 'display-line-numbers-mode)
+                (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)   ; 設定 \r 切換相對行號顯示
+                (evil-global-set-key 'normal (kbd "<leader>n") 'my-toggle-absolute))  ; 設定 \n 切換行號顯示
               (when (package-installed-p 'perfect-margin)
                 (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
               ; end evil mode keybindings
