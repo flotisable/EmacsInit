@@ -136,29 +136,23 @@
                         (- (window-total-width) (string-width left-format) 3)
                         ?\s t))))
 ; end function to format mode line with right alignment
-; end self defined functions
 
-;;; third-party archives  第三方套件庫
-(add-hook 'window-setup-hook
-          (lambda ()
-            (add-to-list 'package-archives
-                         '("melpa" . "https://melpa.org/packages/") t)  ; 加入 melpa 套件庫
-            (package-initialize)))                                      ; 讀入套件資料
-; end third-party archives
-
-;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
-(unless (file-exists-p package-user-dir)
-  (let (my-package-list '(evil
-                          evil-collection
-                          ivy
-                          swiper
-                          org
-                          org-attach-screenshot
-                          org-alert
-                          htmlize
-                          ebdb
-                          perfect-margin
-                          highlight-parentheses))
+;;;; function to install predefined packages  安裝預設的套件
+(defun my-install-predefined-packages ()
+  "Install predefined packages"
+  (interactive)
+  (require 'package)
+  (let ((my-package-list  '(evil
+                            evil-collection
+                            ivy
+                            swiper
+                            org
+                            org-attach-screenshot
+                            org-alert
+                            htmlize
+                            ebdb
+                            perfect-margin
+                            highlight-parentheses)))
     (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
       (add-to-list 'my-package-list 'alert-toast))
 
@@ -167,7 +161,19 @@
 
     (dolist (package my-package-list)
       (unless (package-installed-p package)
-        (package-install package)))) 1)
+        (package-install package)))))
+; end function to install predefined packages  安裝預設的套件
+; end self defined functions
+
+;;; third-party archives  第三方套件庫
+(with-eval-after-load 'package
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/") t)) ; 加入 melpa 套件庫
+; end third-party archives
+
+;;; automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
+(unless (file-exists-p package-user-dir)
+  (my-install-predefined-packages))
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ;;; general settings 通用設定
