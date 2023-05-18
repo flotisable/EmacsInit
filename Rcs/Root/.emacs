@@ -515,10 +515,14 @@
             ,@my-org-agenda-review-settings)))))
 (setq org-todo-keywords
       '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
-(setq org-tag-persistent-alist          '(("Refile")
-                                          ("Project")
-                                          ("Today")
-                                          ("Focus")))
+(setq org-tag-persistent-alist          '(("Refile" . ?r)
+                                          ("Project"  ?p)
+                                          ("Today"    ?t)
+                                          ("Focus"    ?f)
+                                          (:startgroup)
+                                          ("Home" . ?h)
+                                          ("Work" . ?w)
+                                          (:endgroup)))
 (setq org-tags-exclude-from-inheritance '("Refile"
                                           "Project"
                                           "Today"))
