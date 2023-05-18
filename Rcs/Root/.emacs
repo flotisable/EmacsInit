@@ -514,7 +514,7 @@
             (org-agenda-start-day           "-1y")
             ,@my-org-agenda-review-settings)))))
 (setq org-todo-keywords
-      '((sequence "TODO" "WIP" "|" "DONE" "CANCEL")))
+      '((sequence "TODO(t)" "WIP(w)" "|" "DONE(d)" "CANCEL(c)")))
 (setq org-tag-persistent-alist          '(("Refile" . ?r)
                                           ("Project"  ?p)
                                           ("Today"    ?t)
