@@ -408,9 +408,11 @@
     (let ((diff (- clock effort)))
       (org-entry-put nil "ClockEffortDiff" (concat (if (>= diff 0) "+" "-") (org-duration-from-minutes (abs diff)))))))
 
-(defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode 't)
-                                          (org-agenda-archives-mode       't)
-                                          (org-agenda-use-time-grid       nil))
+(defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode         't)
+                                          (org-agenda-start-with-follow-mode      't)
+                                          (org-agenda-archives-mode               't)
+                                          (org-agenda-use-time-grid               nil)
+                                          (org-agenda-include-inactive-timestamps 't))
   "Common settings for review of org agenda")
 
 (setq org-directory                                   my-local-machine-org-directory)
@@ -511,6 +513,11 @@
            ((org-agenda-span                'week)
             (org-agenda-start-on-weekday    nil)
             (org-agenda-start-day           "-1w")
+            ,@my-org-agenda-review-settings))
+          ("am" "Review monthly agenda" agenda ""
+           ((org-agenda-span                'month)
+            (org-agenda-start-on-weekday    nil)
+            (org-agenda-start-day           "-1m")
             ,@my-org-agenda-review-settings))
           ("ay" "Review yearly agenda" agenda ""
            ((org-agenda-span                'year)
