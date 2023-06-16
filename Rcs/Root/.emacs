@@ -367,15 +367,15 @@
 (defun my-remove-today-tag-when-done ()
   "Remove the :Today: tag when a task is marked as done"
   (when (org-entry-is-done-p)
-    (org-set-tags (remove "Today" (org-get-tags)))))
+    (org-set-tags (remove "Today" (org-get-tags (point) t)))))
 (defun my-remove-focus-tag-when-done ()
   "Remove the :Focus: tag when a task is marked as done"
   (when (org-entry-is-done-p)
-    (org-set-tags (remove "Focus" (org-get-tags)))))
+    (org-set-tags (remove "Focus" (org-get-tags (point) t)))))
 (defun my-add-focus-tag-when-has-today-tag ()
   "Add the :Focus: tag is :Today: tag is set"
   (when (and (not (member "Focus" (org-get-tags))) (member "Today" (org-get-tags)))
-    (org-set-tags (delete-dups (append (org-get-tags) '("Focus"))))))
+    (org-set-tags (delete-dups (append (org-get-tags (point) t) '("Focus"))))))
 (defun my-change-parent-todo-state ()
   "Change parent todo state"
   (if (> (org-outline-level) 1)
