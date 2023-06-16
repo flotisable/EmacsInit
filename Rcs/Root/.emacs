@@ -459,9 +459,10 @@
         (org-agenda-files . (:tag       . "Refile"))
         (org-agenda-files . (:tag       . "Project"))))
 (setq org-capture-templates
-      '(("t" "todo" entry (file+headline "" "Todo") "** TODO %?")
-        ("d" "date" entry (file+headline "" "Date") "** %?\n   %^t")
-        ("n" "note" entry (file+headline "" "Note") "** %?")))
+      '(("t" "todo"       entry (file+headline "" "Todo") "** TODO %?")
+        ("d" "date"       entry (file+headline "" "Date") "** %?\n   %^t")
+        ("n" "note"       entry (file+headline "" "Note") "** %?")
+        ("w" "work note"  entry (file+headline "" "Note") "** %?\n   %U")))
 (let ((build-todo-entries
        (lambda (settings)
          (let ((build-priority-template-entry
