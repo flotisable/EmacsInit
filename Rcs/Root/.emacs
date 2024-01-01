@@ -56,7 +56,7 @@
   "local machine specific emacs init file")
 (defconst my-local-machine-org-directory                "~/Documents"
   "org-directory variable in local machine")
-(defconst my-local-machine-org-screenshot-command-line  "powershell C:/Users/s0993/Documents/Program/Powershell/screenshot.ps1 %f"
+(defconst my-local-machine-org-screenshot-command-line  "magick clipboard: %f"
   "org-screenshot-command-line variable of org-attach-screenshot package")
 (defconst my-local-machine-org-agenda-git-repo          "~/Documents/Data/OrgAgenda"
   "git repository of org agenda files")
