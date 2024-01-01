@@ -332,7 +332,7 @@
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
     (org-entry-end-position)))
-(defun my-skip-entry-if-not-today-specific-time-and-habit ()
+(defun my-skip-entry-if-not-today-and-habit ()
   "Skip entry in org agenda when not today specific time or with 'habit' style"
   (unless (string= (org-entry-get nil "STYLE") "habit")
     (let* ((point-start     (org-element-property :begin  (org-element-at-point)))
@@ -346,9 +346,7 @@
         (unless (org-element-map (org-element-parse-buffer) 'timestamp
                   (lambda (timestamp)
                     (let ((time (time-to-days (org-timestamp-to-time timestamp))))
-                      (and (<= day-start time) (< time day-end)
-                           (or (org-element-property :hour-start    timestamp)
-                               (org-element-property :minute-start  timestamp)))))
+                      (and (<= day-start time) (< time day-end))))
                   nil t)
           point-end)))))
 (defun my-skip-entry-if-not-specific-time ()
@@ -408,6 +406,39 @@
     (let ((diff (- clock effort)))
       (org-entry-put nil "ClockEffortDiff" (concat (if (>= diff 0) "+" "-") (org-duration-from-minutes (abs diff)))))))
 
+(defun my-build-todo-priority-template-entry (prioritry settings)
+  "Build priority template entry for custom todo agenda"
+  (let ((template-settings  settings)
+        (default-settings   `((org-agenda-overriding-header ,(concat "Todo List With Priority [#" (string priority) "]:"))
+                              (org-agenda-skip-function     '(my-skip-entry-if-not-priority ,priority)))))
+    (dolist (setting default-settings)
+      (add-to-list 'template-settings setting))
+    `(alltodo "" ,template-settings)))
+
+(defun my-build-agenda-priority-template-entry (priority settings-place-holder)
+  "Build priority template entry for custom agenda"
+  (let ((settings `((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority [#" (string priority) "]:"))
+                    (org-agenda-skip-function      '(lambda ()
+                                                      (let ((end-position (my-skip-entry-if-not-specific-time)))
+                                                        (if end-position
+                                                            end-position
+                                                          (my-skip-entry-if-not-priority ,priority))))))))
+    `(agenda "" ,settings)))
+
+(defun my-build-priority-entries (build-template-function settings)
+  "Build priority entries for custom agenda"
+  (mapcar (lambda (priority)
+            (funcall build-template-function priority settings))
+          (number-sequence org-highest-priority org-lowest-priority)))
+
+(defun my-build-todo-entries (settings)
+  "Build todo entries for custom agenda"
+  (my-build-priority-entries 'my-build-todo-priority-template-entry settings))
+
+(defun my-build-agenda-priority-entries ()
+  "Build priority entries for custom agenda"
+  (my-build-priority-entries 'my-build-agenda-priority-template-entry ()))
+
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode                   't)
                                           (org-agenda-start-with-follow-mode                't)
                                           (org-agenda-archives-mode                         't)
@@ -437,11 +468,11 @@
       (let* ((highest-priority-color  "#BF616A")
              (lowest-priority-color   "#5E81AC")
              (priorities              (number-sequence org-highest-priority org-lowest-priority))
-             (colors (append (append (list (color-name-to-rgb highest-priority-color))
-                                     (color-gradient (color-name-to-rgb highest-priority-color)
-                                                     (color-name-to-rgb lowest-priority-color)
-                                                     (- (length priorities) 2)))
-                             (list (color-name-to-rgb lowest-priority-color)))))
+             (colors                  (append (list (color-name-to-rgb highest-priority-color))
+                                              (color-gradient (color-name-to-rgb highest-priority-color)
+                                                              (color-name-to-rgb lowest-priority-color)
+                                                              (- (length priorities) 2))
+                                              (list (color-name-to-rgb lowest-priority-color)))))
         (mapcar (lambda (priority)
                   (let ((color (nth (- priority org-highest-priority) colors)))
                     (list priority `(:foreground  ,(color-rgb-to-hex (nth 0 color) (nth 1 color) (nth 2 color))
@@ -466,67 +497,41 @@
         ("d" "date"       entry (file+headline "" "Date") "** %?\n   %^t")
         ("n" "note"       entry (file+headline "" "Note") "** %?")
         ("w" "work note"  entry (file+headline "" "Note") "** %?\n   %U")))
-(let ((build-todo-entries
-       (lambda (settings)
-         (let ((build-priority-template-entry
-                (lambda (priority)
-                  (let (template-settings)
-                    (dolist (setting settings)
-                      (add-to-list 'template-settings setting))
-                    (add-to-list 'template-settings `(org-agenda-overriding-header ,(concat "Todo List With Priority [#" (string priority) "]:")))
-                    (add-to-list 'template-settings `(org-agenda-skip-function     '(my-skip-entry-if-not-priority ,priority)))
-                    `(alltodo "" ,template-settings)))))
-           (mapcar build-priority-template-entry
-                   (number-sequence org-highest-priority org-lowest-priority)))))
-
-      (build-agenda-priority-entries
-       (lambda ()
-         (let ((build-priority-entry
-                (lambda (priority)
-                  `(agenda "" ((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority [#" (string priority) "]:"))
-                               (org-agenda-skip-function      '(lambda ()
-                                                                 (let ((end-position (my-skip-entry-if-not-specific-time)))
-                                                                   (if end-position
-                                                                       end-position
-                                                                     (my-skip-entry-if-not-priority ,priority))))))))))
-           (mapcar build-priority-entry
-                   (number-sequence org-highest-priority org-lowest-priority))))))
-
-  (setq org-agenda-custom-commands
-        `(("t" . "List TODO entries")
-          ("ta" "List all the TODO entries"
-           ,(funcall build-todo-entries ()))
-          ("tt" "List all the unscheduled TODO entries"
-           ,(funcall build-todo-entries '((org-agenda-todo-ignore-scheduled 't))))
-          ("tu" "List all the unassigned TODO entries"
-           ,(funcall build-todo-entries '((org-agenda-todo-ignore-scheduled 't)
-                                          (org-agenda-todo-ignore-deadlines 't))))
-          ("a" . "List Agendas")
-          ("aa" "Agenda and todo for current day"
-           ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
-                                 (org-agenda-skip-function      'my-skip-entry-if-not-today-specific-time-and-habit)
-                                 (org-deadline-warning-days     0)))
-            (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
-            (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))
-            ,@(funcall build-agenda-priority-entries)))
-          ("ad" "Review daily agenda" agenda ""
-           ((org-agenda-span                'day)
-            (org-agenda-start-day           "-1d")
-            ,@my-org-agenda-review-settings))
-          ("aw" "Review weekly agenda" agenda ""
-           ((org-agenda-span                'week)
-            (org-agenda-start-on-weekday    nil)
-            (org-agenda-start-day           "-1w")
-            ,@my-org-agenda-review-settings))
-          ("am" "Review monthly agenda" agenda ""
-           ((org-agenda-span                'month)
-            (org-agenda-start-on-weekday    nil)
-            (org-agenda-start-day           "-1m")
-            ,@my-org-agenda-review-settings))
-          ("ay" "Review yearly agenda" agenda ""
-           ((org-agenda-span                'year)
-            (org-agenda-start-day           "-1y")
-            ,@my-org-agenda-review-settings)))))
+(setq org-agenda-custom-commands
+      `(("t" . "List TODO entries")
+        ("ta" "List all the TODO entries"
+         ,(my-build-todo-entries ()))
+        ("tt" "List all the unscheduled TODO entries"
+         ,(my-build-todo-entries '((org-agenda-todo-ignore-scheduled 't))))
+        ("tu" "List all the unassigned TODO entries"
+         ,(my-build-todo-entries '((org-agenda-todo-ignore-scheduled 't)
+                                   (org-agenda-todo-ignore-deadlines 't))))
+        ("a" . "List Agendas")
+        ("aa" "Agenda and todo for current day"
+         ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
+                               (org-agenda-skip-function      'my-skip-entry-if-not-today-and-habit)
+                               (org-deadline-warning-days     0)))
+          (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
+          (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))
+          ,@(my-build-agenda-priority-entries)))
+        ("ad" "Review daily agenda" agenda ""
+         ((org-agenda-span                'day)
+          (org-agenda-start-day           "-1d")
+          ,@my-org-agenda-review-settings))
+        ("aw" "Review weekly agenda" agenda ""
+         ((org-agenda-span                'week)
+          (org-agenda-start-on-weekday    nil)
+          (org-agenda-start-day           "-1w")
+          ,@my-org-agenda-review-settings))
+        ("am" "Review monthly agenda" agenda ""
+         ((org-agenda-span                'month)
+          (org-agenda-start-on-weekday    nil)
+          (org-agenda-start-day           "-1m")
+          ,@my-org-agenda-review-settings))
+        ("ay" "Review yearly agenda" agenda ""
+         ((org-agenda-span                'year)
+          (org-agenda-start-day           "-1y")
+          ,@my-org-agenda-review-settings))))
 (setq org-todo-keywords
       '((sequence "TODO(t)" "WIP(w)" "|" "DONE(d)" "CANCEL(c)")))
 (setq org-tag-persistent-alist          '(("Refile"   . ?r)
