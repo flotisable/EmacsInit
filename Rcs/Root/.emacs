@@ -54,7 +54,7 @@
 ;;; local machine related settings  跟本地機器相關的設定
 (defconst my-local-machine-init-file                    (concat user-emacs-directory "/localInit.el")
   "local machine specific emacs init file")
-(defconst my-local-machine-org-directory                "~/Documents"
+(defconst my-local-machine-org-directory                "~/Documents/Org"
   "org-directory variable in local machine")
 (defconst my-local-machine-org-screenshot-command-line  "magick clipboard: %f"
   "org-screenshot-command-line variable of org-attach-screenshot package")
