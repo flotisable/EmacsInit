@@ -460,6 +460,8 @@
 (setq org-export-backends                             '(html latex odt beamer icalendar))
 (setq org-agenda-span                                 'day)
 (setq org-agenda-skip-scheduled-if-deadline-is-shown  'repeated-after-deadline)
+(setq org-agenda-skip-scheduled-if-done                't)
+(setq org-agenda-skip-deadline-if-done                 't)
 (setq org-agenda-dim-blocked-tasks                    'invisible)
 (setq org-highest-priority                            ?A)
 (setq org-lowest-priority                             ?E)
