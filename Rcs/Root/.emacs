@@ -329,6 +329,7 @@
 ; end evil mode settings
 
 ;;; org mode settings  org mode 設定
+;;;; self defined functions  自定義函式
 (defun my-skip-entry-if-not-priority (priority)
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
@@ -440,6 +441,7 @@
   "Build priority entries for custom agenda"
   (my-build-priority-entries 'my-build-agenda-priority-template-entry ()))
 
+;;;; org mode settings  org mode 設定
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode                   't)
                                           (org-agenda-start-with-follow-mode                't)
                                           (org-agenda-archives-mode                         't)
