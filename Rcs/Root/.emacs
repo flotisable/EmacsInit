@@ -25,7 +25,8 @@
  '(org-modules
    '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
  '(safe-local-variable-values
-   '((eval outline-hide-sublevels 3)
+   '((org-archive-save-context-info)
+     (eval outline-hide-sublevels 3)
      (eval outline-minor-mode 't)
      (org-use-sub-superscripts . {})
      (org-export-with-sub-superscripts . {})))
