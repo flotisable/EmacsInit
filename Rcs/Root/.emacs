@@ -415,7 +415,7 @@
                               (org-agenda-skip-function     '(my-skip-entry-if-not-priority ,priority)))))
     (dolist (setting default-settings)
       (add-to-list 'template-settings setting))
-    `(alltodo "" ,template-settings)))
+    `(todo "TODO|WIP" ,template-settings)))
 
 (defun my-build-agenda-priority-template-entry (priority settings-place-holder)
   "Build priority template entry for custom agenda"
@@ -451,6 +451,11 @@
                                           (org-agenda-skip-scheduled-if-done                't)
                                           (org-agenda-skip-additional-timestamps-same-entry 't))
   "Common settings for review of org agenda")
+
+(defconst my-org-agenda-settings '((org-agenda-include-inactive-timestamps           't)
+                                   (org-agenda-skip-deadline-if-done                 't)
+                                   (org-agenda-skip-scheduled-if-done                't))
+  "Common settings for org agenda")
 
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
@@ -511,34 +516,52 @@
         ("tu" "List all the unassigned TODO entries"
          ,(my-build-todo-entries '((org-agenda-todo-ignore-scheduled 't)
                                    (org-agenda-todo-ignore-deadlines 't))))
+        ("tw" "List all wait TODO entries" todo "WAIT")
+        ("tp" "List all pending TODO entries" todo "PENDING")
+        ("td" "List all done TODO entries" todo "DONE|CANCEL")
+        ("tf" "List all focus TODO entries" tags-todo "Focus")
         ("a" . "List Agendas")
         ("aa" "Agenda and todo for current day"
          ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
                                (org-agenda-skip-function      'my-skip-entry-if-not-today-and-habit)
                                (org-deadline-warning-days     0)))
           (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
-          (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))
-          ,@(my-build-agenda-priority-entries)))
-        ("ad" "Review daily agenda" agenda ""
+          (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))))
+        ("ap" "Prioritized agenda and todo for current day"
+         (,@(my-build-agenda-priority-entries)))
+        ("ad" "Daily agenda" agenda ""
+         ((org-agenda-span 'day)
+          ,@my-org-agenda-settings))
+        ("aw" "Weekly agenda" agenda ""
+         ((org-agenda-span 'week)
+          ,@my-org-agenda-settings))
+        ("am" "Monthly agenda" agenda ""
+         ((org-agenda-span 'month)
+          ,@my-org-agenda-settings))
+        ("ay" "Yearly agenda" agenda ""
+         ((org-agenda-span 'year)
+          ,@my-org-agenda-settings))
+        ("r" . "List Review Agendas")
+        ("rd" "Review daily agenda" agenda ""
          ((org-agenda-span                'day)
           (org-agenda-start-day           "-1d")
           ,@my-org-agenda-review-settings))
-        ("aw" "Review weekly agenda" agenda ""
+        ("rw" "Review weekly agenda" agenda ""
          ((org-agenda-span                'week)
           (org-agenda-start-on-weekday    nil)
           (org-agenda-start-day           "-1w")
           ,@my-org-agenda-review-settings))
-        ("am" "Review monthly agenda" agenda ""
+        ("rm" "Review monthly agenda" agenda ""
          ((org-agenda-span                'month)
           (org-agenda-start-on-weekday    nil)
           (org-agenda-start-day           "-1m")
           ,@my-org-agenda-review-settings))
-        ("ay" "Review yearly agenda" agenda ""
+        ("ry" "Review yearly agenda" agenda ""
          ((org-agenda-span                'year)
           (org-agenda-start-day           "-1y")
           ,@my-org-agenda-review-settings))))
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WIP(w)" "|" "DONE(d)" "CANCEL(c)")))
+      '((sequence "TODO(t)" "WIP(w)" "WAIT(a)" "PENDING(p)" "|" "DONE(d)" "CANCEL(c)")))
 (setq org-tag-persistent-alist          '(("Refile"   . ?r)
                                           ("Project"  . ?p)
                                           ("Today"    . ?t)
