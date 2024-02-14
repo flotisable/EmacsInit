@@ -457,6 +457,8 @@
                                    (org-agenda-skip-scheduled-if-done       't))
   "Common settings for org agenda")
 
+(require 'org-protocol)
+
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file              (concat org-directory "/agenda.ics"))
