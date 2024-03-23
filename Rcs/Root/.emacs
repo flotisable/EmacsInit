@@ -586,6 +586,10 @@
           ,@my-org-agenda-review-settings))))
 (setq org-todo-keywords
       '((sequence "TODO(t)" "WIP(w)" "WAIT(a)" "PENDING(p)" "|" "DONE(d)" "CANCEL(c)")))
+(setq org-todo-keyword-faces            `(("WIP"      . (:foreground ,my-nord8 :weight bold))
+                                          ("WAIT"     . (:foreground ,my-nord9))
+                                          ("PENDING"  . (:foreground ,my-nord3))
+                                          ("CANCEL"   . (:foreground ,my-nord12))))
 (setq org-tag-persistent-alist          '(("Refile"   . ?r)
                                           ("Project"  . ?p)
                                           ("Today"    . ?t)
@@ -594,6 +598,10 @@
                                           ("Home" . ?h)
                                           ("Work" . ?w)
                                           (:endgroup)))
+(setq org-tag-faces                     `(("Today"  . (:foreground ,my-nord8 :weight bold))
+                                          ("Focus"  . (:foreground ,my-nord9))
+                                          ("Home"   . (:foreground ,my-nord14))
+                                          ("Work"   . (:foreground ,my-nord15))))
 (setq org-tags-exclude-from-inheritance '("Refile"
                                           "Project"
                                           "Today"))
