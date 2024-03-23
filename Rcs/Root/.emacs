@@ -178,6 +178,23 @@
 ; end automatic download package when using emacs for the first time  在第一次使用 emacs 時自動下載套件
 
 ;;; general settings 通用設定
+(defconst my-nord0  "#2E3440" "Nord them nord0  color")
+(defconst my-nord1  "#3B4252" "Nord them nord1  color")
+(defconst my-nord2  "#434C5E" "Nord them nord2  color")
+(defconst my-nord3  "#4C566A" "Nord them nord3  color")
+(defconst my-nord4  "#D8DEE9" "Nord them nord4  color")
+(defconst my-nord5  "#E5E9F0" "Nord them nord5  color")
+(defconst my-nord6  "#ECEFF4" "Nord them nord6  color")
+(defconst my-nord7  "#8FBCBB" "Nord them nord7  color")
+(defconst my-nord8  "#88C0D0" "Nord them nord8  color")
+(defconst my-nord9  "#81A1C1" "Nord them nord9  color")
+(defconst my-nord10 "#5E81AC" "Nord them nord10 color")
+(defconst my-nord11 "#BF616A" "Nord them nord11 color")
+(defconst my-nord12 "#D08770" "Nord them nord12 color")
+(defconst my-nord13 "#EBCB8B" "Nord them nord13 color")
+(defconst my-nord14 "#A3BE8C" "Nord them nord14 color")
+(defconst my-nord15 "#B48EAD" "Nord them nord15 color")
+
 (defvar my-fixed-pitch-font-family ""
   "Fixed pitch font family")
 (defvar my-variable-pitch-font-family ""
@@ -211,28 +228,28 @@
               (set-fontset-font t 'han my-chinese-font-family))))
 
 (setq-default mode-line-format
-              '(:eval (my-format-mode-line
+              `(:eval (my-format-mode-line
                        '((:propertize ("" "%e" mode-line-front-space (vc-mode vc-mode) " ")
-                                      face (:foreground "#8FBCBB" :background "#BF616A"))
+                                      face (:foreground ,my-nord7 :background ,my-nord11))
                          (:eval (propertize
                                  (string-replace
                                   "%" "%%"
                                   (format-mode-line
                                    '(" " mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)))
-                                 'face '(:foreground "#88C0D0" :background "#3B4252" :weight bold)))
+                                 'face '(:foreground ,my-nord8 :background ,my-nord1 :weight bold)))
                          (:propertize evil-mode-line-tag
-                                      face (:foreground "#88C0D0" :background "#3B4252" :weight bold))
+                                      face (:foreground ,my-nord8 :background ,my-nord1 :weight bold))
                          (:eval (propertize
                                  (format-mode-line
                                   '("" mode-line-frame-identification mode-line-buffer-identification))
-                                 'face '(:foreground "#D8DEE9" :weight bold))))
+                                 'face '(:foreground ,my-nord4 :weight bold))))
                        '((:eval (propertize
                                  (format-mode-line '(" " mode-line-modes))
-                                 'face '(:foreground "#88C0D0" :background "#3B4252" :weight bold)))
+                                 'face '(:foreground ,my-nord8 :background ,my-nord1 :weight bold)))
                          (:eval (propertize
                                  (format-mode-line '(" " mode-line-position))
-                                 'face '(:foreground "#EBCB8B" :background "#81A1C1")))
-                         (:propertize (" " mode-line-misc-info mode-line-end-spaces) face (:background "#5E81AC"))))))
+                                 'face '(:foreground ,my-nord13 :background ,my-nord9)))
+                         (:propertize (" " mode-line-misc-info mode-line-end-spaces) face (:background ,my-nord10))))))
 ; end general settings
 
 ;;; mode settings  模式設定
@@ -479,8 +496,8 @@
 (setq org-lowest-priority                             ?E)
 (setq org-default-priority                            ?C)
 (setq org-priority-faces
-      (let* ((highest-priority-color  "#BF616A")
-             (lowest-priority-color   "#5E81AC")
+      (let* ((highest-priority-color  my-nord11)
+             (lowest-priority-color   my-nord10)
              (priorities              (number-sequence org-highest-priority org-lowest-priority))
              (colors                  (append (list (color-name-to-rgb highest-priority-color))
                                               (color-gradient (color-name-to-rgb highest-priority-color)
