@@ -540,14 +540,17 @@
         ("tw" "List all wait TODO entries" todo "WAIT")
         ("tp" "List all pending TODO entries" todo "PENDING")
         ("td" "List all done TODO entries" todo "DONE|CANCEL")
-        ("tf" "List all focus TODO entries" tags-todo "Focus")
+        ("tf" "List all focus TODO entries" tags-todo "Focus" ((org-agenda-overriding-header  "Focused Todo List:")
+                                                               (org-agenda-hide-tags-regexp   "Focus")))
         ("a" . "List Agendas")
         ("aa" "Agenda and todo for current day"
          ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
                                (org-agenda-skip-function      'my-skip-entry-if-not-today-and-habit)
                                (org-deadline-warning-days     0)))
-          (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")))
-          (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")))))
+          (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")
+                               (org-agenda-hide-tags-regexp   "Today")))
+          (tags-todo  "Focus" ((org-agenda-overriding-header  "Focused Todo List:")
+                               (org-agenda-hide-tags-regexp   "Focus")))))
         ("ap" "Prioritized agenda and todo for current day"
          (,@(my-build-agenda-priority-entries)))
         ("ad" "Daily agenda" agenda ""
