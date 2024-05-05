@@ -62,7 +62,7 @@
 (defconst my-local-machine-org-agenda-git-repo          "~/Documents/Data/OrgAgenda"
   "git repository of org agenda files")
 (defconst my-local-machine-github-io-git-repo           "~/Documents/Github/flotisable.github.io"
-  "git repository of github io pahe")
+  "git repository of github io page")
 
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
