@@ -351,23 +351,6 @@
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
     (org-entry-end-position)))
-(defun my-skip-entry-if-not-today-and-habit ()
-  "Skip entry in org agenda when not today specific time or with 'habit' style"
-  (unless (string= (org-entry-get nil "STYLE") "habit")
-    (let* ((point-start     (org-element-property :begin  (org-element-at-point)))
-           (point-end       (org-element-property :end    (org-element-at-point)))
-           (element-string  (buffer-substring point-start point-end))
-           (today           org-starting-day)
-           (day-start       (time-to-days today))
-           (day-end         (time-to-days (time-add today 86400))))
-      (with-temp-buffer
-        (insert element-string)
-        (unless (org-element-map (org-element-parse-buffer) 'timestamp
-                  (lambda (timestamp)
-                    (let ((time (time-to-days (org-timestamp-to-time timestamp))))
-                      (and (<= day-start time) (< time day-end))))
-                  nil t)
-          point-end)))))
 (defun my-skip-entry-if-not-specific-time ()
   "Skip entry in org agenda when not today non specific time"
   (let* ((point-start     (org-element-property :begin  (org-element-at-point)))
@@ -545,8 +528,10 @@
         ("a" . "List Agendas")
         ("aa" "Agenda and todo for current day"
          ((agenda     ""      ((org-agenda-overriding-header  "Daily Agenda:")
-                               (org-agenda-skip-function      'my-skip-entry-if-not-today-and-habit)
+                               (org-scheduled-past-days       0)
+                               (org-deadline-past-days        0)
                                (org-deadline-warning-days     0)
+                               (org-habit-scheduled-past-days 10000)
                                (org-agenda-hide-tags-regexp   "Today\\\|Focus")))
           (tags-todo  "Today" ((org-agenda-overriding-header  "Today's Todo List:")
                                (org-agenda-hide-tags-regexp   "Today\\\|Focus")))
