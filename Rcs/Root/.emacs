@@ -250,6 +250,8 @@
                                  (format-mode-line '(" " mode-line-position))
                                  'face '(:foreground ,my-nord13 :background ,my-nord9)))
                          (:propertize (" " mode-line-misc-info mode-line-end-spaces) face (:background ,my-nord10))))))
+
+(setq display-line-numbers-type 'visual)
 ; end general settings
 
 ;;; mode settings  模式設定
@@ -262,8 +264,11 @@
 (global-auto-revert-mode  1 ) ; 自動讀取更改的檔案
 
 (if (fboundp 'display-line-numbers-mode)
-    (add-hook 'prog-mode-hook 'display-line-numbers-mode )
-  (add-hook 'prog-mode-hook 'linum-mode )) ; 在 prog mode 下顯示行號
+    (progn
+      (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+      (add-hook 'text-mode-hook 'display-line-numbers-mode))
+  (add-hook 'prog-mode-hook 'linum-mode)
+  (add-hook 'text-mode-hook 'linum-mode)) ; 在 prog mode 下顯示行號
 
 (when (package-installed-p 'highlight-parentheses)
   (add-hook 'prog-mode-hook 'highlight-parentheses-mode))
