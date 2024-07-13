@@ -253,13 +253,13 @@
 ; end general settings
 
 ;;; mode settings  模式設定
-(column-number-mode       1   ) ; 在 mode line 顯示列號
-(menu-bar-mode            -1  ) ; 關閉 menu bar
-(tool-bar-mode            -1  ) ; 關閉 tool bar
-(scroll-bar-mode          -1  ) ; 關閉 scroll bar
-(display-time-mode        1   ) ; 在 mode line 顯示時間
-(show-paren-mode          1   ) ; highlight 對應的小括號
-(global-auto-revert-mode  1   ) ; 自動讀取更改的檔案
+(column-number-mode       1 ) ; 在 mode line 顯示列號
+(menu-bar-mode            -1) ; 關閉 menu bar
+(tool-bar-mode            -1) ; 關閉 tool bar
+(scroll-bar-mode          -1) ; 關閉 scroll bar
+(display-time-mode        1 ) ; 在 mode line 顯示時間
+(show-paren-mode          1 ) ; highlight 對應的小括號
+(global-auto-revert-mode  1 ) ; 自動讀取更改的檔案
 
 (if (fboundp 'display-line-numbers-mode)
     (add-hook 'prog-mode-hook 'display-line-numbers-mode )
@@ -860,7 +860,7 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 ;;; load local machine settings  讀取本地機器設定
 (when (file-readable-p my-local-machine-init-file)
-    (load-file my-local-machine-init-file))
+  (load-file my-local-machine-init-file))
 ;;; local varialbe settings
 ;; Local Variables:
 ;; eval: (outline-minor-mode 't)
