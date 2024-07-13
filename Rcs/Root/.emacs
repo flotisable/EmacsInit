@@ -448,7 +448,6 @@
 
 ;;;; org mode settings  org mode 設定
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode                   't)
-                                          (org-agenda-start-with-follow-mode                't)
                                           (org-agenda-archives-mode                         't)
                                           (org-agenda-use-time-grid                         nil)
                                           (org-agenda-include-inactive-timestamps           't)
