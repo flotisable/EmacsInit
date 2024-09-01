@@ -110,6 +110,13 @@
   (find-file org-agenda-files))
 ; end function to edit org agenda file
 
+;;;; function to edit org file  編輯 org 檔案
+(defun my-edit-org-dir-file ()
+  "Edit org file in org directory"
+  (interactive)
+  (ido-find-file-in-dir my-local-machine-org-directory))
+; end function to edit org file
+
 ;;;; function to alert on Windows < 8  在 Windows 8 以下的 alert
 (defun my-alert-w32-notify (info)
   "Alert on Windows < 8"
@@ -318,7 +325,7 @@
               (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file               ) ; 設定 \er 編輯設定檔
               (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file ) ; 設定 \er 編輯設定檔
               (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         ) ; 設定 \ea 編輯 org agenda 設定檔
-
+              (evil-global-set-key  'normal (kbd "<leader>eo") 'my-edit-org-dir-file            ) ; 設定 \eo 編輯 org 檔案
               (when (fboundp 'display-line-numbers-mode)
                 (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)   ; 設定 \r 切換相對行號顯示
                 (evil-global-set-key 'normal (kbd "<leader>n") 'my-toggle-absolute))  ; 設定 \n 切換行號顯示
