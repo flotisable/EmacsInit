@@ -89,6 +89,19 @@
                               ((not display-line-numbers)))))
 ; end function to toggle relative line number
 
+;;;; function to toggle frame alpha  切換透明度
+(defun my-toggle-frame-alpha ()
+  "Toggle frame alpha"
+  (interactive)
+  (let ((default-alpha 100)
+        (opacity-alpha 80)
+        (current-alpha (frame-parameter (selected-frame) 'alpha)))
+    (set-frame-parameter (selected-frame) 'alpha
+                         (cond
+                          ((or (not current-alpha) (= current-alpha default-alpha)) opacity-alpha)
+                            (default-alpha)))))
+; end function to toggle frame alpha
+
 ;;;; function to edit emacs init file  編輯 emacs 設定檔
 (defun my-edit-init-file ()
   "Edit emacs init file"
@@ -284,9 +297,10 @@
 ; end mode settings
 
 ;;; key bindings  按鍵設定
-(global-set-key (kbd "C-c a") 'org-agenda ) ; 設定 C-c a 開啟 org agenda dispatcher
-(global-set-key (kbd "C-c c") 'org-capture) ; 設定 C-c c 開啟 org capture
-(global-set-key (kbd "C-s"  ) 'swiper     ) ; 設定 C-s 開啟互動式模糊搜尋
+(global-set-key (kbd "C-c a") 'org-agenda           ) ; 設定 C-c a 開啟 org agenda dispatcher
+(global-set-key (kbd "C-c c") 'org-capture          ) ; 設定 C-c c 開啟 org capture
+(global-set-key (kbd "C-s"  ) 'swiper               ) ; 設定 C-s 開啟互動式模糊搜尋
+(global-set-key (kbd "C-c o") 'my-toggle-frame-alpha) ; 設定 C-c o 切換透明度
 ; end key bindings
 
 ;;; evil mode settings  evil mode 設定
