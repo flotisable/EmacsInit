@@ -373,9 +373,7 @@
 
 ;;; org mode settings  org mode 設定
 ;;;; self defined functions  自定義函式
-(defconst my-org-capture-frame-name "Org Capture"
-  "Frame name of org capture used for tiling window manager")
-
+;;;;; miscs  雜項
 (defun my-skip-entry-if-not-priority (priority)
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
@@ -436,6 +434,11 @@
         (clock  (org-duration-to-minutes (org-clock-sum-current-item))))
     (let ((diff (- clock effort)))
       (org-entry-put nil "ClockEffortDiff" (concat (if (>= diff 0) "+" "-") (org-duration-from-minutes (abs diff)))))))
+
+;;;;; org capture for tiling window manager  在平鋪式視窗管理員使用 org capture
+(defconst my-org-capture-frame-name "Org Capture"
+  "Frame name of org capture used for tiling window manager")
+
 (defun my-delete-org-capture-frame ()
   "Delete the frame of org capture used for tiling window manager"
   (dolist (frame (frame-list))
@@ -456,6 +459,7 @@
         (remove-hook  'org-capture-mode-hook            'delete-other-windows)
         (add-hook     'org-capture-after-finalize-hook  'my-delete-org-capture-frame)))))
 
+;;;;; building org agenda  用於建構 org agenda
 (defun my-build-todo-priority-template-entry (prioritry settings)
   "Build priority template entry for custom todo agenda"
   (let ((template-settings  settings)
@@ -488,6 +492,111 @@
 (defun my-build-agenda-priority-entries ()
   "Build priority entries for custom agenda"
   (my-build-priority-entries 'my-build-agenda-priority-template-entry ()))
+
+;;;;; synchonized with remote calendar  與遠端日曆同步
+(defun my-remote-cal-filter (body backend channel)
+  "Filter agenda from remote calendar"
+  (if (string-equal backend "icalendar")
+      (let ((category (org-get-category))
+            filtered)
+        (with-temp-buffer
+          (insert-file-contents my-remote-cal-file)
+          (dolist (line (split-string (buffer-string) "\n" t))
+            (when (string-equal category (car (read line)))
+              (setq filtered 't))))
+        (if filtered
+            ""
+          body))
+    body))
+
+(defun my-sync-agenda-files-to-git-repo ()
+  "Synchronize org agenda files to git repo"
+  (interactive)
+  (let ((buffer (get-buffer-create "*Sync Org Agenda Files*")))
+    (with-current-buffer buffer
+      (cd my-local-machine-org-agenda-git-repo)
+      (split-window nil nil 'above)
+      (switch-to-buffer buffer)
+      (require 'term)
+      (term-mode)
+      (term-exec buffer "Sync Org Agenda Files" "make" nil '("sync")))))
+
+(defun my-sync-agenda-files-from-google-drive ()
+  "Synchronize org agenda files from google drive"
+  (interactive)
+  (let ((process (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" "google:Emacs/Org/note.org.gpg" my-org-note-gpg-file)))
+    (set-process-sentinel process (lambda (process event)
+                                    (epa-decrypt-file my-org-note-gpg-file (expand-file-name org-default-notes-file))))))
+
+(defun my-sync-agenda-files-to-google-drive ()
+  "Synchronize org agenda files to google drive"
+  (interactive)
+  (epa-encrypt-file (expand-file-name org-default-notes-file) (epg-list-keys (epg-make-context epa-protocol) "Wei-Chih"))
+  (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" my-org-note-gpg-file "google:Emacs/Org/note.org.gpg"))
+
+(defun my-sync-agenda-from-remote-cal ()
+  "Synchronize org agenda from remote calendar"
+  (interactive)
+  (let ((ics2org "ical2orgpy")
+        line data url icsFile orgFile)
+    (with-temp-buffer
+      (insert-file-contents my-remote-cal-file)
+      (dolist (line (split-string (buffer-string) "\n" t))
+        (setq data    (read line))
+        (setq url     (cadr data))
+        (setq icsFile (concat (expand-file-name org-directory) "/" (car data) ".ics"))
+        (setq orgFile (concat (expand-file-name org-directory) "/" (car data) ".org"))
+        (call-process "curl"  nil nil nil url "-o" icsFile)
+        (call-process ics2org nil nil nil icsFile orgFile)
+        (delete-file icsFile)
+        (let ((buffer (find-buffer-visiting orgFile)))
+          (if buffer
+            (save-current-buffer
+              (set-buffer buffer)
+              (revert-buffer 't 't))
+            (princ "No buffer found\n"))))
+      (princ "Synchronized from Remote Calendar"))))
+
+(defun my-sync-agenda-to-remote-cal ()
+  "Synchronize org agenda to remote calendar"
+  (interactive)
+  (org-icalendar-combine-agenda-files)
+  (princ "Synchronized to Remote Calendar"))
+; end synchonized with remote calendar
+
+;;;;; for org agenda keybindings  用於 org agenda 快捷鍵
+(defun my-org-agenda-file-to-front ()
+  "org-agenda-file-to-front works on single org-agenda-files"
+  (interactive)
+  (save-current-buffer
+    (let ((current-file buffer-file-name)
+          (agenda-file  org-agenda-files))
+      (set-buffer (find-file-noselect agenda-file))
+      (goto-char (point-min))
+      (insert current-file "\n")
+      (save-buffer)
+      (princ (concat "Adding file " current-file " to agenda file")))))
+
+(defun my-org-remove-file ()
+  "org-remove-file works on single org-agenda-files"
+  (interactive)
+  (save-current-buffer
+    (let ((current-file buffer-file-name)
+          (agenda-file  org-agenda-files))
+      (set-buffer (find-file-noselect agenda-file))
+      (goto-char (point-min))
+      (goto-char (re-search-forward (concat "^" current-file "$") nil t))
+      (delete-region (- (point) (length current-file)) (1+ (point)))
+      (save-buffer)
+      (princ (concat "Removing file " current-file " from agenda file")))))
+
+(defun my-org-agenda-toggle-blocked-tasks-visiblility ()
+  "Toggle visitility of blocked tasks in org agenda"
+  (interactive)
+  (if (equal org-agenda-dim-blocked-tasks 'invisible)
+      (setq org-agenda-dim-blocked-tasks 't)
+    (setq org-agenda-dim-blocked-tasks 'invisible))
+  (org-agenda-redo))
 
 ;;;; org mode settings  org mode 設定
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode                   't)
@@ -676,6 +785,7 @@
                             (sleep-for alert-fade-time)
                             (kill-emacs))"))))))
 
+(add-hook 'org-agenda-mode-hook             'hl-line-mode)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
 (add-hook 'org-after-todo-state-change-hook 'my-change-parent-todo-state)
@@ -688,133 +798,25 @@
 (add-hook 'org-property-changed-functions   (lambda (property value)
                                               (when (string= property "Effort")
                                                 (my-add-clock-effort-diff-property))))
-
 (defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
   "The file stores the information to synchronize with remote calendar.
 Each line is an elisp list with two string elements.
 The first element is the filename to store the agenda.
 The second element is the url to fetch the ics file from remote calendar.")
-(defconst my-org-note-gpg-file (concat (expand-file-name org-default-notes-file) ".gpg")
-  "The file is the gpg encrypt note file of org mode")
-
-;;;; export filter settings  匯出過濾器設定
-(defun my-remote-cal-filter (body backend channel)
-  "Filter agenda from remote calendar"
-  (if (string-equal backend "icalendar")
-      (let ((category (org-get-category))
-            filtered)
-        (with-temp-buffer
-          (insert-file-contents my-remote-cal-file)
-          (dolist (line (split-string (buffer-string) "\n" t))
-            (when (string-equal category (car (read line)))
-              (setq filtered 't))))
-        (if filtered
-            ""
-          body))
-    body))
 
 (add-hook 'org-mode (lambda ()
                       (require 'ox)
                       (add-hook 'org-export-filter-body-functions 'my-remote-cal-filter)))
-; end export filter settings
 
-;;;; synchonized with remote calendar  與遠端日曆同步
-(defun my-sync-agenda-files-to-git-repo ()
-  "Synchronize org agenda files to git repo"
-  (interactive)
-  (let ((buffer (get-buffer-create "*Sync Org Agenda Files*")))
-    (with-current-buffer buffer
-      (cd my-local-machine-org-agenda-git-repo)
-      (split-window nil nil 'above)
-      (switch-to-buffer buffer)
-      (require 'term)
-      (term-mode)
-      (term-exec buffer "Sync Org Agenda Files" "make" nil '("sync")))))
-
-(defun my-sync-agenda-files-from-google-drive ()
-  "Synchronize org agenda files from google drive"
-  (interactive)
-  (let ((process (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" "google:Emacs/Org/note.org.gpg" my-org-note-gpg-file)))
-    (set-process-sentinel process (lambda (process event)
-                                    (epa-decrypt-file my-org-note-gpg-file (expand-file-name org-default-notes-file))))))
-
-(defun my-sync-agenda-files-to-google-drive ()
-  "Synchronize org agenda files to google drive"
-  (interactive)
-  (epa-encrypt-file (expand-file-name org-default-notes-file) (epg-list-keys (epg-make-context epa-protocol) "Wei-Chih"))
-  (start-process "sync" "*Sync Org Agenda Files*" "rclone" "copyto" my-org-note-gpg-file "google:Emacs/Org/note.org.gpg"))
-
-(defun my-sync-agenda-from-remote-cal ()
-  "Synchronize org agenda from remote calendar"
-  (interactive)
-  (let ((ics2org "ical2orgpy")
-        line data url icsFile orgFile)
-    (with-temp-buffer
-      (insert-file-contents my-remote-cal-file)
-      (dolist (line (split-string (buffer-string) "\n" t))
-        (setq data    (read line))
-        (setq url     (cadr data))
-        (setq icsFile (concat (expand-file-name org-directory) "/" (car data) ".ics"))
-        (setq orgFile (concat (expand-file-name org-directory) "/" (car data) ".org"))
-        (call-process "curl"  nil nil nil url "-o" icsFile)
-        (call-process ics2org nil nil nil icsFile orgFile)
-        (delete-file icsFile)
-        (let ((buffer (find-buffer-visiting orgFile)))
-          (if buffer
-            (save-current-buffer
-              (set-buffer buffer)
-              (revert-buffer 't 't))
-            (princ "No buffer found\n"))))
-      (princ "Synchronized from Remote Calendar"))))
-
-(defun my-sync-agenda-to-remote-cal ()
-  "Synchronize org agenda to remote calendar"
-  (interactive)
-  (org-icalendar-combine-agenda-files)
-  (princ "Synchronized to Remote Calendar"))
-; end synchonized with remote calendar
+(defconst my-org-note-gpg-file (concat (expand-file-name org-default-notes-file) ".gpg")
+  "The file is the gpg encrypt note file of org mode")
 
 ;;;; org mode specific key bindings
-(defun my-org-agenda-file-to-front ()
-  "org-agenda-file-to-front works on single org-agenda-files"
-  (interactive)
-  (save-current-buffer
-    (let ((current-file buffer-file-name)
-          (agenda-file  org-agenda-files))
-      (set-buffer (find-file-noselect agenda-file))
-      (goto-char (point-min))
-      (insert current-file "\n")
-      (save-buffer)
-      (princ (concat "Adding file " current-file " to agenda file")))))
-
-(defun my-org-remove-file ()
-  "org-remove-file works on single org-agenda-files"
-  (interactive)
-  (save-current-buffer
-    (let ((current-file buffer-file-name)
-          (agenda-file  org-agenda-files))
-      (set-buffer (find-file-noselect agenda-file))
-      (goto-char (point-min))
-      (goto-char (re-search-forward (concat "^" current-file "$") nil t))
-      (delete-region (- (point) (length current-file)) (1+ (point)))
-      (save-buffer)
-      (princ (concat "Removing file " current-file " from agenda file")))))
-
-(defun my-org-agenda-toggle-blocked-tasks-visiblility ()
-  "Toggle visitility of blocked tasks in org agenda"
-  (interactive)
-  (if (equal org-agenda-dim-blocked-tasks 'invisible)
-      (setq org-agenda-dim-blocked-tasks 't)
-    (setq org-agenda-dim-blocked-tasks 'invisible))
-  (org-agenda-redo))
-
 (add-hook 'org-mode-hook
           (lambda ()
             (define-key org-mode-map (kbd "C-c [") 'my-org-agenda-file-to-front)
             (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file)))
 
-(add-hook 'org-agenda-mode-hook
-          'hl-line-mode)
 (add-hook 'org-agenda-mode-hook
           (lambda ()
             (define-key org-agenda-mode-map (kbd "C-c d") 'my-org-agenda-toggle-blocked-tasks-visiblility)))
