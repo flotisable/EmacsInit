@@ -373,6 +373,9 @@
 
 ;;; org mode settings  org mode 設定
 ;;;; self defined functions  自定義函式
+(defconst my-org-capture-frame-name "Org Capture"
+  "Frame name of org capture used for tiling window manager")
+
 (defun my-skip-entry-if-not-priority (priority)
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
@@ -433,6 +436,25 @@
         (clock  (org-duration-to-minutes (org-clock-sum-current-item))))
     (let ((diff (- clock effort)))
       (org-entry-put nil "ClockEffortDiff" (concat (if (>= diff 0) "+" "-") (org-duration-from-minutes (abs diff)))))))
+(defun my-delete-org-capture-frame ()
+  "Delete the frame of org capture used for tiling window manager"
+  (dolist (frame (frame-list))
+    (if (string= my-org-capture-frame-name (frame-parameter frame 'title))
+        (delete-frame frame))))
+(defun my-org-capture ()
+  "Create a new frame to do org capture. This is mainly to be used for tiling window manager"
+  (with-current-buffer "*scratch*"
+    (let ((frame  (make-frame `((title  . ,my-org-capture-frame-name)
+                                (height . 0.5)
+                                (width  . 0.5)))))
+      (with-selected-frame frame
+        (add-hook 'org-capture-mode-hook 'delete-other-windows)
+        (condition-case nil
+            (org-capture)
+          (error
+           (delete-frame frame)))
+        (remove-hook  'org-capture-mode-hook            'delete-other-windows)
+        (add-hook     'org-capture-after-finalize-hook  'my-delete-org-capture-frame)))))
 
 (defun my-build-todo-priority-template-entry (prioritry settings)
   "Build priority template entry for custom todo agenda"
