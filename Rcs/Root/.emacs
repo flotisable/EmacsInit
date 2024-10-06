@@ -299,6 +299,7 @@
 ;;; key bindings  按鍵設定
 (global-set-key (kbd "C-c a") 'org-agenda           ) ; 設定 C-c a 開啟 org agenda dispatcher
 (global-set-key (kbd "C-c c") 'org-capture          ) ; 設定 C-c c 開啟 org capture
+(global-set-key (kbd "C-c l") 'org-store-link       ) ; 設定 C-c l 儲存當前位置連結
 (global-set-key (kbd "C-s"  ) 'swiper               ) ; 設定 C-s 開啟互動式模糊搜尋
 (global-set-key (kbd "C-c o") 'my-toggle-frame-alpha) ; 設定 C-c o 切換透明度
 ; end key bindings
