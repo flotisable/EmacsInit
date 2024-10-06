@@ -826,19 +826,22 @@
                             (sleep-for alert-fade-time)
                             (kill-emacs))"))))))
 
-(add-hook 'org-agenda-mode-hook             'hl-line-mode)
-(add-hook 'org-after-todo-state-change-hook 'my-remove-today-tag-when-done)
-(add-hook 'org-after-todo-state-change-hook 'my-remove-focus-tag-when-done 1) ; should be after removing today tag
-(add-hook 'org-after-todo-state-change-hook 'my-change-parent-todo-state)
-(add-hook 'org-shiftup-hook                 (lambda ()
-                                              (my-change-children-priority t)))
-(add-hook 'org-shiftdown-hook               (lambda ()
-                                              (my-change-children-priority nil)))
-(add-hook 'org-after-tags-change-hook       'my-add-focus-tag-when-has-today-tag)
-(add-hook 'org-clock-out-hook               'my-add-clock-effort-diff-property)
-(add-hook 'org-property-changed-functions   (lambda (property value)
-                                              (when (string= property "Effort")
-                                                (my-add-clock-effort-diff-property))))
+(add-hook 'org-agenda-mode-hook               'hl-line-mode)
+(add-hook 'org-after-todo-state-change-hook   'my-remove-today-tag-when-done)
+(add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done 1) ; should be after removing today tag
+(add-hook 'org-after-todo-state-change-hook   'my-change-parent-todo-state)
+(add-hook 'org-shiftup-hook                   (lambda ()
+                                                (my-change-children-priority t)))
+(add-hook 'org-shiftdown-hook                 (lambda ()
+                                                (my-change-children-priority nil)))
+(add-hook 'org-after-tags-change-hook         'my-add-focus-tag-when-has-today-tag)
+(add-hook 'org-clock-out-hook                 'my-add-clock-effort-diff-property)
+(add-hook 'org-property-changed-functions     (lambda (property value)
+                                                (when (string= property "Effort")
+                                                  (my-add-clock-effort-diff-property))))
+(add-hook 'org-capture-prepare-finalize-hook  (lambda ()
+                                                (org-entry-put (point) "CAPTURED"
+                                                               (concat "[" (org-timestamp-format (org-timestamp-from-time (current-time) t t) "%F %a %R") "]"))))
 (defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
   "The file stores the information to synchronize with remote calendar.
 Each line is an elisp list with two string elements.
