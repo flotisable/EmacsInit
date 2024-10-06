@@ -700,10 +700,10 @@
         (org-agenda-files . (:tag       . "Refile"))
         (org-agenda-files . (:tag       . "Project"))))
 (setq org-capture-templates
-      '(("t" "todo"       entry (file+headline "" "Todo") "** TODO %?")
-        ("d" "date"       entry (file+headline "" "Date") "** %?\n   %^t")
-        ("n" "note"       entry (file+headline "" "Note") "** %?")
-        ("w" "work note"  entry (file+headline "" "Note") "** %?\n   %U")))
+      '(("t" "todo"       entry (file+olp "" "Todo" "Inbox") "*** TODO %?")
+        ("d" "date"       entry (file+olp "" "Date" "Inbox") "*** %?\n   %^t")
+        ("n" "note"       entry (file+olp "" "Note" "Inbox") "*** %?")
+        ("w" "work note"  entry (file+olp "" "Note" "Inbox") "*** %?\n   %U")))
 (setq org-agenda-custom-commands
       `(("t" . "List TODO entries")
         ("ta" "List all the TODO entries"
@@ -762,7 +762,11 @@
         ("ry" "Review yearly agenda" agenda ""
          ((org-agenda-span                'year)
           (org-agenda-start-day           "-1y")
-          ,@my-org-agenda-review-settings))))
+          ,@my-org-agenda-review-settings))
+        ("i" "List all uncategorized captured entries" tags "Inbox"
+         ((org-agenda-overriding-header "Uncategorizaed Captured Items:")
+          (org-agenda-hide-tags-regexp  "Inbox")
+          (org-agenda-skip-function     '(org-agenda-skip-entry-if 'regexp "Inbox"))))))
 (setq org-todo-keywords
       '((sequence "TODO(t)" "WIP(w)" "WAIT(a)" "PENDING(p)" "|" "DONE(d)" "CANCEL(c)")))
 (setq org-todo-keyword-faces            `(("WIP"      . (:foreground ,my-nord8 :weight bold))
