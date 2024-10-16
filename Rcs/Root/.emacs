@@ -525,8 +525,10 @@
                   (save-excursion
                     (org-backward-heading-same-level 0)
                     (org-entry-put (point) "Outline" (mapconcat 'identity outline "/"))
-                    (while (not (= (org-current-level) item-level))
-                      (org-do-promote))))))))
+                    (while (> (org-current-level) item-level)
+                      (org-do-promote))
+                    (while (< (org-current-level) item-level)
+                      (org-do-demote))))))))
 
         (setq current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
         (org-agenda-next-item 1)))))
