@@ -647,9 +647,9 @@
                                           (org-agenda-skip-additional-timestamps-same-entry 't))
   "Common settings for review of org agenda")
 
-(defconst my-org-agenda-settings '((org-agenda-include-inactive-timestamps  't)
-                                   (org-agenda-skip-deadline-if-done        't)
-                                   (org-agenda-skip-scheduled-if-done       't))
+(defconst my-org-agenda-settings '((org-agenda-use-time-grid          nil)
+                                   (org-agenda-skip-deadline-if-done  't)
+                                   (org-agenda-skip-scheduled-if-done 't))
   "Common settings for org agenda")
 
 (require 'org-protocol)
