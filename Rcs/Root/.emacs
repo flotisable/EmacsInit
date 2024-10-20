@@ -241,10 +241,15 @@
   (set-fontset-font t 'han my-chinese-font-family))
 
 ; This is needed for running with daemon mode
-(add-hook 'before-make-frame-hook
+(add-hook 'window-setup-hook
           (lambda ()
             (unless (string= my-chinese-font-family "")
-              (set-fontset-font t 'han my-chinese-font-family))))
+              (set-fontset-font t 'han my-chinese-font-family))
+            (when (x-list-fonts "DejaVuSansM Nerd Font")
+              (add-hook 'emacs-lisp-mode-hook (lambda ()
+                                                (setq mode-name "")))
+              (add-hook 'org-mode-hook        (lambda ()
+                                                (setq mode-name ""))))))
 
 (setq-default mode-line-format
               `(:eval (my-format-mode-line
@@ -315,7 +320,10 @@
                                         gnus
                                         info
                                         (custom cus-edit)
-                                        (term term ansi-term multi-term))))
+                                        (term term ansi-term multi-term)))
+                (add-hook 'evil-collection-unimpaired-mode-hook
+                          (lambda ()
+                            (setq minor-mode-alist (assoc-delete-all 'evil-collection-unimpaired-mode minor-mode-alist)))))
 
               (setq evil-shift-width  2) ; 設定縮排為 2 個字元
               (setq evil-echo-state   nil)
@@ -829,6 +837,8 @@
                             (kill-emacs))"))))))
 
 (add-hook 'org-agenda-mode-hook               'hl-line-mode)
+(add-hook 'org-agenda-mode-hook               (lambda ()
+                                                (setq mode-name "📅")))
 (add-hook 'org-after-todo-state-change-hook   'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done 1) ; should be after removing today tag
 (add-hook 'org-after-todo-state-change-hook   'my-change-parent-todo-state)
