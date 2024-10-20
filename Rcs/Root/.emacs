@@ -461,7 +461,7 @@
         (add-hook     'org-capture-after-finalize-hook  'my-delete-org-capture-frame)))))
 
 ;;;;; building org agenda  用於建構 org agenda
-(defun my-build-todo-priority-template-entry (prioritry settings)
+(defun my-build-todo-priority-template-entry (priority settings)
   "Build priority template entry for custom todo agenda"
   (let ((template-settings  settings)
         (default-settings   `((org-agenda-overriding-header ,(concat "Todo List With Priority [#" (string priority) "]:"))
