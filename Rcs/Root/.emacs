@@ -153,8 +153,7 @@
         (right-format (format-mode-line right)))
     (concat left-format
             (string-pad right-format
-                        ; the 3 is needed so that right aligned character will not be eaten (not sure why)
-                        (- (window-total-width) (string-width left-format) 3)
+                        (- (window-total-width) (string-width left-format))
                         ?\s t))))
 ; end function to format mode line with right alignment
 
@@ -271,7 +270,8 @@
                                  'face '(:foreground ,my-nord13 :background ,my-nord9)))
                          (:propertize (" " mode-line-misc-info mode-line-end-spaces) face (:background ,my-nord10))))))
 
-(setq display-line-numbers-type 'visual)
+(setq display-line-numbers-type         'visual)
+(setq display-time-default-load-average nil)
 ; end general settings
 
 ;;; mode settings  模式設定
