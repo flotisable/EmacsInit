@@ -517,24 +517,26 @@
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (let ((buffer       (get-buffer-create "*Org Agenda Report*"))
-          (current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
-          (item-level   2)
+    (let ((buffer         (get-buffer-create "*Org Agenda Report*"))
+          (current-point  (point))
+          (item-level     3)
           items)
       ; initialize temp buffer
       (with-current-buffer buffer
         (erase-buffer)
         (org-mode)
-        (insert "* [" (org-timestamp-format (org-timestamp-from-time (current-time) t t) "%F %a %R") "] Org Agenda Report\n"))
+        (insert "* [" (org-timestamp-format (org-timestamp-from-time (current-time) t t) "%F %a %R") "] Org Agenda Report\n")
+        (insert "** Summary\n")
+        (insert "** Details\n"))
 
       ; parse org agenda and put to temp buffer
       (org-agenda-next-item 1)
-      (while (not (string= current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+      (while (not (= current-point (point)))
         (let ((marker (org-get-at-bol 'org-marker)))
           (with-current-buffer (marker-buffer marker)
             (goto-char (marker-position marker))
-            (let ((outline  (org-get-outline-path))
-                  (item     (org-get-outline-path t)))
+            (let ((outline  (append (list (buffer-name)) (org-get-outline-path)))
+                  (item     (append (list (buffer-name)) (org-get-outline-path t))))
               (when (not (member item items))
                 (push item items)
                 (insert-into-buffer buffer (org-entry-beginning-position) (org-entry-end-position))
@@ -547,7 +549,7 @@
                     (while (< (org-current-level) item-level)
                       (org-do-demote))))))))
 
-        (setq current-line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+        (setq current-point (point))
         (org-agenda-next-item 1)))))
 ;;;;; synchonized with remote calendar  與遠端日曆同步
 (defun my-remote-cal-filter (body backend channel)
