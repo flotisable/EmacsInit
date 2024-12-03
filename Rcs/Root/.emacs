@@ -7,6 +7,8 @@
  '(c-tab-always-indent nil)
  '(current-language-environment "UTF-8")
  '(custom-enabled-themes (quote (misterioso)))
+ '(custom-safe-themes
+   (quote ("98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" default)))
  '(desktop-path (quote ("./" "~/.emacs.d/" "~")))
  '(indent-tabs-mode nil)
  '(make-backup-files nil)
@@ -274,6 +276,13 @@
                                  (format-mode-line '(" " mode-line-position))
                                  'face '(:foreground ,my-nord13 :background ,my-nord9)))
                          (:propertize (" " mode-line-misc-info mode-line-end-spaces) face (:background ,my-nord10))))))
+
+(when (package-installed-p 'nord-theme)
+  (load-theme 'nord)
+  ; This is needed for running with daemon mode
+  (add-hook 'window-setup-hook
+            (lambda ()
+              (load-theme 'nord))))
 
 (setq display-line-numbers-type         'visual)
 (setq display-time-default-load-average nil)
