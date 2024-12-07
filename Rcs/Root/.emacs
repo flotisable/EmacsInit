@@ -477,6 +477,24 @@
         (remove-hook  'org-capture-mode-hook            'delete-other-windows)
         (add-hook     'org-capture-after-finalize-hook  'my-delete-org-capture-frame)))))
 
+;;;;; automatically refresh daily agenda  自動更新 daily agenda
+(defconst my-org-agenda-refresh-interval 600
+  "Update interval for daily agenda in seconds")
+
+(defvar my-org-agenda-refresh-timer nil
+  "Timer used to refresh daily agenda")
+
+(defun my-agenda-auto-refresh ()
+  "Automatically refresh daily agenda"
+  (when my-org-agenda-refresh-timer
+    (cancel-timer my-org-agenda-refresh-timer)
+    (setq my-org-agenda-refresh-timer nil))
+  (when (and (equal org-agenda-type 'agenda) (equal org-agenda-span 'day))
+    (setq my-org-agenda-refresh-timer (run-with-timer my-org-agenda-refresh-interval nil
+                                                      (lambda ()
+                                                        (undo-boundary)
+                                                        (org-agenda-redo)
+                                                        (undo-boundary))))))
 ;;;;; building org agenda  用於建構 org agenda
 (defun my-build-todo-priority-template-entry (priority settings)
   "Build priority template entry for custom todo agenda"
@@ -854,6 +872,7 @@
 (add-hook 'org-agenda-mode-hook               'hl-line-mode)
 (add-hook 'org-agenda-mode-hook               (lambda ()
                                                 (setq mode-name "📅")))
+(add-hook 'org-agenda-finalize-hook           'my-agenda-auto-refresh)
 (add-hook 'org-after-todo-state-change-hook   'my-remove-today-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done 1) ; should be after removing today tag
 (add-hook 'org-after-todo-state-change-hook   'my-change-parent-todo-state)
