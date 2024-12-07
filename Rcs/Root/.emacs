@@ -493,7 +493,8 @@
     (setq my-org-agenda-refresh-timer (run-with-timer my-org-agenda-refresh-interval nil
                                                       (lambda ()
                                                         (undo-boundary)
-                                                        (org-agenda-redo)
+                                                        (with-current-buffer org-agenda-buffer-name
+                                                          (org-agenda-redo))
                                                         (undo-boundary))))))
 ;;;;; building org agenda  用於建構 org agenda
 (defun my-build-todo-priority-template-entry (priority settings)
