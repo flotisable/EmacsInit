@@ -280,9 +280,10 @@
 (when (package-installed-p 'nord-theme)
   (load-theme 'nord)
   ; This is needed for running with daemon mode
-  (add-hook 'window-setup-hook
-            (lambda ()
-              (load-theme 'nord))))
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (with-selected-frame frame
+                (load-theme 'nord)))))
 
 (setq display-line-numbers-type         'visual)
 (setq display-time-default-load-average nil)
