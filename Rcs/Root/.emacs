@@ -493,10 +493,12 @@
   (when (and (equal org-agenda-type 'agenda) (equal org-agenda-span 'day))
     (setq my-org-agenda-refresh-timer (run-with-timer my-org-agenda-refresh-interval nil
                                                       (lambda ()
-                                                        (undo-boundary)
-                                                        (with-current-buffer org-agenda-buffer-name
-                                                          (org-agenda-redo))
-                                                        (undo-boundary))))))
+                                                        (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
+                                                          (when agenda-window
+                                                            (with-selected-window agenda-window
+                                                              (undo-boundary)
+                                                              (org-agenda-redo))
+                                                              (undo-boundary))))))))
 ;;;;; building org agenda  用於建構 org agenda
 (defun my-build-todo-priority-template-entry (priority settings)
   "Build priority template entry for custom todo agenda"
