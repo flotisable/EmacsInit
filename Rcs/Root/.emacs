@@ -6,10 +6,10 @@
  ;; If there is more than one, they won't work right.
  '(c-tab-always-indent nil)
  '(current-language-environment "UTF-8")
- '(custom-enabled-themes (quote (misterioso)))
+ '(custom-enabled-themes '(misterioso))
  '(custom-safe-themes
-   (quote ("98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" default)))
- '(desktop-path (quote ("./" "~/.emacs.d/" "~")))
+   '("5a4cdc4365122d1a17a7ad93b6e3370ffe95db87ed17a38a94713f6ffe0d8ceb" "98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" default))
+ '(desktop-path '("./" "~/.emacs.d/" "~"))
  '(indent-tabs-mode nil)
  '(make-backup-files nil)
  '(org-agenda-prefix-format
