@@ -8,29 +8,27 @@
  '(current-language-environment "UTF-8")
  '(custom-enabled-themes '(misterioso))
  '(custom-safe-themes
-   '("5a4cdc4365122d1a17a7ad93b6e3370ffe95db87ed17a38a94713f6ffe0d8ceb" "98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd" default))
+   '("5a4cdc4365122d1a17a7ad93b6e3370ffe95db87ed17a38a94713f6ffe0d8ceb"
+     "98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd"
+     default))
  '(desktop-path '("./" "~/.emacs.d/" "~"))
  '(indent-tabs-mode nil)
  '(make-backup-files nil)
  '(org-agenda-prefix-format
-   '((agenda . " %i %-12:c%?-12t% s%l")
-     (todo . " %i %-12:c%l")
-     (tags . " %i %-12:c%l")
-     (search . " %i %-12:c")))
+   '((agenda . " %i %-12:c%?-12t% s%l") (todo . " %i %-12:c%l")
+     (tags . " %i %-12:c%l") (search . " %i %-12:c")))
  '(org-agenda-sorting-strategy
    '((agenda habit-up time-up deadline-up priority-down category-keep)
      (todo priority-down category-keep)
-     (tags priority-down category-keep)
-     (search category-keep)))
+     (tags priority-down category-keep) (search category-keep)))
  '(org-enforce-todo-checkbox-dependencies t)
  '(org-enforce-todo-dependencies t)
  '(org-modules
-   '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc ol-mhe ol-rmail ol-w3m))
+   '(ol-bbdb ol-bibtex ol-docview ol-eww ol-gnus org-habit ol-info ol-irc
+             ol-mhe ol-rmail ol-w3m))
  '(safe-local-variable-values
-   '((org-archive-save-context-info)
-     (eval outline-hide-sublevels 3)
-     (eval outline-minor-mode 't)
-     (org-use-sub-superscripts . {})
+   '((org-archive-save-context-info) (eval outline-hide-sublevels 3)
+     (eval outline-minor-mode 't) (org-use-sub-superscripts . {})
      (org-export-with-sub-superscripts . {})))
  '(tab-always-indent nil)
  '(tab-width 2))
