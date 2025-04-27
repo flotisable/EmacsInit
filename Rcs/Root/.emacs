@@ -464,7 +464,8 @@
 (defun my-org-capture ()
   "Create a new frame to do org capture. This is mainly to be used for tiling window manager"
   (with-current-buffer "*scratch*"
-    (let ((frame  (make-frame `((window-system  . x)
+    (let ((frame  (make-frame `((window-system  . ,(cond ((string= system-type "windows-nt") 'w32)
+                                                         ('x)))
                                 (title          . ,my-org-capture-frame-name)
                                 (height         . 0.5)
                                 (width          . 0.5)))))
