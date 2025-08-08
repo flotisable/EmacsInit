@@ -241,15 +241,18 @@
   (set-fontset-font t 'han my-chinese-font-family))
 
 ; This is needed for running with daemon mode
-(add-hook 'window-setup-hook
-          (lambda ()
-            (unless (string= my-chinese-font-family "")
-              (set-fontset-font t 'han my-chinese-font-family))
-            (when (x-list-fonts "DejaVuSansM Nerd Font")
-              (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                                (setq mode-name "")))
-              (add-hook 'org-mode-hook        (lambda ()
-                                                (setq mode-name ""))))))
+(defun my-x-startup-setup ()
+  "Setup font and icon related settings when start"
+  (unless (string= my-chinese-font-family "")
+    (set-fontset-font t 'han my-chinese-font-family))
+  (when (x-list-fonts "DejaVuSansM Nerd Font")
+    (add-hook 'emacs-lisp-mode-hook (lambda ()
+                                      (setq mode-name "")))
+    (add-hook 'org-mode-hook        (lambda ()
+                                      (setq mode-name "")))))
+
+(add-hook 'window-setup-hook            'my-x-startup-setup)
+(add-hook 'server-after-make-frame-hook 'my-x-startup-setup)
 
 (setq-default mode-line-format
               `(:eval (my-format-mode-line
@@ -320,7 +323,7 @@
 ;;; evil mode settings  evil mode 設定
 (when (package-installed-p 'evil)
   (setq evil-want-keybinding 'nil)
-  (add-hook 'window-setup-hook (lambda () (evil-mode 1))) ; 開啟 evil mode
+  (add-hook 'emacs-startup-hook (lambda () (evil-mode 1))) ; 開啟 evil mode
   (add-hook 'evil-mode-hook
             (lambda ()
               (when (package-installed-p 'evil-collection)
@@ -983,7 +986,7 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 ;;; alert settings  alert 設定
 (when (package-installed-p 'alert)
-  (add-hook 'window-setup-hook
+  (add-hook 'emacs-startup-hook
             (lambda ()
               (require 'alert)
               (alert-define-style 'w32 :title "W32 notification style"
@@ -993,7 +996,7 @@ The second element is the url to fetch the ics file from remote calendar.")
 
 ;;; ivy mode settings  ivy mode 設定
 (when (package-installed-p 'ivy)
-  (add-hook 'window-setup-hook (lambda () (ivy-mode 1))) ; 互動式模糊補全
+  (add-hook 'emacs-startup-hook (lambda () (ivy-mode 1))) ; 互動式模糊補全
   (add-hook 'ivy-mode-hook
             (lambda ()
               (setq ivy-use-virtual-buffers 't)
