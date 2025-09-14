@@ -755,8 +755,7 @@
 (setq org-capture-templates
       '(("t" "todo"       entry (file+olp "" "Todo" "Inbox") "*** TODO %?")
         ("d" "date"       entry (file+olp "" "Date" "Inbox") "*** %?\n   %^t")
-        ("n" "note"       entry (file+olp "" "Note" "Inbox") "*** %?")
-        ("w" "work note"  entry (file+olp "" "Note" "Inbox") "*** %?\n   %U")))
+        ("n" "note"       entry (file+olp "" "Note" "Inbox") "*** %?")))
 (setq org-agenda-custom-commands
       `(("t" . "List TODO entries")
         ("ta" "List all the TODO entries"
