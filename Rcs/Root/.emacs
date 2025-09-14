@@ -696,12 +696,17 @@
                                    (org-agenda-skip-scheduled-if-done 't))
   "Common settings for org agenda")
 
+(defvar my-org-knowledgebase-file nil
+  "File to store knowledges, like second brain")
+
 (require 'org-protocol)
 
 (setq org-directory                                   my-local-machine-org-directory)
 (setq org-agenda-files                                (concat org-directory "/orgAgendaFiles.org"))  ; 設定 agenda file 的列表設定檔
 (setq org-icalendar-combined-agenda-file              (concat org-directory "/agenda.ics"))
 (setq org-default-notes-file                          (concat org-directory "/note.org"))
+(setq my-org-knowledgebase-file                       (concat org-directory "/knowledgeBase.org"))
+(setq org-id-link-to-org-use-id                       'create-if-interactive)
 (setq org-ellipsis                                    " ▼")
 (setq org-adapt-indentation                           't)
 (setq org-image-actual-width                          'nil)
@@ -742,9 +747,11 @@
 (setq org-outline-path-complete-in-steps              'nil)
 (setq org-refile-allow-creating-parent-nodes          't)
 (setq org-refile-targets
-      '((org-agenda-files . (:maxlevel  . 2))
-        (org-agenda-files . (:tag       . "Refile"))
-        (org-agenda-files . (:tag       . "Project"))))
+      '((org-agenda-files           . (:maxlevel  . 2))
+        (org-agenda-files           . (:tag       . "Refile"))
+        (org-agenda-files           . (:tag       . "Project"))
+        (my-org-knowledgebase-file  . (:maxlevel  . 2))
+        (my-org-knowledgebase-file  . (:tag       . "Refile"))))
 (setq org-capture-templates
       '(("t" "todo"       entry (file+olp "" "Todo" "Inbox") "*** TODO %?")
         ("d" "date"       entry (file+olp "" "Date" "Inbox") "*** %?\n   %^t")
