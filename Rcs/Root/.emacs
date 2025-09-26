@@ -411,18 +411,14 @@
                            (org-element-property :minute-start  timestamp))))
                 nil t)
         point-end))))
-(defun my-remove-today-tag-when-done ()
-  "Remove the :Today: tag when a task is marked as done"
+(defun my-remove-next-tag-when-done ()
+  "Remove the :Next: tag when a task is marked as done"
   (when (org-entry-is-done-p)
-    (org-set-tags (remove "Today" (org-get-tags (point) t)))))
+    (org-set-tags (remove "Next" (org-get-tags (point) t)))))
 (defun my-remove-focus-tag-when-done ()
   "Remove the :Focus: tag when a task is marked as done"
   (when (org-entry-is-done-p)
     (org-set-tags (remove "Focus" (org-get-tags (point) t)))))
-(defun my-add-focus-tag-when-has-today-tag ()
-  "Add the :Focus: tag is :Today: tag is set"
-  (when (and (not (member "Focus" (org-get-tags))) (member "Today" (org-get-tags)))
-    (org-set-tags (delete-dups (append (org-get-tags (point) t) '("Focus"))))))
 (defun my-change-parent-todo-state ()
   "Change parent todo state"
   (if (> (org-outline-level) 1)
@@ -772,22 +768,18 @@
                                                                (org-agenda-hide-tags-regexp   "Focus")))
         ("a" . "List Agendas")
         ("aa" "Agenda and todo for current day"
-         ((agenda     ""                  ((org-agenda-overriding-header              "Daily Agenda:")
-                                           (org-scheduled-past-days                   0)
-                                           (org-deadline-past-days                    0)
-                                           (org-deadline-warning-days                 0)
-                                           (org-habit-scheduled-past-days             10000)
-                                           (org-agenda-hide-tags-regexp               "Today\\\|Focus\\\|Next")))
-          (tags-todo  "Next"              ((org-agenda-overriding-header              "Next Todo List:")
-                                           (org-agenda-hide-tags-regexp               "Next\\\|Focus")
-                                           (org-agenda-tags-todo-honor-ignore-options 't)
-                                           (org-agenda-todo-ignore-scheduled          't)))
-          (tags-todo  "Today"             ((org-agenda-overriding-header              "Today's Todo List:")
-                                           (org-agenda-hide-tags-regexp               "Today\\\|Focus")
-                                           (org-agenda-tags-todo-honor-ignore-options 't)
-                                           (org-agenda-todo-ignore-scheduled          't)))
-          (tags-todo  "Focus-Today-Next"  ((org-agenda-overriding-header              "Focused Todo List:")
-                                           (org-agenda-hide-tags-regexp               "Focus")))))
+         ((agenda     ""            ((org-agenda-overriding-header              "Daily Agenda:")
+                                     (org-scheduled-past-days                   0)
+                                     (org-deadline-past-days                    0)
+                                     (org-deadline-warning-days                 0)
+                                     (org-habit-scheduled-past-days             10000)
+                                     (org-agenda-hide-tags-regexp               "Focus\\\|Next")))
+          (tags-todo  "Next"        ((org-agenda-overriding-header              "Next Todo List:")
+                                     (org-agenda-hide-tags-regexp               "Next\\\|Focus")
+                                     (org-agenda-tags-todo-honor-ignore-options 't)
+                                     (org-agenda-todo-ignore-scheduled          't)))
+          (tags-todo  "Focus-Next"  ((org-agenda-overriding-header              "Focused Todo List:")
+                                     (org-agenda-hide-tags-regexp               "Focus")))))
         ("ap" "Prioritized agenda and todo for current day"
          (,@(my-build-agenda-priority-entries)))
         ("ad" "Daily agenda" agenda ""
@@ -838,7 +830,6 @@
                                           (:startgrouptag)
                                           ("Focus"    . ?f)
                                           (:grouptags)
-                                          ("Today"    . ?t)
                                           ("Next"     . ?n)
                                           (:endgrouptag)
                                           (:startgroup)
@@ -850,8 +841,7 @@
                                           ("Perfer"   . ?P)
                                           ("Optional" . ?O)
                                           (:endgroup)))
-(setq org-tag-faces                     `(("Today"    . (:foreground ,my-nord8 :weight bold))
-                                          ("Next"     . (:foreground ,my-nord8 :weight bold))
+(setq org-tag-faces                     `(("Next"     . (:foreground ,my-nord8 :weight bold))
                                           ("Focus"    . (:foreground ,my-nord9))
                                           ("Home"     . (:foreground ,my-nord14))
                                           ("Work"     . (:foreground ,my-nord15))
@@ -860,7 +850,6 @@
                                           ("Optional" . (:foreground ,my-nord14))))
 (setq org-tags-exclude-from-inheritance '("Refile"
                                           "Project"
-                                          "Today"
                                           "Next"))
 (setq org-publish-project-alist
       `(("github-io"
@@ -904,14 +893,13 @@
 (add-hook 'org-agenda-mode-hook               (lambda ()
                                                 (setq mode-name "📅")))
 (add-hook 'org-agenda-finalize-hook           'my-agenda-auto-refresh)
-(add-hook 'org-after-todo-state-change-hook   'my-remove-today-tag-when-done)
-(add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done 1) ; should be after removing today tag
+(add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done)
+(add-hook 'org-after-todo-state-change-hook   'my-remove-next-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-change-parent-todo-state)
 (add-hook 'org-shiftup-hook                   (lambda ()
                                                 (my-change-children-priority t)))
 (add-hook 'org-shiftdown-hook                 (lambda ()
                                                 (my-change-children-priority nil)))
-(add-hook 'org-after-tags-change-hook         'my-add-focus-tag-when-has-today-tag)
 (add-hook 'org-clock-out-hook                 'my-add-clock-effort-diff-property)
 (add-hook 'org-property-changed-functions     (lambda (property value)
                                                 (when (string= property "Effort")
