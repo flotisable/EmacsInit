@@ -799,19 +799,37 @@
          ((org-agenda-span                'day)
           (org-agenda-start-day           "-1d")
           ,@my-org-agenda-review-settings))
+        ("rD" "Review selected daily agenda" agenda ""
+         ((org-agenda-span                'day)
+          (org-agenda-start-day           (org-read-date))
+          ,@my-org-agenda-review-settings))
         ("rw" "Review weekly agenda" agenda ""
          ((org-agenda-span                'week)
           (org-agenda-start-on-weekday    nil)
           (org-agenda-start-day           "-1w")
+          ,@my-org-agenda-review-settings))
+        ("rW" "Review selected weekly agenda" agenda ""
+         ((org-agenda-span                'week)
+          (org-agenda-start-on-weekday    nil)
+          (org-agenda-start-day           (org-read-date))
           ,@my-org-agenda-review-settings))
         ("rm" "Review monthly agenda" agenda ""
          ((org-agenda-span                'month)
           (org-agenda-start-on-weekday    nil)
           (org-agenda-start-day           "-1m")
           ,@my-org-agenda-review-settings))
+        ("rM" "Review selected monthly agenda" agenda ""
+         ((org-agenda-span                'month)
+          (org-agenda-start-on-weekday    nil)
+          (org-agenda-start-day           (org-read-date))
+          ,@my-org-agenda-review-settings))
         ("ry" "Review yearly agenda" agenda ""
          ((org-agenda-span                'year)
           (org-agenda-start-day           "-1y")
+          ,@my-org-agenda-review-settings))
+        ("rY" "Review selected yearly agenda" agenda ""
+         ((org-agenda-span                'year)
+          (org-agenda-start-day           (org-read-date))
           ,@my-org-agenda-review-settings))
         ("i" "List all uncategorized captured entries" tags "Inbox"
          ((org-agenda-overriding-header "Uncategorizaed Captured Items:")
