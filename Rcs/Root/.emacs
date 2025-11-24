@@ -424,7 +424,7 @@
   (if (> (org-outline-level) 1)
     (save-excursion
       (outline-up-heading 1)
-      (if (org-get-todo-state)
+      (if (and (org-get-todo-state) (not (org-entry-get nil "NotAutoMarkDown")))
           (org-todo org-state)))))
 (defun my-change-children-priority (is-up)
   "Change children priority"
@@ -676,6 +676,15 @@
       (setq org-agenda-dim-blocked-tasks 't)
     (setq org-agenda-dim-blocked-tasks 'invisible))
   (org-agenda-redo))
+
+;;;;; for org keybindings  用於 org 快捷鍵
+(defun my-org-toggle-not-auto-mark-down-property ()
+  "Toggle NotAutoMarkDown property for a todo item"
+  (interactive)
+  (if (org-get-todo-state)
+      (if (org-entry-get nil "NotAutoMarkDown")
+          (org-entry-delete nil "NotAutoMarkDown")
+        (org-entry-put nil "NotAutoMarkDown" "t"))))
 
 ;;;; org mode settings  org mode 設定
 (defconst my-org-agenda-review-settings '((org-agenda-start-with-log-mode                   't)
@@ -942,7 +951,8 @@ The second element is the url to fetch the ics file from remote calendar.")
 (add-hook 'org-mode-hook
           (lambda ()
             (define-key org-mode-map (kbd "C-c [") 'my-org-agenda-file-to-front)
-            (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file)))
+            (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file))
+            (define-key org-mode-map (kbd "C-c d") 'my-org-toggle-not-auto-mark-down-property)))
 
 (add-hook 'org-agenda-mode-hook
           (lambda ()
