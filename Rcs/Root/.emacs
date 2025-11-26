@@ -951,7 +951,7 @@ The second element is the url to fetch the ics file from remote calendar.")
 (add-hook 'org-mode-hook
           (lambda ()
             (define-key org-mode-map (kbd "C-c [") 'my-org-agenda-file-to-front)
-            (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file))
+            (define-key org-mode-map (kbd "C-c ]") 'my-org-remove-file)
             (define-key org-mode-map (kbd "C-c d") 'my-org-toggle-not-auto-mark-down-property)))
 
 (add-hook 'org-agenda-mode-hook
