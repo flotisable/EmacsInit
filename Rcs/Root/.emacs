@@ -172,7 +172,8 @@
                             htmlize
                             ebdb
                             perfect-margin
-                            highlight-parentheses)))
+                            highlight-parentheses
+                            company)))
     (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
       (add-to-list 'my-package-list 'alert-toast))
 
@@ -1043,6 +1044,11 @@ The second element is the url to fetch the ics file from remote calendar.")
               (setq minor-mode-alist (assoc-delete-all 'ivy-mode minor-mode-alist))
               (add-to-list 'minor-mode-alist '(ivy-mode " ❧")))))
 ; end ivy mode settings
+
+;;; company mode settings  company mode 設定
+(when (package-installed-p 'company)
+  (add-hook 'emacs-startup-hook (lambda () (global-company-mode 1)))) ; 自動補全
+; end company mode settings
 
 ;;; load local machine settings  讀取本地機器設定
 (when (file-readable-p my-local-machine-init-file)
