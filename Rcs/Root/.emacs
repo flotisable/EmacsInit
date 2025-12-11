@@ -397,6 +397,10 @@
 ;;; org mode settings  org mode 設定
 ;;;; self defined functions  自定義函式
 ;;;;; miscs  雜項
+(defconst my-org-agenda-next-todo-limit   5
+  "Limit of todo items for Next tag")
+(defconst my-org-agenda-focus-todo-limit  10
+  "Limit of todo items for Focus tag")
 (defun my-skip-entry-if-not-priority (priority)
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
@@ -453,6 +457,22 @@
         (clock  (org-duration-to-minutes (org-clock-sum-current-item))))
     (let ((diff (- clock effort)))
       (org-entry-put nil "ClockEffortDiff" (concat (if (>= diff 0) "+" "-") (org-duration-from-minutes (abs diff)))))))
+(defun my-agenda-highlight-todo-limit (title limit face)
+  "Highlight LIMIT-th todo item after TITLE with FACE to indicate the limit of todo items in agenda"
+  (save-excursion
+    (goto-char (point-min))
+    (when (search-forward title nil t)
+      (let ((found-limit 't))
+        (when (dotimes (i limit found-limit)
+                (org-agenda-next-line)
+                (when (string-prefix-p (make-string 5 org-agenda-block-separator) (buffer-substring (line-beginning-position) (line-end-position)))
+                  (setq found-limit nil)))
+          (let ((overlay (make-overlay (line-beginning-position) (line-beginning-position 2))))
+            (overlay-put overlay 'face face)))))))
+(defun my-agenda-highlight-todo-limits ()
+  "Highlight the limit of todo items in agenda to indicate too many items"
+  (my-agenda-highlight-todo-limit "Next Todo List:"     my-org-agenda-next-todo-limit   `(:background ,my-nord2 :extend t))
+  (my-agenda-highlight-todo-limit "Focused Todo List:"  my-org-agenda-focus-todo-limit  `(:background ,my-nord2 :extend t)))
 
 ;;;;; org capture for tiling window manager  在平鋪式視窗管理員使用 org capture
 (defconst my-org-capture-frame-name "Org Capture"
@@ -932,6 +952,7 @@
 (add-hook 'org-agenda-mode-hook               (lambda ()
                                                 (setq mode-name "📅")))
 (add-hook 'org-agenda-finalize-hook           'my-agenda-auto-refresh)
+(add-hook 'org-agenda-finalize-hook           'my-agenda-highlight-todo-limits)
 (add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-remove-next-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-change-parent-todo-state)
