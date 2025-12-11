@@ -63,6 +63,8 @@
   "git repository of org agenda files")
 (defconst my-local-machine-github-io-git-repo           "~/Documents/Github/flotisable.github.io"
   "git repository of github io page")
+(defconst my-local-machine-work-environment             nil
+  "Setup if local machine is for work")
 
 (setenv "LC_ALL" "en_US.UTF-8")
 ; end local machine related settings
@@ -701,6 +703,8 @@
                                    (org-agenda-skip-deadline-if-done  't)
                                    (org-agenda-skip-scheduled-if-done 't))
   "Common settings for org agenda")
+(defconst my-org-focus-next-ignore-tags (if my-local-machine-work-environment "Home" "Work")
+  "Ignore Work or Home tag based on whether the machine is for work or not")
 
 (defvar my-org-knowledgebase-file nil
   "File to store knowledges, like second brain")
@@ -771,25 +775,32 @@
         ("tu" "List all the unassigned TODO entries"
          ,(my-build-todo-entries '((org-agenda-todo-ignore-scheduled 't)
                                    (org-agenda-todo-ignore-deadlines 't))))
-        ("tw" "List all wait TODO entries" todo "WAIT")
-        ("tp" "List all pending TODO entries" todo "PENDING")
-        ("td" "List all done TODO entries" todo "DONE|CANCEL" ((org-agenda-todo-list-sublevels nil)))
-        ("tf" "List all focus TODO entries" tags-todo "Focus" ((org-agenda-overriding-header  "Focused Todo List:")
-                                                               (org-agenda-hide-tags-regexp   "Focus")))
+        ("tw" "List all wait TODO entries"    todo      "WAIT")
+        ("tp" "List all pending TODO entries" todo      "PENDING")
+        ("td" "List all done TODO entries"    todo      "DONE|CANCEL"
+         ((org-agenda-todo-list-sublevels nil)))
+        ("tf" "List all focus TODO entries"   tags-todo ,(concat "Focus-" my-org-focus-next-ignore-tags)
+         ((org-agenda-overriding-header  "Focused Todo List:")
+          (org-agenda-hide-tags-regexp   "Focus\\\|Home\\\|Work")))
         ("a" . "List Agendas")
         ("aa" "Agenda and todo for current day"
-         ((agenda     ""            ((org-agenda-overriding-header              "Daily Agenda:")
-                                     (org-scheduled-past-days                   0)
-                                     (org-deadline-past-days                    0)
-                                     (org-deadline-warning-days                 0)
-                                     (org-habit-scheduled-past-days             10000)
-                                     (org-agenda-hide-tags-regexp               "Focus\\\|Next")))
-          (tags-todo  "Next"        ((org-agenda-overriding-header              "Next Todo List:")
-                                     (org-agenda-hide-tags-regexp               "Next\\\|Focus")
-                                     (org-agenda-tags-todo-honor-ignore-options 't)
-                                     (org-agenda-todo-ignore-scheduled          't)))
-          (tags-todo  "Focus-Next"  ((org-agenda-overriding-header              "Focused Todo List:")
-                                     (org-agenda-hide-tags-regexp               "Focus")))))
+         ((agenda     ""
+                      ((org-agenda-overriding-header              "Daily Agenda:")
+                       (org-scheduled-past-days                   0)
+                       (org-deadline-past-days                    0)
+                       (org-deadline-warning-days                 0)
+                       (org-habit-scheduled-past-days             10000)
+                       (org-agenda-hide-tags-regexp               "Focus\\\|Next")))
+          (tags-todo  ,(concat "Next-"        my-org-focus-next-ignore-tags)
+                      ((org-agenda-overriding-header              "Next Todo List:")
+                       (org-agenda-hide-tags-regexp               "Next\\\|Focus\\\|Home\\\|Work")
+                       (org-agenda-tags-todo-honor-ignore-options 't)
+                       (org-agenda-todo-ignore-scheduled          't)))
+          (tags-todo  ,(concat "Focus-Next-"  my-org-focus-next-ignore-tags)
+                      ((org-agenda-overriding-header              "Focused Todo List:")
+                       (org-agenda-hide-tags-regexp               "Focus\\\|Home\\\|Work")
+                       (org-agenda-tags-todo-honor-ignore-options 't)
+                       (org-agenda-todo-ignore-scheduled          't)))))
         ("ap" "Prioritized agenda and todo for current day"
          (,@(my-build-agenda-priority-entries)))
         ("ad" "Daily agenda" agenda ""
