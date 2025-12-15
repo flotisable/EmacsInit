@@ -397,10 +397,12 @@
 ;;; org mode settings  org mode 設定
 ;;;; self defined functions  自定義函式
 ;;;;; miscs  雜項
-(defconst my-org-agenda-next-todo-limit   5
+(defconst my-org-agenda-next-todo-limit       5
   "Limit of todo items for Next tag")
-(defconst my-org-agenda-focus-todo-limit  10
+(defconst my-org-agenda-focus-todo-limit      10
   "Limit of todo items for Focus tag")
+(defconst my-org-agenda-priority-todo-limits  '(5 20 50 100)
+  "Limit of todo items for different priorities")
 (defun my-skip-entry-if-not-priority (priority)
   "Skip entry in org agenda when no in specified priority"
   (when (not (= (org-get-priority (org-get-heading)) (org-get-priority (concat "[#" (string priority) "]"))))
@@ -473,7 +475,12 @@
 (defun my-agenda-highlight-todo-limits ()
   "Highlight the limit of todo items in agenda to indicate too many items"
   (my-agenda-highlight-todo-limit "Next Todo List:"     my-org-agenda-next-todo-limit   `(:background ,my-nord2 :extend t))
-  (my-agenda-highlight-todo-limit "Focused Todo List:"  my-org-agenda-focus-todo-limit  `(:background ,my-nord2 :extend t)))
+  (my-agenda-highlight-todo-limit "Focused Todo List:"  my-org-agenda-focus-todo-limit  `(:background ,my-nord2 :extend t))
+  (dotimes (i (length (number-sequence org-highest-priority org-lowest-priority)))
+    (let ((priority (nth i (number-sequence org-highest-priority org-lowest-priority)))
+          (limit    (nth i my-org-agenda-priority-todo-limits)))
+      (when limit
+        (my-agenda-highlight-todo-limit (concat "Todo List With Priority [#" (string priority) "]:") limit `(:background ,my-nord2 :extend t))))))
 
 ;;;;; org capture for tiling window manager  在平鋪式視窗管理員使用 org capture
 (defconst my-org-capture-frame-name "Org Capture"
