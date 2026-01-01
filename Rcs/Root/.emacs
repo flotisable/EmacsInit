@@ -467,7 +467,7 @@
       (let ((found-limit 't))
         (when (dotimes (i limit found-limit)
                 (when (< (line-end-position) (point-max))
-                  (org-agenda-next-line))
+                  (forward-line))
                 (when (string-prefix-p (make-string 5 org-agenda-block-separator) (buffer-substring (line-beginning-position) (line-end-position)))
                   (setq found-limit nil)))
           (let ((overlay (make-overlay (line-beginning-position) (line-beginning-position 2))))
