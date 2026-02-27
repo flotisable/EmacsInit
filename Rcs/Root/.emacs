@@ -652,21 +652,43 @@
     (with-temp-buffer
       (insert-file-contents my-remote-cal-file)
       (dolist (line (split-string (buffer-string) "\n" t))
-        (setq data    (read line))
-        (setq url     (cadr data))
-        (setq icsFile (concat (expand-file-name org-directory) "/" (car data) ".ics"))
-        (setq orgFile (concat (expand-file-name org-directory) "/" (car data) ".org"))
+        (setq data      (read line))
+        (setq url       (cadr data))
+        (setq icsFile   (concat (expand-file-name org-directory) "/" (car data) ".ics"))
+        (setq orgFile   (concat (expand-file-name org-directory) "/" (car data) ".org"))
+        (setq diaryFile (concat (expand-file-name org-directory) "/" (car data) ".diary"))
         (call-process "curl"  nil nil nil url "-o" icsFile)
-        (call-process ics2org nil nil nil icsFile orgFile)
-        (delete-file icsFile)
-        (let ((buffer (find-buffer-visiting orgFile)))
-          (if buffer
-            (save-current-buffer
-              (set-buffer buffer)
-              (revert-buffer 't 't))
-            (princ "No buffer found\n"))))
+        (when (file-writable-p diaryFile)
+          (let ((buffer (find-buffer-visiting diaryFile)))
+            (when buffer
+              (save-current-buffer
+                (set-buffer buffer)
+                (erase-buffer)))))
+        (icalendar-import-file icsFile diaryFile)
+        (when (executable-find ics2org)
+          (call-process ics2org nil nil nil icsFile orgFile)
+          (let ((buffer (find-buffer-visiting orgFile)))
+            (if buffer
+              (save-current-buffer
+                (set-buffer buffer)
+                (revert-buffer 't 't))
+              (princ "No buffer found\n"))))
+        (when (file-readable-p diaryFile)
+          (save-current-buffer
+            (set-buffer (find-file-noselect diary-file))
+            (let ((includeString (concat "#include \"" diaryFile "\"\n")))
+              (save-excursion
+                (goto-char (point-min))
+                (unless (search-forward includeString nil t)
+                  (goto-char (point-min))
+                  (insert includeString)
+                  (save-buffer)
+                  (princ (concat "Adding file " diaryFile " to diary file\n")))))))
+        (let ((buffer (find-buffer-visiting icsFile)))
+          (when buffer
+            (kill-buffer buffer)))
+        (delete-file icsFile))
       (princ "Synchronized from Remote Calendar"))))
-
 (defun my-sync-agenda-to-remote-cal ()
   "Synchronize org agenda to remote calendar"
   (interactive)
@@ -754,6 +776,7 @@
 (setq org-agenda-skip-scheduled-if-deadline-is-shown  'repeated-after-deadline)
 (setq org-agenda-skip-scheduled-if-done               't)
 (setq org-agenda-skip-deadline-if-done                't)
+(setq org-agenda-include-diary                        't)
 (setq org-deadline-past-days                          7)
 (setq org-scheduled-past-days                         7)
 (setq org-agenda-dim-blocked-tasks                    'invisible)
@@ -999,6 +1022,11 @@ The second element is the url to fetch the ics file from remote calendar.")
           (lambda ()
             (define-key org-agenda-mode-map (kbd "C-c d") 'my-org-agenda-toggle-blocked-tasks-visiblility)))
 ; end org mode settings
+
+;;; diary settings  郵件設定
+(add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
+(add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
+; end diary settings
 
 ;;; mail settings  郵件設定
 (setq gnus-select-method
