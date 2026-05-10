@@ -175,7 +175,8 @@
                             ebdb
                             perfect-margin
                             highlight-parentheses
-                            company)))
+                            company
+                            gptel)))
     (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
       (add-to-list 'my-package-list 'alert-toast))
 
@@ -1117,6 +1118,15 @@ The second element is the url to fetch the ics file from remote calendar.")
 (when (package-installed-p 'company)
   (add-hook 'emacs-startup-hook (lambda () (global-company-mode 1)))) ; 自動補全
 ; end company mode settings
+
+;;; gptel settings  gptel 設定
+(when (package-installed-p 'gptel)
+  (with-eval-after-load 'gptel
+    (setq gptel-model   'qwen3.5:4b)
+    (setq gptel-backend (gptel-make-ollama "Ollama"
+                          :stream t
+                          :models '(qwen3.5:4b)))))
+; end gptel settings
 
 ;;; load local machine settings  讀取本地機器設定
 (when (file-readable-p my-local-machine-init-file)
