@@ -176,7 +176,8 @@
                             perfect-margin
                             highlight-parentheses
                             company
-                            gptel)))
+                            gptel
+                            mastodon)))
     (when (and (string= system-type "windows-nt") (>= (car (w32-version)) 8))
       (add-to-list 'my-package-list 'alert-toast))
 
@@ -1127,6 +1128,13 @@ The second element is the url to fetch the ics file from remote calendar.")
                           :stream t
                           :models '(qwen3.5:4b)))))
 ; end gptel settings
+
+;;; mastodon settings  mastodon 設定
+(when (package-installed-p 'mastodon)
+  (setq mastodon-instance-url "https://fairy.id")
+  (setq mastodon-active-user  "flotisable")
+  (setq plstore-encrypt-to    "Wei-Chih"))
+; end mastodon settings
 
 ;;; load local machine settings  讀取本地機器設定
 (when (file-readable-p my-local-machine-init-file)
