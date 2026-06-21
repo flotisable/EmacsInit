@@ -1,0 +1,43 @@
+;;; public entries -*- mode: plstore -*- 
+(("active-user" :secret-access_token t :secret-client_id t
+  :secret-client_secret t :username "flotisable@fairy.id" :instance
+  "https://fairy.id")
+ ("user-flotisable@fairy.id" :secret-client_id t :secret-client_secret
+  t :username "flotisable@fairy.id" :instance "https://fairy.id")
+ ("mastodon-https://fairy.id" :secret-client_id t
+  :secret-client_secret t :id "28705" :name "mastodon.el" :website
+  "https://codeberg.org/martianh/mastodon.el" :scopes
+  ["read" "write" "follow"] :redirect_uris
+  ["urn:ietf:wg:oauth:2.0:oob"] :vapid_key
+  "BFIDrN9Y5iBasL6LkqsP9nyNlQ0xP110Lw8dsdRW2W9RcgVx2AD_V2oWUqmVewC2QDMX74KdHFb4P4PZUDGKSUc="
+  :redirect_uri "urn:ietf:wg:oauth:2.0:oob" :client_secret_expires_at
+  0))
+;;; secret entries
+"-----BEGIN PGP MESSAGE-----
+
+hQMOAwzS14VHI8MVEAv/eeHvB2KXGg2H9pj8LGtMMkUSnyvcGbJ59zHqDwetSOy9
+Bk1lV9i+eihbj6L0sW7bRwaaMB1AZYUl8YF58tnb/a5FFnPaR+i+Gad2I3qCz4zf
+FojQBM+9aP6ZBYM2IhZiCEdeM7OVeuS+M+rQP64gbytYAcv8OmSL+cjWCLfwSsQV
+dmvvgk0eGZQFqMxpabul6uBGjzo+duh80meMTgeA7K4VkvdK0NPvzBQ5ZI5VTaih
+N2Jp/MqhqrvyEJpAX1IUlToGgC6PuFpFGCofug9+hNUqj/lq4nHw/iV0BFDPrzxu
+uAmGG9Gi1rDDt6coYqcaXWdj8ml5gIMFjelIsipDt6hsSuG8BwGnI18vQKP+yuob
+ZWLdenze5n7L14AIzJKOux6lejaxu+wWkGCmCOwuHR8ToxPlRR/0zo1nlZZa0Wnc
+kD3/8JbtLh4hQxh5KFJmEEYbTSYPtYoH1bpXzgqUxv+jDrEp/a4Rhzuwxq/c3cjy
+edu2f4zg7MEXpp43l5iXC/9pXu+oh/cEGLQIvkFHm/SlpNhMhCG98DXBqKCIWld6
+iVouiQxmO61c+YUOgO8e3iWA7y0RB80TFWQnS5vhgvmgzkOQPLktzv3FIjuYzYox
+HnrnMQ0DzyrEZYik1y5HQEQZ46aKLjy9/SUfHTJP5kTC/o6qIGYPBMVLVzMqHMY7
+hHR0W0ZLii7IMUpIr2cQu8xEj74Y3dg2dGGzeMyWcMuiXCSAL7x74AXVspGPE9oM
+f8zVOTuwVeAG4hQUDb1MiTLnZ4TDP1c8QI44JjlDUyTfzL7s/cwiQJjSCEKG5hZv
+ZyVrEB6Pdh30Xk5heE/2eCoKhj8+KyNiWtV0mikUZ1MPTB/P2uTO31nI3rhwf1dP
+/29Aq+VLyaH8Qe7UgcoPw17ZISXGnQcGCorW72Hx/xgAVkbZ1t/1HK6IvYzKx5AT
+xlK3o13rwmZicks07oFr7ymWYuCritASU6T0o3JXHktHjIvEVCDPSXP0O62uiZJS
+FDF1b9eqy3wqHvt2LH0zEoPUwGsBCQIQJXRkTfcmIMCLxDq0XpvQ7H74SjyAMAmd
+xXc39abnTIfkOVFc3tUo6+fUpHfyrANHhv98x9uPUQ4CxkIzVT/lddHupx94QIAi
+JPzud+WFjvZFmkAMwfkbH4dNBTMV6VpBDndcARAZBamxJhSbdBA9LnW4gTFW63uD
+wg2FCzgNo/NUYqw1RWzjXUC1tClBQqLhZCPk5WvARNf0dlfedSgn7r82LMWkaN6S
+tsWup8bHKoA0ZZ02OSXWskjgAcIQJvavESsvJ+Ub9YcwsWhJTGqMxnXu0btUhAom
+ZdEhdMIjmOW1ZHAxhVdHAnAB80jZtC8ErJVqhC6g/h8hGeTp2r4KORrckGhMubNW
+wVa/iTHfSGb2Q+0dTwBx25eLkHQCoanDmPQfRVnDig==
+=Uq3r
+-----END PGP MESSAGE-----
+"
