@@ -546,16 +546,6 @@
       (add-to-list 'template-settings setting))
     `(todo "TODO|WIP" ,template-settings)))
 
-(defun my-build-agenda-priority-template-entry (priority settings-place-holder)
-  "Build priority template entry for custom agenda"
-  (let ((settings `((org-agenda-overriding-header  ,(concat "Assigned Todo List With Priority [#" (string priority) "]:"))
-                    (org-agenda-skip-function      '(lambda ()
-                                                      (let ((end-position (my-skip-entry-if-not-specific-time)))
-                                                        (if end-position
-                                                            end-position
-                                                          (my-skip-entry-if-not-priority ,priority))))))))
-    `(agenda "" ,settings)))
-
 (defun my-build-priority-entries (build-template-function settings)
   "Build priority entries for custom agenda"
   (mapcar (lambda (priority)
@@ -565,10 +555,6 @@
 (defun my-build-todo-entries (settings)
   "Build todo entries for custom agenda"
   (my-build-priority-entries 'my-build-todo-priority-template-entry settings))
-
-(defun my-build-agenda-priority-entries ()
-  "Build priority entries for custom agenda"
-  (my-build-priority-entries 'my-build-agenda-priority-template-entry ()))
 
 ;;;;; building org agenda report  用於建構 org agenda report
 (defun my-agenda-report ()
@@ -859,8 +845,6 @@
                        (org-agenda-hide-tags-regexp               "Focus\\\|Home\\\|Work")
                        (org-agenda-tags-todo-honor-ignore-options 't)
                        (org-agenda-todo-ignore-scheduled          't)))))
-        ("ap" "Prioritized agenda and todo for current day"
-         (,@(my-build-agenda-priority-entries)))
         ("ad" "Daily agenda" agenda ""
          ((org-agenda-span 'day)
           ,@my-org-agenda-settings))
