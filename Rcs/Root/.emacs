@@ -899,7 +899,7 @@
           (org-agenda-hide-tags-regexp  "Inbox")
           (org-agenda-skip-function     '(org-agenda-skip-entry-if 'regexp "Inbox"))))))
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WIP(w)" "WAIT(a)" "PENDING(p)" "|" "DONE(d)" "CANCEL(c)")))
+      '((sequence "TODO(t)" "WIP(w)" "WAIT(a!/!)" "PENDING(p)" "|" "DONE(d!)" "CANCEL(c!)")))
 (setq org-clock-in-switch-to-state      "WIP")
 (setq org-clock-out-switch-to-state     "TODO")
 (setq org-todo-keyword-faces            `(("WIP"      . (:foreground ,my-nord8 :weight bold))
