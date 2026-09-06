@@ -484,6 +484,11 @@
       (when limit
         (my-agenda-highlight-todo-limit (concat "Todo List With Priority [#" (string priority) "]:") limit `(:background ,my-nord2 :extend t))))))
 
+(defun my-add-capture-time (&rest args)
+  "Adding capture time"
+  (org-entry-put (point) "CAPTURED"
+                 (concat "[" (org-timestamp-format (org-timestamp-from-time (current-time) t t) "%F %a %R") "]")))
+
 ;;;;; org capture for tiling window manager  在平鋪式視窗管理員使用 org capture
 (defconst my-org-capture-frame-name "Org Capture"
   "Frame name of org capture used for tiling window manager")
@@ -997,9 +1002,9 @@
 (add-hook 'org-property-changed-functions     (lambda (property value)
                                                 (when (string= property "Effort")
                                                   (my-add-clock-effort-diff-property))))
-(add-hook 'org-capture-prepare-finalize-hook  (lambda ()
-                                                (org-entry-put (point) "CAPTURED"
-                                                               (concat "[" (org-timestamp-format (org-timestamp-from-time (current-time) t t) "%F %a %R") "]"))))
+(add-hook 'org-capture-prepare-finalize-hook  'my-add-capture-time)
+(advice-add 'org-insert-todo-heading :after #'my-add-capture-time)
+
 (defconst my-remote-cal-file (concat org-directory "/orgRemoteCal.org")
   "The file stores the information to synchronize with remote calendar.
 Each line is an elisp list with two string elements.
