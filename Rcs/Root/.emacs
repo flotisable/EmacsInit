@@ -432,11 +432,34 @@
     (org-set-tags (remove "Focus" (org-get-tags (point) t)))))
 (defun my-change-parent-todo-state ()
   "Change parent todo state"
-  (if (> (org-outline-level) 1)
+  (if (and (> (org-outline-level) 1)
+           ; check parent should be auto marked done
+           (save-excursion
+             (outline-up-heading 1)
+             (and (org-get-todo-state) (not (org-entry-get nil "NotAutoMarkDown"))))
+           ; check all children are done, or if force child done, parent is marked done unconditionally
+           (save-excursion
+             (outline-up-heading 1)
+             (not (org-map-entries t
+                                   (concat "+LEVEL=" (number-to-string (+ (org-current-level) 1)))
+                                   'tree
+                                   '(org-agenda-skip-entry-if 'nottodo 'todo)))))
+      (save-excursion
+        (outline-up-heading 1)
+        (org-todo org-state))))
+(defun my-change-children-todo-state ()
+  "Change children todo state"
+  ; using org-map-entries seems causing too deep ot nested call when combining with change parent todo state
+  (let ((parent-level (org-outline-level)))
     (save-excursion
-      (outline-up-heading 1)
-      (if (and (org-get-todo-state) (not (org-entry-get nil "NotAutoMarkDown")))
-          (org-todo org-state)))))
+      (outline-next-heading)
+      (while (= (org-outline-level) (+ parent-level 1))
+        (if (org-entry-is-todo-p)
+            (org-todo org-state))
+        (let ((line-begin (line-beginning-position)))
+          (org-forward-heading-same-level 1)
+          (if (= (line-beginning-position) line-begin)
+              (outline-next-heading)))))))
 (defun my-change-children-priority (is-up)
   "Change children priority"
   (let* ((element             (org-element-at-point))
@@ -978,6 +1001,7 @@
 (add-hook 'org-after-todo-state-change-hook   'my-remove-focus-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-remove-next-tag-when-done)
 (add-hook 'org-after-todo-state-change-hook   'my-change-parent-todo-state)
+(add-hook 'org-after-todo-state-change-hook   'my-change-children-todo-state)
 (add-hook 'org-shiftup-hook                   (lambda ()
                                                 (my-change-children-priority t)))
 (add-hook 'org-shiftdown-hook                 (lambda ()
