@@ -104,6 +104,32 @@
                             (default-alpha)))))
 ; end function to toggle frame alpha
 
+;;;; function to highlight symbol  設置標籤
+(defun my-toggle-highlight-symbol (symbol)
+  "Highlight/Unhighlight SYMBOLE"
+  (when symbol
+    (if (assoc symbol hi-lock-interactive-lighters)
+        (unhighlight-regexp symbol)
+      (highlight-regexp symbol))))
+
+(defun my-toggle-highlight-symbol-at-point ()
+  "Highlight/Unhighlight symbol at point"
+  (interactive)
+  (let ((symbol (find-tag-default-as-symbol-regexp)))
+    (my-toggle-highlight-symbol symbol)))
+
+(defun my-toggle-highlight-symbol-in-region (begin end)
+  "Highlight/Unhighlight symbol selected by the region (BEGIN END)"
+  (interactive "r")
+  (let ((symbol (buffer-substring-no-properties begin end)))
+    (my-toggle-highlight-symbol symbol)))
+
+(defun my-disable-highlight-symbols ()
+  "Unhighlight all symbols highlighted through hi-lock-mode"
+  (interactive)
+  (hi-lock-mode -1))
+; end function to highlight symbol
+
 ;;;; function to edit emacs init file  編輯 emacs 設定檔
 (defun my-edit-init-file ()
   "Edit emacs init file"
@@ -356,20 +382,23 @@
 
               ;;;; evil mode keybindings  evil mode 按鍵設定
               (evil-set-leader      'normal (kbd "\\"))
-              (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
-              (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down           ) ; 設定空白鍵向下一頁
-              (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up             ) ; 設定退格鍵向上一頁
-              (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode                    ) ; 設定 \c 高亮現在行數
-              (evil-global-set-key  'normal (kbd "<leader>w")  'toggle-truncate-lines           ) ; 設定 \w 切換 wrap line
-              (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file               ) ; 設定 \er 編輯設定檔
-              (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file ) ; 設定 \er 編輯設定檔
-              (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         ) ; 設定 \ea 編輯 org agenda 設定檔
-              (evil-global-set-key  'normal (kbd "<leader>eo") 'my-edit-org-dir-file            ) ; 設定 \eo 編輯 org 檔案
+              (evil-global-set-key  'normal (kbd "DEL")        'evil-scroll-page-up             )     ; 設定退格鍵向上一頁
+              (evil-global-set-key  'motion (kbd "SPC")        'evil-scroll-page-down           )     ; 設定空白鍵向下一頁
+              (evil-global-set-key  'motion (kbd "DEL")        'evil-scroll-page-up             )     ; 設定退格鍵向上一頁
+              (evil-global-set-key  'normal (kbd "<leader>c")  'hl-line-mode                    )     ; 設定 \c 高亮現在行數
+              (evil-global-set-key  'normal (kbd "<leader>w")  'toggle-truncate-lines           )     ; 設定 \w 切換 wrap line
+              (evil-global-set-key  'normal (kbd "<leader>er") 'my-edit-init-file               )     ; 設定 \er 編輯設定檔
+              (evil-global-set-key  'normal (kbd "<leader>el") 'my-edit-local-machine-init-file )     ; 設定 \er 編輯設定檔
+              (evil-global-set-key  'normal (kbd "<leader>ea") 'my-edit-org-agenda-file         )     ; 設定 \ea 編輯 org agenda 設定檔
+              (evil-global-set-key  'normal (kbd "<leader>eo") 'my-edit-org-dir-file            )     ; 設定 \eo 編輯 org 檔案
               (when (fboundp 'display-line-numbers-mode)
-                (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)   ; 設定 \r 切換相對行號顯示
-                (evil-global-set-key 'normal (kbd "<leader>n") 'my-toggle-absolute))  ; 設定 \n 切換行號顯示
+                (evil-global-set-key 'normal (kbd "<leader>r") 'my-toggle-relative)                   ; 設定 \r 切換相對行號顯示
+                (evil-global-set-key 'normal (kbd "<leader>n") 'my-toggle-absolute))                  ; 設定 \n 切換行號顯示
               (when (package-installed-p 'perfect-margin)
-                (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))
+                (evil-global-set-key 'normal (kbd "<leader>C") 'perfect-margin-mode))                 ; 設定 \C 切換視窗置中
+              (evil-global-set-key  'normal (kbd "<leader>m") 'my-toggle-highlight-symbol-at-point)   ; 設定 \m 設置標籤 highlight symbol
+              (evil-global-set-key  'visual (kbd "<leader>m") 'my-toggle-highlight-symbol-in-region)  ; 設定 \m 設置標籤 highlight symbol
+              (evil-global-set-key  'normal (kbd "<leader>M") 'my-disable-highlight-symbols)          ; 設定 \M 清理標籤
               ; end evil mode keybindings
 
               ;;;; remove vim key binding in insert mode  清掉插入模式的 vim 按鍵
@@ -387,7 +416,8 @@
                                                   "C-k"
                                                   "C-v"))
                                          (motion ("RET"
-                                                  "TAB")))))
+                                                  "TAB"
+                                                  "\\")))))
                 (dolist (key-map key-to-be-removed)
                   (let ((mode (car  key-map))
                         (keys (cadr key-map)))
