@@ -349,6 +349,20 @@
 (global-set-key (kbd "C-c l") 'org-store-link       ) ; 設定 C-c l 儲存當前位置連結
 (global-set-key (kbd "C-s"  ) 'swiper               ) ; 設定 C-s 開啟互動式模糊搜尋
 (global-set-key (kbd "C-c o") 'my-toggle-frame-alpha) ; 設定 C-c o 切換透明度
+
+(global-set-key (kbd "C-c w")  'toggle-truncate-lines           ) ; 設定 C-c w 切換 wrap line
+(global-set-key (kbd "C-c er") 'my-edit-init-file               ) ; 設定 C-c er 編輯設定檔
+(global-set-key (kbd "C-c el") 'my-edit-local-machine-init-file ) ; 設定 C-c er 編輯設定檔
+(global-set-key (kbd "C-c ea") 'my-edit-org-agenda-file         ) ; 設定 C-c ea 編輯 org agenda 設定檔
+(global-set-key (kbd "C-c eo") 'my-edit-org-dir-file            ) ; 設定 C-c eo 編輯 org 檔案
+(when (fboundp 'display-line-numbers-mode)
+  (global-set-key (kbd "C-c r") 'my-toggle-relative)  ; C-c r 切換相對行號顯示
+  (global-set-key (kbd "C-c n") 'my-toggle-absolute)) ; C-c n 切換行號顯示
+(when (package-installed-p 'perfect-margin)
+  (global-set-key (kbd "C-c C") 'perfect-margin-mode)) ; 設定 C-c C 切換視窗置中
+(global-set-key (kbd "C-c m") 'my-toggle-highlight-symbol-at-point)   ; 設定 C-c m 設置標籤 highlight symbol
+(global-set-key (kbd "C-c m") 'my-toggle-highlight-symbol-in-region)  ; 設定 C-c m 設置標籤 highlight symbol
+(global-set-key (kbd "C-c M") 'my-disable-highlight-symbols)          ; 設定 C-c M 清理標籤
 ; end key bindings
 
 ;;; evil mode settings  evil mode 設定
