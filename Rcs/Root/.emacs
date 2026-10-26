@@ -376,7 +376,8 @@
                                         gnus
                                         info
                                         (custom cus-edit)
-                                        (term term ansi-term multi-term)))
+                                        (term term ansi-term multi-term)
+                                        speedbar))
                 (add-hook 'evil-collection-unimpaired-mode-hook
                           (lambda ()
                             (setq minor-mode-alist (assoc-delete-all 'evil-collection-unimpaired-mode minor-mode-alist)))))
