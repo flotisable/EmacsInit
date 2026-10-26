@@ -1001,10 +1001,29 @@
                                           "Project"
                                           "Next"))
 (setq org-publish-project-alist
-      `(("github-io"
+      `(("github-io" :components
+         ("github-io-org"
+          "github-io-assets"))
+        ("github-io-org"
          :base-directory        ,my-local-machine-github-io-git-repo
-         :publishing-directory  ,my-local-machine-github-io-git-repo
-         :recursive             t)))
+         :publishing-directory  ,(concat my-local-machine-github-io-git-repo "/html")
+         :recursive             t
+         :html-head             ,(concat
+                                  "<link id=\"colorScheme\" rel=\"stylesheet\" type=\"text/css\" href=\"/styles/style.css\">\n"
+                                  "<script src=\"/scripts/main.js\"></script>")
+         :html-preamble-format  (("en"
+                                  ,(concat
+                                   "<form>\n"
+                                   "  <button name=\"lightTheme\" value=\"true\">Light</button>\n"
+                                   "  <button name=\"darkTheme\"  value=\"true\">Dark</button>\n"
+                                   "</form>"))))
+        ("github-io-assets"
+         :base-directory        ,my-local-machine-github-io-git-repo
+         :publishing-directory  ,(concat my-local-machine-github-io-git-repo "/html")
+         :recursive             t
+         :base-extension        "png\\|jpg\\|css\\|js"
+         :exclude               "html"
+         :publishing-function   org-publish-attachment)))
 
 (when (package-installed-p 'org-attach-screenshot)
   (with-eval-after-load 'org
